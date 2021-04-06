@@ -32,15 +32,16 @@ vX: future thoughts
 	const k = sqexp();
 	
 	$: k1s = xs.map(x => k($x1, x));
-	$: means = xs.map(x => 0.0);
+	$: means = xs.map(x => { return 0.0; });
 	$: confidence = xs.map(x => 2 * Math.sqrt(k(x, x)));  // +/- 2 standard deviations
 	$: covMat = covMatrix(sumKernel([k, white(1e-6)]), xs);
 	$: covSqrt = matrixSqrt(covMat);
-	function createSampler(means, covSqrt, numSamples) {
-    return () => { return sampleMvn(means, covSqrt, numSamples).transpose().to2DArray(); }
-	}
-	$: generateSample = createSampler(means, covSqrt, 3);
-	let samples = generateSample();
+	$: samples = means;
+	//function createSampler(means, covSqrt, numSamples) {
+	//	return () => { return sampleMvn(means, covSqrt, numSamples).transpose().to2DArray(); }
+	//}
+	//$: generateSample = createSampler(means, covSqrt, 3);
+	//let samples = generateSample();
 	$: console.log(k1s);
 	$: console.log(samples);
 	// plot!
