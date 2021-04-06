@@ -19,7 +19,7 @@ v3: advanced interactions
 vX: future thoughts
 - per-data point noise scale, entered by click-and-pull when creating data points on main plot
 -->
-<script>
+<script lang="ts">
 	import Lineplot from './Lineplot.svelte';
 	import Kernelplot from './Kernelplot.svelte';
 	import { x1, x2 } from './store.js';
