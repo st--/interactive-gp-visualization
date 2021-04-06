@@ -22,7 +22,8 @@ vX: future thoughts
 <script lang="ts">
 	import Lineplot from './Lineplot.svelte';
 	import Kernelplot from './Kernelplot.svelte';
-	import { x1, x2 } from './store.js';
+	import RandomSample from './RandomSample.svelte';
+	import { x1, x2, vs } from './store.js';
 	import { sqexp, matern12, white, sumKernel, covMatrix } from './kernels.js';
 	import { linspace, matrixSqrt, randn, sampleMvn } from './mymath.js';
 	
@@ -30,20 +31,18 @@ vX: future thoughts
 	$: xs = linspace(0, 6, num_grid);
 	
 	const k = sqexp();
+	const numSamples = 3;
 	
 	$: k1s = xs.map(x => k($x1, x));
-	$: means = xs.map(x => { return 0.0; });
+	$: means = xs.map(_ => 0.0);
 	$: confidence = xs.map(x => 2 * Math.sqrt(k(x, x)));  // +/- 2 standard deviations
 	$: covMat = covMatrix(sumKernel([k, white(1e-6)]), xs);
 	$: covSqrt = matrixSqrt(covMat);
-	$: samples = means;
-	//function createSampler(means, covSqrt, numSamples) {
-	//	return () => { return sampleMvn(means, covSqrt, numSamples).transpose().to2DArray(); }
-	//}
-	//$: generateSample = createSampler(means, covSqrt, 3);
-	//let samples = generateSample();
+	$: samples = sampleMvn(means, covSqrt, $vs).transpose().to2DArray();
 	$: console.log(k1s);
 	$: console.log(samples);
+	$: console.log(`vs = ${$vs}`);
+	$: console.log(`covSqrt = ${covSqrt}`);
 	// plot!
 	let points = [
     {'x': 1.1, 'y': 1.5},
@@ -75,7 +74,5 @@ vX: future thoughts
 			<Lineplot {xs} {means} {confidence} {samples} {points} />
 		</div>
 	</div>
-<!-- 	<button on:click={() => { samples = generateSample(); }}> -->
-	  Resample
-<!-- 	</button> -->
+	<RandomSample xsLength={num_grid} numSamples={numSamples} />
 </div>

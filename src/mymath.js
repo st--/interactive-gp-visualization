@@ -45,8 +45,13 @@ export function randn(rows, cols) {
 // 	const samples = m.Matrix.add(meanMat, covChol.mmul(v));
 // 	return samples;
 // }
-export function sampleMvn(meanVec, covSqrt, numSamples=1) {
-	const v = randn(meanVec.length, numSamples);
+
+export function sampleMvn(meanVec, covSqrt, v) {
+//export function sampleMvn(meanVec, covSqrt, numSamples=1) {
+	//const v = randn(meanVec.length, numSamples);
+	if (v === undefined) {
+		return m.Matrix.zeros(meanVec.length, 1);
+	}
 	const Lv = covSqrt.mmul(v);
 	// TODO add mean
 	return Lv;
