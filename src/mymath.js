@@ -12,6 +12,20 @@ export function cholesky(A) {
   return chol.lowerTriangularMatrix;  // L such that LL^T = A
 }
 
+export function covEllipse(covMat) {
+	const e = new m.EigenvalueDecomposition(covMat);
+	const eigvals = e.realEigenvalues;
+	const largestEigvec = e.eigenvectorMatrix.getColumn(0);
+	const alpha = Math.atan2(largestEigvec[1], -largestEigvec[0]);
+	const factor = 2 * Math.sqrt(5.991);
+	return {
+		width: factor * Math.sqrt(eigvals[0]),
+		length: factor * Math.sqrt(eigvals[1]),
+		angle: alpha * 180 / Math.PI,
+
+	};
+}
+
 export function svdSqrt(A) {
 	const e = new m.EigenvalueDecomposition(A);
 	const r = e.eigenvectorMatrix;

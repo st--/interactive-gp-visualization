@@ -7,7 +7,7 @@ function createMinMaxStore(min, max, initial=null) {
 		set: (x) => { if (x < min) x = min; if (x > max) x = max; orig_set(x); },
 	};
 }
-export const x1 = createMinMaxStore(0, 6)
-export const x2 = createMinMaxStore(0, 6)
+export const x1 = createMinMaxStore(0, 6, 2.0)
+export const x2 = createMinMaxStore(0, 6, 2.1)
 export const vs = writable();
 export const seed = writable(0.5);
