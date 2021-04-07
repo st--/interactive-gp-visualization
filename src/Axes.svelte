@@ -16,7 +16,7 @@
   <!-- x axis -->
   <g class="axis x-axis">
     {#each xTicks as tick}
-      <g class="tick" transform="translate({xScale(tick)},0)">
+      <g class="tick" transform="translate({xScale(tick)}, 0)">
         <line y1={yScale(yTicks[0])} y2={yScale(yTicks[yTicks.length - 1])} />
         <text y={height - padding.bottom + 16}>{tick}</text>
       </g>
@@ -29,7 +29,8 @@
     stroke: #ddd;
     stroke-dasharray: 2;
   }
-  :blush text {
+
+  text {
     font-size: 12px;
     fill: #999;
   }

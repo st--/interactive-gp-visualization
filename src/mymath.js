@@ -54,7 +54,7 @@ export function randn(rows, cols, seed) {
 
 // export function sampleMvn(meanVec, covChol, numSamples=1) {
 // 	const v = randn(meanVec.length, numSamples)
-// 	const meanMat = m.ColumnVector(meanVec);  // TODO fix for numSamples>1
+// 	const meanMat = m.Matrix.columnVector(meanVec);  // TODO fix for numSamples>1
 // 	const samples = m.Matrix.add(meanMat, covChol.mmul(v));
 // 	return samples;
 // }
