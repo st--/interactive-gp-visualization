@@ -36,6 +36,7 @@ vX: future thoughts
 	let numSamples = 3;
 	
 	$: k1s = xs.map(x => k($x1, x));
+	//$: means = xs.map(x => (x - 2)**2 * 4);
 	$: means = xs.map(_ => 0.0);
 	$: confidence = xs.map(x => 2 * Math.sqrt(k(x, x)));  // +/- 2 standard deviations
 	$: kernelWithJitter = sumKernel([k, white(1e-6)]);
@@ -47,6 +48,7 @@ vX: future thoughts
 	$: ysAtX1 = samples.getRow(getIndexInSorted(xs, $x1));
 	$: ysAtX2 = samples.getRow(getIndexInSorted(xs, $x2));
 
+	// TODO: either subtract mean or shift axes in Covariance plot accordingly
 	$: covY1Y2 = covMatrix(kernelWithJitter, [$x1, $x2]);
 	$: covProps = covEllipse(covY1Y2);
 	$: console.log(covProps);

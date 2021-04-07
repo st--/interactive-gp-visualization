@@ -65,6 +65,5 @@ export function sampleMvn(meanVec, covSqrt, v) {
 		return m.Matrix.zeros(meanVec.length, 1);
 	}
 	const Lv = covSqrt.mmul(v);
-	// TODO add mean
-	return Lv;
+	return Lv.addColumnVector(meanVec);
 }
