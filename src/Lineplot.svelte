@@ -81,7 +81,7 @@
 	
 	<!-- data -->
 	<path class="path-area" d={areaConfidence}></path>
-	<path class="path-line" d={pathMean}></path>
+	<!--<path class="path-line" d={pathMean}></path>-->
 
 	{#each samplePaths as path, i}
 		<path class="path-line" d={path} style="stroke: {sampleColor(i)};"></path>
@@ -109,7 +109,7 @@
 	}
 
 	circle {
-		fill: orange;
+		fill: black;
 		fill-opacity: 0.6;
 		stroke: rgba(0,0,0,0.5);
 	}
