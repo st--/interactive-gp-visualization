@@ -37,6 +37,19 @@ By default, the server will only respond to requests from localhost. To allow co
 
 If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
 
+## Contributing
+
+### Using TypeScript
+
+This repository is set up to use TypeScript.
+
+### Using Prettier
+
+This repository is set up to use Prettier.
+```bash
+npx prettier -w src
+```
+
 ## Building and running in production mode
 
 To create an optimised version of the app:
@@ -56,20 +69,6 @@ If you're building a single-page app (SPA) with multiple routes, sirv needs to b
 
 ```js
 "start": "sirv public --single"
-```
-
-## Using TypeScript
-
-This template comes with a script to set up a TypeScript development environment, you can run it immediately after cloning the template with:
-
-```bash
-node scripts/setupTypeScript.js
-```
-
-Or remove the script via:
-
-```bash
-rm scripts/setupTypeScript.js
 ```
 
 ## Deploying to the web
