@@ -6,6 +6,7 @@
 	import { x1, x2 } from './store.js';
 	import { getSVGpoint } from './getsvgpoint.js';
 	import Axes from './Axes.svelte';
+	import XIndicators from './XIndicators.svelte';
 	export let xs, means, confidence, samples, points, ysAtX1, ysAtX2;
 
 	let svg;
@@ -74,10 +75,9 @@
 <svelte:window on:resize='{resize}' />
 
 <svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
-  <line x1='{xScale($x1)}' x2='{xScale($x1)}' y1='{yScale(minY)}' y2='{yScale(maxY)}' style="stroke:rgb(255,0,0);stroke-width:2" />
-  <line x1='{xScale($x2)}' x2='{xScale($x2)}' y1='{yScale(minY)}' y2='{yScale(maxY)}' style="stroke:rgb(255,0,0);stroke-width:2" />
 
 	<Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
+	<XIndicators {xScale} y1={yScale(minY)} y2={yScale(maxY)} />
 	
 	<!-- data -->
 	<path class="path-area" d={areaConfidence}></path>

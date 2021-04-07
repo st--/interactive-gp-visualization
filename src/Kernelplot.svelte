@@ -5,6 +5,7 @@
 	import { x1, x2 } from './store.js';
 	import { getSVGpoint } from './getsvgpoint.js';
 	import Axes from './Axes.svelte';
+	import XIndicators from './XIndicators.svelte';
 	export let xs, ys;
 
 	let svg;
@@ -53,9 +54,9 @@
 <svelte:window on:resize='{resize}' />
 
 <svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
-  <line x1='{xScale($x1)}' x2='{xScale($x1)}' y1='{yScale(yTicks[0])}' y2='{yScale(2)}' style="stroke:rgb(255,0,0);stroke-width:2" />
-  <line x1='{xScale($x2)}' x2='{xScale($x2)}' y1='{yScale(yTicks[0])}' y2='{yScale(2)}' style="stroke:rgb(255,0,0);stroke-width:2" />
+
 	<Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
+	<XIndicators {xScale} y1={yScale(yTicks[0])} y2={yScale(2)} />
 
 	<!-- data -->
 		<path class="path-line" d={path}></path>
