@@ -1,23 +1,19 @@
 <!--
 To dos:
+- proper spacing/(re)sizing of Covariance/Line/Kernel plots
+- Covariance plot: square aspect ratio
+- Covariance plot: fix covariance ellipse
+- Kernel plot: automatic y-axis scaling?
+- change Line plot to allow changing $x1 (with Shift+Click?)
 
-v0: prior
-- GP samples
-- covariance plot
+More features:
+- select prior mean function (linear, quadratic, sine?)
+- select prior kernel function (sqexp, mat32, mat12, periodic?)
+- adjustable likelihood noise scale (input slider?)
 
-v1: posterior
-- fixed data
-- GP conditional
-
-v2: custom data
-- click on main plot adds/shift+click removes data point
-
-v3: advanced interactions
-- select kernel functions
-- input slider for noise scale
-
-vX: future thoughts
-- per-data point noise scale, entered by click-and-pull when creating data points on main plot
+Future thoughts:
+- per-data point noise scale - how to do UI?
+- entered by click-and-pull when creating data points on main plot
 -->
 <script lang="ts">
   import Lineplot from "./Lineplot.svelte";
