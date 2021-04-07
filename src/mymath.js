@@ -1,4 +1,5 @@
 import * as m from 'ml-matrix';
+import { randomNormal, randomLcg } from 'd3-random';
 
 export function linspace(start, stop, num) {
 	// endpoint=True behaviour from np.linspace
@@ -25,18 +26,15 @@ export function matrixSqrt(A) {
 	return svdSqrt(A);
 }
 
-function randn1() {
-	return Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random())
-}
-
-export function randn(rows, cols) {
+export function randn(rows, cols, seed) {
+  const randn1 = randomNormal.source(randomLcg(seed))();
   const v = m.Matrix.zeros(rows, cols);
-	for (let i = 0; i < rows; ++i) {
-		for (let j = 0; j < cols; ++j) {
-			v.set(i, j, randn1());
-		}
-	}
-	return v;
+  for (let j = 0; j < cols; ++j) {
+    for (let i = 0; i < rows; ++i) {
+      v.set(i, j, randn1());
+    }
+  }
+  return v;
 }
 
 // export function sampleMvn(meanVec, covChol, numSamples=1) {

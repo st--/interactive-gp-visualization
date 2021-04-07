@@ -31,7 +31,7 @@ vX: future thoughts
 	$: xs = linspace(0, 6, num_grid);
 	
 	const k = sqexp();
-	const numSamples = 3;
+	let numSamples = 3;
 	
 	$: k1s = xs.map(x => k($x1, x));
 	$: means = xs.map(_ => 0.0);
