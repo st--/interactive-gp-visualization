@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
-	import { scaleLinear } from 'd3-scale';
+	import { scaleLinear, scaleOrdinal } from 'd3-scale';
+	import { schemeCategory10 } from 'd3-scale-chromatic';
 	import { zip } from 'd3-array';
 	import { x1, x2 } from './store.js';
 	import { getSVGpoint } from './getsvgpoint.js';
@@ -65,6 +66,9 @@
 		event.stopPropagation();
 		points = points.filter(element => element != point);
 	}
+
+	// TODO unify with Covariance.svelte?
+	const sampleColor = scaleOrdinal(schemeCategory10);
 </script>
 
 <svelte:window on:resize='{resize}' />
@@ -79,15 +83,15 @@
 	<path class="path-area" d={areaConfidence}></path>
 	<path class="path-line" d={pathMean}></path>
 
-	{#each samplePaths as path}
-		<path class="path-line" d={path}></path>
+	{#each samplePaths as path, i}
+		<path class="path-line" d={path} style="stroke: {sampleColor(i)};"></path>
 	{/each}
 
-	{#each ysAtX1 as y1}
-		<circle cx='{xScale($x1)}' cy='{yScale(y1)}' r='3' />
+	{#each ysAtX1 as y1, i}
+		<circle cx='{xScale($x1)}' cy='{yScale(y1)}' r='3' style="fill: {sampleColor(i)};" />
 	{/each}
-	{#each ysAtX2 as y2}
-		<circle cx='{xScale($x2)}' cy='{yScale(y2)}' r='3' />
+	{#each ysAtX2 as y2, i}
+		<circle cx='{xScale($x2)}' cy='{yScale(y2)}' r='3' style="fill: {sampleColor(i)};" />
 	{/each}
 
 	{#each points as point}

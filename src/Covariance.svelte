@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
-	import { scaleLinear } from 'd3-scale';
+	import { scaleLinear, scaleOrdinal } from 'd3-scale';
+	import { schemeCategory10 } from 'd3-scale-chromatic';
 	import { zip } from 'd3-array';
 	import Axes from './Axes.svelte';
 	export let ysAtX1, ysAtX2, covProps;
@@ -38,6 +39,9 @@
 	function resize() {
 		({ width, height } = svg.getBoundingClientRect());
 	}
+
+	// TODO unify with Lineplot.svelte?
+	const sampleColor = scaleOrdinal(schemeCategory10);
 </script>
 
 <svelte:window on:resize='{resize}' />
@@ -50,8 +54,8 @@
 		<ellipse cx='{xScale(0)}' cy='{yScale(0)}' rx='{yFactor * covProps.width}' ry='{yFactor * covProps.length}' />
 	</g>
 
-	{#each yPairs as ys}
-		<circle cx='{xScale(ys[0])}' cy='{yScale(ys[1])}' r='3' />
+	{#each yPairs as ys, i}
+		<circle cx='{xScale(ys[0])}' cy='{yScale(ys[1])}' r='3' style="fill: {sampleColor(i)};" />
 	{/each}
 </svg>
 
