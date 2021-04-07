@@ -33,8 +33,9 @@
 	$: maxY = Math.max.apply(null, yTicks);
 	
 	function pathGenerator(xs, xScale, yScale) {
-		return (ys) => {
-			const points = zip(xs, ys).map(p => `${xScale(p[0])},${yScale(p[1])}`);
+		return (ys, reversed) => {
+			const zipped = reversed ? zip(xs, ys).reverse() : zip(xs, ys);
+			const points = zipped.map(p => `${xScale(p[0])},${yScale(p[1])}`);
 			return `M${points.join('L')}`;
 		}
 	}
@@ -42,9 +43,9 @@
 	$: samplePaths = samples.transpose().to2DArray().map(makePath);
 	
 	$: pathMean = makePath(means);
-// 	$: confidenceLower = zip(means, confidence).map((m, c) => m + c);
-	$: console.log(`Lineplot: ${width} xs0 ${xScale(0)} xs6 ${xScale(6)} ${samples}`);
-	$: areaConfidence = `${makePath(confidence)}L${xScale(maxX)},${yScale(0)}L${xScale(minX)},${yScale(0)}Z`;
+	$: confidenceLower = means.map((mean, idx) => mean - confidence[idx]);
+	$: confidenceUpper = means.map((mean, idx) => mean + confidence[idx]);
+	$: areaConfidence = `${makePath(confidenceLower)}L${makePath(confidenceUpper, true).slice(1)}Z`;
 
 	onMount(resize);
 
@@ -76,8 +77,9 @@ width={width} height={height}
 	<Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
 	
 	<!-- data -->
-		<path class="path-area" d={areaConfidence}></path>
-		<path class="path-line" d={pathMean}></path>
+	<path class="path-area" d={areaConfidence}></path>
+	<path class="path-line" d={pathMean}></path>
+
 	{#each samplePaths as path}
 		<path class="path-line" d={path}></path>
 	{/each}
