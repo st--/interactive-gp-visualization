@@ -5,7 +5,7 @@
 	import { x1, x2 } from './store.js';
 	import { getSVGpoint } from './getsvgpoint.js';
 	import Axes from './Axes.svelte';
-	export let xs, means, confidence, samples, points;
+	export let xs, means, confidence, samples, points, ysAtX1, ysAtX2;
 
 	let svg;
 	let width = 500;
@@ -39,7 +39,7 @@
 		}
 	}
 	$: makePath = pathGenerator(xs, xScale, yScale);
-	$: samplePaths = samples.map(makePath);
+	$: samplePaths = samples.transpose().to2DArray().map(makePath);
 	
 	$: pathMean = makePath(means);
 // 	$: confidenceLower = zip(means, confidence).map((m, c) => m + c);
@@ -80,6 +80,13 @@ width={width} height={height}
 		<path class="path-line" d={pathMean}></path>
 	{#each samplePaths as path}
 		<path class="path-line" d={path}></path>
+	{/each}
+
+	{#each ysAtX1 as y1}
+		<circle cx='{xScale($x1)}' cy='{yScale(y1)}' r='3' />
+	{/each}
+	{#each ysAtX2 as y2}
+		<circle cx='{xScale($x2)}' cy='{yScale(y2)}' r='3' />
 	{/each}
 
 	{#each points as point}

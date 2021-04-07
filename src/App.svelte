@@ -26,6 +26,7 @@ vX: future thoughts
 	import { x1, x2, vs } from './store.js';
 	import { sqexp, matern12, white, sumKernel, covMatrix } from './kernels.js';
 	import { linspace, matrixSqrt, randn, sampleMvn } from './mymath.js';
+	import { getIndexInSorted } from './binarysearch.js';
 	
 	let num_grid = 40;
 	$: xs = linspace(0, 6, num_grid);
@@ -38,7 +39,10 @@ vX: future thoughts
 	$: confidence = xs.map(x => 2 * Math.sqrt(k(x, x)));  // +/- 2 standard deviations
 	$: covMat = covMatrix(sumKernel([k, white(1e-6)]), xs);
 	$: covSqrt = matrixSqrt(covMat);
-	$: samples = sampleMvn(means, covSqrt, $vs).transpose().to2DArray();
+	$: samples = sampleMvn(means, covSqrt, $vs);
+
+	$: ysAtX1 = samples.getRow(getIndexInSorted(xs, $x1));
+	$: ysAtX2 = samples.getRow(getIndexInSorted(xs, $x2));
 	$: console.log(k1s);
 	$: console.log(samples);
 	$: console.log(`vs = ${$vs}`);
@@ -71,7 +75,7 @@ vX: future thoughts
 			<Kernelplot xs={xs} ys={k1s} />
 		</div>
 		<div class="chart" style="grid-row: 2; grid-column: 1;">
-			<Lineplot {xs} {means} {confidence} {samples} {points} />
+			<Lineplot {xs} {means} {confidence} {samples} {points} {ysAtX1} {ysAtX2}/>
 		</div>
 	</div>
 	<RandomSample xsLength={num_grid} numSamples={numSamples} />
