@@ -1,29 +1,45 @@
 import * as m from "ml-matrix";
 import { covMatrix } from "./kernels.js";
 
+export function prior(kernel) {
+  function mean(xs) {
+    return xs.map((_) => 0.0);
+  }
+  function cov(xs) {
+    return covMatrix(kernel, xs);
+  }
+  return { mean, cov, kernel };
+}
+
 export function posterior(kernel, X, Y) {
   // mean(*) = K*x (Kxx⁻¹ Y)
   // cov(*, *') = K**' - K*x Kxx⁻¹ Kx*'
-  function covYf(x) {
-    const kvec = m.Matrix.zeros(X.length, 1);
+  function covYf(xs) {
+    const kyf = m.Matrix.zeros(X.length, xs.length);
     for (let i = 0; i < X.length; ++i) {
-      kvec.set(i, 0, kernel(X[i], x));
+      for (let j = 0; j < xs.length; ++j) {
+        kyf.set(i, j, kernel(X[i], xs[j]));
+      }
     }
-    return kvec;
+    return kyf;
   }
+
   const kyy = covMatrix(kernel, X);
-  const kyyinv_Y = m.solve(kyy, m.ColumnVector(Y));
-  function mean(xnew) {
-    return covYf(xnew).transpose().mmul(kyyinv_Y).to1DArray();
+  const kyyinv_Y = m.solve(kyy, m.Matrix.columnVector(Y));
+
+  function mean(xs) {
+    const kyf = covYf(xs);
+    return kyf.transpose().mmul(kyyinv_Y).to1DArray();
   }
-  function cov(x1, x2) {
-    const kf1f2 = covMatrix(kernel, [x1, x2]);
-    const kf1y = covYf(x1).transpose();
-    const kyf2 = covYf(x2);
+
+  function cov(xs) {
+    const kff = covMatrix(kernel, xs);
+    const kyf = covYf(xs);
     // TODO: replace with symmetric Cholesky solve
-    const kyyinv_kyf2 = m.solve(kyy, kyf2);
-    const kf1y_kyyinv_kyf2 = kf1y.mmul(kyyinv_kyf2);
-    return kf1f2.subtract(kf1y_kyyinv_kyf2);
+    const kyyinv_kyf = m.solve(kyy, kyf);
+    const kfy_kyyinv_kyf = kyf.transpose().mmul(kyyinv_kyf);
+    return kff.subtract(kfy_kyyinv_kyf);
   }
-  return { mean, cov };
+
+  return { mean, cov, kernel: (x1, x2) => cov([x1, x2]).get(1, 0) };
 }

@@ -81,7 +81,7 @@
 
   <!-- data -->
   <path class="path-area" d={areaConfidence} />
-  <!--<path class="path-line" d={pathMean}></path>-->
+  <path class="path-line" d={pathMean} />
 
   {#each samplePaths as path, i}
     <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />

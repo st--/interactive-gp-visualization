@@ -34,19 +34,30 @@ vX: future thoughts
     covEllipse,
   } from "./mymath.js";
   import { getIndexInSorted } from "./binarysearch.js";
+  import { posterior, prior } from "./gpposterior.js";
 
   let num_grid = 40;
   $: xs = linspace(0, 6, num_grid);
 
   const k = sqexp();
+  $: kernelWithJitter = sumKernel([k, white(1e-6)]);
+
+  $: gp =
+    points.length > 0
+      ? posterior(
+          kernelWithJitter,
+          points.map((p) => p.x),
+          points.map((p) => p.y)
+        )
+      : prior(kernelWithJitter);
+
   let numSamples = 3;
 
-  $: k1s = xs.map((x) => k($x1, x));
-  //$: means = xs.map(x => (x - 2)**2 * 4);
-  $: means = xs.map((_) => 0.0);
-  $: confidence = xs.map((x) => 2 * Math.sqrt(k(x, x))); // +/- 2 standard deviations
-  $: kernelWithJitter = sumKernel([k, white(1e-6)]);
-  $: covMat = covMatrix(kernelWithJitter, xs);
+  $: k1s = xs.map((x) => gp.kernel($x1, x));
+  $: means = gp.mean(xs);
+  $: confidence = xs.map((x) => 2 * Math.sqrt(gp.kernel(x, x))); // +/- 2 standard deviations
+  $: covMat = gp.cov(xs);
+  // TODO: confidence from covMat.diagonal
   $: covSqrt = matrixSqrt(covMat);
   $: samples = sampleMvn(means, covSqrt, $vs);
 
@@ -55,15 +66,10 @@ vX: future thoughts
   $: ysAtX2 = samples.getRow(getIndexInSorted(xs, $x2));
 
   // TODO: either subtract mean or shift axes in Covariance plot accordingly
-  $: covY1Y2 = covMatrix(kernelWithJitter, [$x1, $x2]);
+  $: covY1Y2 = gp.cov([$x1, $x2]);
   $: covProps = covEllipse(covY1Y2);
-  $: console.log(covProps);
 
-  // plot!
-  let points = [
-    { x: 1.1, y: 1.5 },
-    { x: 2.5, y: -0.5 },
-  ];
+  let points = [];
 </script>
 
 <div>
@@ -81,7 +87,7 @@ vX: future thoughts
         {means}
         {confidence}
         {samples}
-        {points}
+        bind:points
         {ysAtX1}
         {ysAtX2}
       />
