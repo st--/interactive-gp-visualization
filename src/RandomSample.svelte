@@ -17,6 +17,7 @@
 </script>
 <div class="randomize-box">
   <label>
+    Number of samples:
     <input type=number bind:value={numSamples} min=0 max=10 on:change={() => resample($seed)}>
   </label>
   <button class="btn" on:click={resampleClick}>Resample</button>
