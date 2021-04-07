@@ -16,6 +16,7 @@
 		[-3, 0, 3];
 	$: xTicks = yTicks;
 
+	// TODO: fix aspect ratio to be square!
 	$: xScale = scaleLinear()
 		.domain([minY, maxY])
 		.range([padding.left, width - padding.right]);

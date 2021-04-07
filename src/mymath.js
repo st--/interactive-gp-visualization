@@ -13,6 +13,8 @@ export function cholesky(A) {
 }
 
 export function covEllipse(covMat) {
+	// https://www.visiondummy.com/2014/04/draw-error-ellipse-representing-covariance-matrix/
+	// http://cs229.stanford.edu/section/gaussians.pdf
 	const e = new m.EigenvalueDecomposition(covMat);
 	const eigvals = e.realEigenvalues;
 	const largestEigvec = e.eigenvectorMatrix.getColumn(0);
