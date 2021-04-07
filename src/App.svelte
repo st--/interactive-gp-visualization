@@ -45,7 +45,7 @@ vX: future thoughts
 	$: console.log(`covSqrt = ${covSqrt}`);
 	// plot!
 	let points = [
-    {'x': 1.1, 'y': 1.5},
+		{'x': 1.1, 'y': 1.5},
 		{'x': 2.5, 'y': -0.5}
 	];
 </script>
@@ -75,4 +75,5 @@ vX: future thoughts
 		</div>
 	</div>
 	<RandomSample xsLength={num_grid} numSamples={numSamples} />
+	<button class="btn" on:click={event => { points = []; }}>Reset points</button>
 </div>

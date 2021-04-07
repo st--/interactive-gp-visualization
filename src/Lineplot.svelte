@@ -52,10 +52,17 @@
 		({ width, height } = svg.getBoundingClientRect());
 	}
 	function handleClick(event) {
-		x1.set(xScale.invert(getSVGpoint(svg, event).x));
+		const pt = getSVGpoint(svg, event);
+		const newX = xScale.invert(pt.x);
+		const newY = yScale.invert(pt.y);
+		points = points.concat({'x': newX, 'y': newY});
 	}
 	function handleMousemove(event) {
 		x2.set(xScale.invert(getSVGpoint(svg, event).x));
+	}
+	function removePoint(point, event) {
+		event.stopPropagation();
+		points = points.filter(element => element != point);
 	}
 </script>
 
@@ -69,13 +76,16 @@ width={width} height={height}
 	<Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
 	
 	<!-- data -->
-	{#each points as point}
-		<circle cx='{xScale(point.x)}' cy='{yScale(point.y)}' r='5'/>
-	{/each}
 		<path class="path-area" d={areaConfidence}></path>
 		<path class="path-line" d={pathMean}></path>
 	{#each samplePaths as path}
 		<path class="path-line" d={path}></path>
+	{/each}
+
+	{#each points as point}
+		<circle cx='{xScale(point.x)}' cy='{yScale(point.y)}' r='5'
+			on:click="{event => removePoint(point, event)}" />
+		<!-- see https://svelte.dev/examples#7guis-circles -->
 	{/each}
 </svg>
 
