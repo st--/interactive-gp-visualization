@@ -34,11 +34,6 @@
   $: path = `M${zip(xs, ys)
     .map((p) => `${xScale(p[0])},${yScale(p[1])}`)
     .join("L")}`;
-  $: console.log(`path: ${minX} ${maxX} xS0 ${xScale(0)} xs6 ${xScale(6)}`);
-
-  $: area = `${path}L${xScale(maxX)},${yScale(0)}L${xScale(minX)},${yScale(
-    0
-  )}Z`;
 
   onMount(resize);
 

@@ -21,11 +21,10 @@ Future thoughts:
   import Covariance from "./Covariance.svelte";
   import RandomSample from "./RandomSample.svelte";
   import { x1, x2, vs } from "./store.js";
-  import { sqexp, matern12, white, sumKernel, covMatrix } from "./kernels.js";
+  import { sqexp, matern12, white, sumKernel } from "./kernels.js";
   import {
     linspace,
     matrixSqrt,
-    randn,
     sampleMvn,
     covEllipse,
   } from "./mymath.js";
@@ -69,8 +68,6 @@ Future thoughts:
 </script>
 
 <div>
-  The mouse position is {$x2}. Last clicked on {$x1}.
-
   <h2>Visualization</h2>
 
   <div style="display: grid;">

@@ -24,8 +24,7 @@
     .domain([minY, maxY])
     .range([height - padding.bottom, padding.top]);
 
-  $: yFactor = Math.abs((yScale(maxY) - yScale(minY)) / (maxY - minY));
-  $: console.log(yFactor);
+  $: yFactor = Math.abs((yScale(maxY) - yScale(minY)) / (maxY - minY)); // TODO: is this right?
 
   $: yPairs = zip(ysAtX1, ysAtX2);
 
