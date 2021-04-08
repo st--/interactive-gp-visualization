@@ -1,6 +1,7 @@
 <!--
 To dos:
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
+- axis & line labels
 - Covariance plot: square aspect ratio
 - Covariance plot: fix covariance ellipse
 - Kernel plot: automatic y-axis scaling?
@@ -69,6 +70,15 @@ Future thoughts:
 
 <div>
   <h2>Visualization</h2>
+
+  <div>
+    <h3>Instructions</h3>
+    Top-left: visualises slice through covariance function k(x1, .) where x1 can be changed by clicking (red line).
+    Right: visualises covariance k(x1, x2) where x1 can be changed by clicking in top-left plot and x2 follows mouse in top-left and bottom-left plots (orange line).
+    Dots correspond to function values at the samples in the bottom-left plot.
+    Bottom-left: visualises mean (solid blue line), marginal variance (shaded blue area), and samples from the GP. Clicking adds data points (black circles); clicking on an existing point removes it.
+    Controls: change number of samples; re-draw random samples; remove all points.
+  </div>
 
   <div style="display: grid;">
     <div class="chart" style="grid-row: 1; grid-column: 1;">
