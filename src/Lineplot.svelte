@@ -6,6 +6,7 @@
   import { zip } from "d3-array";
   import { x1, x2, y1, y2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
+  import { linspace, gaussian } from "./mymath.js";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
   import YIndicatorBar from "./YIndicatorBar.svelte";
@@ -34,35 +35,58 @@
   $: minY = Math.min.apply(null, yTicks);
   $: maxY = Math.max.apply(null, yTicks);
 
-  function pathGenerator(xs, xScale, yScale) {
-    return (ys, reversed) => {
+  function pathGenerator(xScale, yScale) {
+    return (xs, ys, reversed) => {
       const zipped = reversed ? zip(xs, ys).reverse() : zip(xs, ys);
       const points = zipped.map((p) => `${xScale(p[0])},${yScale(p[1])}`);
       return `M${points.join("L")}`;
     };
   }
-  $: makePath = pathGenerator(xs, xScale, yScale);
-  $: samplePaths = samples.transpose().to2DArray().map(makePath);
+  $: makePath = pathGenerator(xScale, yScale);
 
-  $: pathMean = makePath(means);
+  // mean and samples
+  $: pathMean = makePath(xs, means);
+  $: samplePaths = samples
+    .transpose()
+    .to2DArray()
+    .map((ys) => makePath(xs, ys));
+
+  // marginal y distributions at x1 and x2
+  let num_grid = 60;
+  $: ys = linspace(minY, maxY, num_grid);
+  $: marginalDistX1 = gaussian(atX1.mean, atX1.variance);
+  $: marginalDistX2 = gaussian(atX2.mean, atX2.variance);
+  function offset(delta, func) {
+    return (y) => delta + func(y);
+  }
+  $: pathMarginal1 = makePath(ys.map(offset($x1, marginalDistX1)), ys);
+  $: pathMarginal2 = makePath(ys.map(offset($x2, marginalDistX2)), ys);
+
+  // one and two sigma confidence intervals
   $: sigma = marginalVariances.map((v) => Math.sqrt(v));
   $: confidenceLower2 = means.map((mean, idx) => mean - 2 * sigma[idx]);
   $: confidenceLower1 = means.map((mean, idx) => mean - sigma[idx]);
   $: confidenceUpper1 = means.map((mean, idx) => mean + sigma[idx]);
   $: confidenceUpper2 = means.map((mean, idx) => mean + 2 * sigma[idx]);
   $: makeArea = (lower, upper) =>
-    `${makePath(lower)}L${makePath(upper, true).slice(1)}Z`;
-
+    `${makePath(xs, lower)}L${makePath(xs, upper, true).slice(1)}Z`;
   $: areaConfidence1 = makeArea(confidenceLower1, confidenceUpper1);
   $: areaConfidence2 = makeArea(confidenceLower2, confidenceUpper2);
-  onMount(resize);
 
+  // event handlers
+  onMount(resize);
   function resize() {
     ({ width, height } = svg.getBoundingClientRect());
   }
+
   function addPoint(newX, newY) {
     points = points.concat({ x: newX, y: newY });
   }
+  function removePoint(point, event) {
+    event.stopPropagation();
+    points = points.filter((element) => element != point);
+  }
+
   function handleClick(event) {
     const pt = getSVGpoint(svg, event);
     const newX = xScale.invert(pt.x);
@@ -85,10 +109,6 @@
     y1.set(newY);
     y2.set(newY);
   }
-  function removePoint(point, event) {
-    event.stopPropagation();
-    points = points.filter((element) => element != point);
-  }
 
   // TODO unify with Covariance.svelte?
   const sampleColor = scaleOrdinal(schemeCategory10);
@@ -105,6 +125,16 @@
   <path class="path-area" d={areaConfidence2} />
   <path class="path-area" d={areaConfidence1} />
   <path class="path-line" d={pathMean} />
+  <path
+    class="path-line"
+    d={pathMarginal1}
+    style="stroke: red; stroke-width: 2;"
+  />
+  <path
+    class="path-line"
+    d={pathMarginal2}
+    style="stroke: orange; stroke-width: 2;"
+  />
 
   {#each samplePaths as path, i}
     <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />

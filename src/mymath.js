@@ -9,6 +9,12 @@ export function linspace(start, stop, num) {
   return Array.from({ length: num }, (_, i) => start + step * i);
 }
 
+export function gaussian(mean, variance) {
+  return (y) =>
+    Math.exp(-Math.pow(y - mean, 2) / (2 * variance)) /
+    Math.sqrt(2 * Math.PI * variance);
+}
+
 export function cholesky(A) {
   const chol = new m.CholeskyDecomposition(A);
   return chol.lowerTriangularMatrix; // L such that LL^T = A

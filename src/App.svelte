@@ -63,7 +63,10 @@ Future thoughts:
     const samples2 = samples.getRow(dat.idx2);
     const ys = samples1.map((y1, i) => dat.w1 * y1 + dat.w2 * samples2[i]);
     const mean = dat.w1 * means[dat.idx1] + dat.w2 * means[dat.idx2];
-    return { ys, mean };
+    const variance =
+      dat.w1 * marginalVariances[dat.idx1] +
+      dat.w2 * marginalVariances[dat.idx2];
+    return { ys, mean, variance };
   };
   $: atX1 = getDataAt(getIndicesAndFrac(xs, $x1));
   $: atX2 = getDataAt(getIndicesAndFrac(xs, $x2));
@@ -137,7 +140,11 @@ Future thoughts:
     }}>Reset points</button
   >
   <div>
-	  [ <a href="https://github.com/st--/interactive-gp-visualization/">Source on GitHub</a> ]
+    [
+    <a href="https://github.com/st--/interactive-gp-visualization/"
+      >Source on GitHub</a
+    >
+    ]
   </div>
 </div>
 
