@@ -136,6 +136,9 @@ Future thoughts:
       points = [];
     }}>Reset points</button
   >
+  <div>
+	  [ <a href="https://github.com/st--/interactive-gp-visualization/">Source on GitHub</a> ]
+  </div>
 </div>
 
 <style>
