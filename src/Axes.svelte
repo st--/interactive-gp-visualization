@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2021 ST John -->
 <script>
   export let xScale, yScale, xTicks, yTicks, width, height, padding;
 </script>

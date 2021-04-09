@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2021 ST John -->
 <script>
   import { onMount } from "svelte";
   import { randn } from "./mymath.js";

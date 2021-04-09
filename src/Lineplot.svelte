@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2021 ST John -->
 <script>
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";

@@ -1,3 +1,5 @@
+// Copyright (c) 2021 ST John
+
 import * as m from "ml-matrix";
 import { covMatrix } from "./kernels.js";
 

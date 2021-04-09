@@ -1,3 +1,5 @@
+// Copyright (c) 2021 ST John
+
 import * as m from "ml-matrix";
 import { randomNormal, randomLcg } from "d3-random";
 

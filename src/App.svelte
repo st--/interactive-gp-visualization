@@ -1,4 +1,5 @@
-<!--
+<!-- Copyright (c) 2021 ST John
+
 To dos:
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
 - Covariance plot: square aspect ratio so that covariance ellipse is correct

@@ -1,3 +1,5 @@
+// Copyright (c) 2021 ST John
+
 export function getIndexInSorted(array, target) {
   let low = 0;
   let high = array.length;
