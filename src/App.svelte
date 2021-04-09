@@ -6,7 +6,6 @@ To dos:
 - Covariance plot: fix covariance ellipse
 - Kernel plot: automatic y-axis scaling?
 - marginal distribution plots for Covariance and Lineplot
-- Lineplot: 1 and 2 sigma
 
 More features:
 - checkbox for showing/hiding mean/credible intervals
@@ -53,9 +52,8 @@ Future thoughts:
 
   $: k1s = xs.map((x) => gp.kernel($x1, x));
   $: means = gp.mean(xs);
-  $: confidence = xs.map((x) => 2 * Math.sqrt(gp.kernel(x, x))); // +/- 2 standard deviations
   $: covMat = gp.cov(xs);
-  // TODO: confidence from covMat.diagonal
+  $: marginalVariances = covMat.diag();
   $: covSqrt = matrixSqrt(covMat);
   $: samples = sampleMvn(means, covSqrt, $vs);
 
@@ -93,7 +91,7 @@ Future thoughts:
       <Lineplot
         {xs}
         {means}
-        {confidence}
+        {marginalVariances}
         {samples}
         bind:points
         {ysAtX1}

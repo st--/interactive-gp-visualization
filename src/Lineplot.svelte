@@ -7,7 +7,7 @@
   import { getSVGpoint } from "./getsvgpoint.js";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
-  export let xs, means, confidence, samples, points, ysAtX1, ysAtX2;
+  export let xs, means, marginalVariances, samples, points, ysAtX1, ysAtX2;
 
   let svg;
   let width = 500;
@@ -43,13 +43,16 @@
   $: samplePaths = samples.transpose().to2DArray().map(makePath);
 
   $: pathMean = makePath(means);
-  $: confidenceLower = means.map((mean, idx) => mean - confidence[idx]);
-  $: confidenceUpper = means.map((mean, idx) => mean + confidence[idx]);
-  $: areaConfidence = `${makePath(confidenceLower)}L${makePath(
-    confidenceUpper,
-    true
-  ).slice(1)}Z`;
+  $: sigma = marginalVariances.map((v) => Math.sqrt(v));
+  $: confidenceLower2 = means.map((mean, idx) => mean - 2 * sigma[idx]);
+  $: confidenceLower1 = means.map((mean, idx) => mean - sigma[idx]);
+  $: confidenceUpper1 = means.map((mean, idx) => mean + sigma[idx]);
+  $: confidenceUpper2 = means.map((mean, idx) => mean + 2 * sigma[idx]);
+  $: makeArea = (lower, upper) =>
+    `${makePath(lower)}L${makePath(upper, true).slice(1)}Z`;
 
+  $: areaConfidence1 = makeArea(confidenceLower1, confidenceUpper1);
+  $: areaConfidence2 = makeArea(confidenceLower2, confidenceUpper2);
   onMount(resize);
 
   function resize() {
@@ -88,7 +91,8 @@
   <XIndicators {xScale} y1={yScale(minY)} y2={yScale(maxY)} />
 
   <!-- data -->
-  <path class="path-area" d={areaConfidence} />
+  <path class="path-area" d={areaConfidence2} />
+  <path class="path-area" d={areaConfidence1} />
   <path class="path-line" d={pathMean} />
 
   {#each samplePaths as path, i}
