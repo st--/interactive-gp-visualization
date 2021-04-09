@@ -117,9 +117,8 @@
 
 <style>
   svg {
-    width: 50%;
-    height: 50%;
-    float: left;
+    width: 100%;
+    height: 100%;
   }
 
   circle {

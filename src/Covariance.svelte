@@ -7,10 +7,10 @@
   export let ysAtX1, ysAtX2, covProps;
 
   let svg;
-  let width = 200;
-  let height = 200;
+  let width = 300;
+  let height = 300;
 
-  const padding = { top: 20, right: 40, bottom: 40, left: 25 };
+  const padding = { top: 25, right: 40, bottom: 40, left: 25 };
 
   $: yTicks = height > 180 ? [-3, -2, -1, 0, 1, 2, 3] : [-3, 0, 3];
   $: xTicks = yTicks;
@@ -68,9 +68,8 @@
 
 <style>
   svg {
-    width: 50%;
-    height: 50%;
-    float: left;
+    width: 100%;
+    height: 100%;
   }
 
   ellipse {

@@ -20,7 +20,7 @@ More features:
 
 
 Alternative visualisations:
-https://distill.pub/2019/visual-exploration-gaussian-processes/ https://github.com/distillpub/post--visual-exploration-gaussian-processes
+https://distill.pub/2019/visual-exploration-gaussian-processes/ https://github.com/distillpub/post%2d-visual-exploration-gaussian-processes
 http://smlbook.org/GP/ https://github.com/uu-sml/sml-book-page/tree/master/GP
 http://www.tmpl.fi/gp/ https://github.com/to-mi/gp-demo-js
 http://chifeng.scripts.mit.edu/stuff/gp-demo/ https://github.com/chi-feng/gp-demo
@@ -94,11 +94,11 @@ Future thoughts:
     change number of samples; re-draw random samples; remove all points.
   </div>
 
-  <div style="display: grid;">
-    <div class="chart" style="grid-row: 1; grid-column: 1;">
+  <div class="plot-container">
+    <div class="chart" style="grid-area: kernel;">
       <Kernelplot {xs} ys={k1s} />
     </div>
-    <div class="chart" style="grid-row: 2; grid-column: 1;">
+    <div class="chart" style="grid-area: line;">
       <Lineplot
         {xs}
         {means}
@@ -109,7 +109,7 @@ Future thoughts:
         {ysAtX2}
       />
     </div>
-    <div class="chart" style="grid-row: 2; grid-column: 2;">
+    <div class="squarechart" style="grid-area: covariance;">
       <Covariance {ysAtX1} {ysAtX2} {covProps} />
     </div>
   </div>
@@ -123,12 +123,22 @@ Future thoughts:
 </div>
 
 <style>
+  .plot-container {
+    display: grid;
+    grid-template-rows: 30% 70%;
+    grid-template-columns: 70% 30%;
+    grid-template-areas:
+      "kernel ."
+      "line covariance";
+  }
   .chart {
-    width: 100%;
-    max-width: 640px;
-    height: calc(100% - 4em);
-    min-height: 280px;
-    max-height: 480px;
-    margin: 0 auto;
+    margin: 20px 20px;
+    background-color: #fafafa;
+  }
+  .squarechart {
+    min-width: 200px;
+    min-height: 200px;
+    margin: 20px 20px;
+    background-color: #fafafa;
   }
 </style>
