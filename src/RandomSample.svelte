@@ -3,7 +3,9 @@
   import { onMount } from "svelte";
   import { randn } from "./mymath.js";
   import { vs, seed } from "./store.js";
-  export let xsLength, numSamples;
+  export let xsLength;
+
+  let numSamples = 3;
 
   function resample(seed) {
     vs.set(randn(xsLength, numSamples, seed));

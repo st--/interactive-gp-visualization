@@ -50,8 +50,6 @@ Future thoughts:
         )
       : prior(kernelWithJitter);
 
-  let numSamples = 3;
-
   $: k1s = xs.map((x) => gp.kernel($x1, x));
   $: means = gp.mean(xs);
   $: covMat = gp.cov(xs);
@@ -131,7 +129,7 @@ Future thoughts:
       <Covariance {atX1} {atX2} {covProps} />
     </div>
   </div>
-  <RandomSample xsLength={num_grid} {numSamples} />
+  <RandomSample xsLength={xs.length} />
   <button
     class="btn"
     on:click={(event) => {
