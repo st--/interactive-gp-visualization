@@ -1,20 +1,20 @@
-*Looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+# Interactive Visualisation of Gaussian processes
+
+## Other visualisations
+
+There are plenty of other Gaussian process visualisations out there; here are some I came across so far (if you know of others you like, please let me know!):
+
+* [A Visual Exploration of Gaussian Processes (distill.pub)](https://distill.pub/2019/visual-exploration-gaussian-processes/) ([source](https://github.com/distillpub/post%2d-visual-exploration-gaussian-processes), using D3.js, ml-matrix)
+* [Demo by Nicolas Durrande](https://durrande.shinyapps.io/gp_playground/) ([source](https://github.com/NicolasDurrande/shinyApps/tree/master/GP_playground), using R and Shiny)
+* [Demo by Johan W&aring;gberg](http://smlbook.org/GP/) ([source](https://github.com/uu-sml/sml-book-page/tree/master/GP), using D3.js, Numeric.js, katex)
+* [Demo by Tomi Peltola](http://www.tmpl.fi/gp/) ([source](https://github.com/to-mi/gp-demo-js), using React, D3.js, Numeric.js)
+* [Demo by Chi Feng](https://chi-feng.github.io/gp-demo/) ([source](https://github.com/chi-feng/gp-demo), using dat.gui, jQuery)
+* [Demo by Alex Y. Chan](https://gaussianprocess.herokuapp.com/) ([source](https://github.com/aybchan/gaussianprocess), using D3.js, math.js)
+* Demo by Artem Artemev, run locally ([source](https://github.com/awav/interactive-gp), using Python, GPflow, holoviews/bokeh)
 
 ---
 
-# svelte app
-
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
-
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
-
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
-```
-
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
-
+# Svelte development
 
 ## Get started
 

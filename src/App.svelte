@@ -18,15 +18,6 @@ More features:
 - include log marginal likelihood
 - include 2D visualisation of covariance function
 
-
-Alternative visualisations:
-https://distill.pub/2019/visual-exploration-gaussian-processes/ https://github.com/distillpub/post%2d-visual-exploration-gaussian-processes
-http://smlbook.org/GP/ https://github.com/uu-sml/sml-book-page/tree/master/GP
-http://www.tmpl.fi/gp/ https://github.com/to-mi/gp-demo-js
-http://chifeng.scripts.mit.edu/stuff/gp-demo/ https://github.com/chi-feng/gp-demo
-https://gaussianprocess.herokuapp.com/ https://github.com/aybchan/gaussianprocess
-https://github.com/awav/interactive-gp (Python-based)
-
 Future thoughts:
 - per-data point noise scale - how to do UI?
   entered by click-and-pull when creating data points on main plot
