@@ -12,6 +12,8 @@
 
   const padding = { top: 25, right: 40, bottom: 40, left: 25 };
 
+  const sigmaContours = [1, 2];
+
   $: yTicks = height > 180 ? [-3, -2, -1, 0, 1, 2, 3] : [-3, 0, 3];
   $: xTicks = yTicks;
 
@@ -48,12 +50,14 @@
 
   <!-- data -->
   <g transform="rotate({covProps.angle} {xScale(0)} {yScale(0)})">
-    <ellipse
-      cx={xScale(0)}
-      cy={yScale(0)}
-      rx={yFactor * covProps.width}
-      ry={yFactor * covProps.length}
-    />
+    {#each sigmaContours as sigma}
+      <ellipse
+        cx={xScale(0)}
+        cy={yScale(0)}
+        rx={yFactor * sigma * covProps.width}
+        ry={yFactor * sigma * covProps.length}
+      />
+    {/each}
   </g>
 
   {#each yPairs as ys, i}

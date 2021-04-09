@@ -2,8 +2,7 @@
 To dos:
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
 - axis & line labels (LaTeX/ketex?)
-- Covariance plot: square aspect ratio
-- Covariance plot: fix covariance ellipse
+- Covariance plot: square aspect ratio so that covariance ellipse is correct
 - Kernel plot: automatic y-axis scaling?
 - marginal distribution plots for Covariance and Lineplot
 
