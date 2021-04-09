@@ -6,6 +6,7 @@ To dos:
 - adjust axis ticks when resizing
 - Kernel plot: automatic y-axis scaling?
 - marginal distribution plots for Covariance and Lineplot
+- can we unify XIndicators/YIndicatorBar/YIndicatorCross in a single component?
 
 More features:
 - checkbox for showing/hiding mean/credible intervals
@@ -30,7 +31,7 @@ Future thoughts:
   import { x1, x2, vs } from "./store.js";
   import { sqexp, matern12, white, sumKernel } from "./kernels.js";
   import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
-  import { getIndexInSorted } from "./binarysearch.js";
+  import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
   let num_grid = 40;
@@ -57,12 +58,16 @@ Future thoughts:
   $: covSqrt = matrixSqrt(covMat);
   $: samples = sampleMvn(means, covSqrt, $vs);
 
-  // TODO: linear interpolation between two points
-  $: getDataAt = (idx) => {
-    return { ys: samples.getRow(idx), mean: means[idx] };
+  $: getDataAt = (dat) => {
+    // TODO improve using d3-interpolate?
+    const samples1 = samples.getRow(dat.idx1);
+    const samples2 = samples.getRow(dat.idx2);
+    const ys = samples1.map((y1, i) => dat.w1 * y1 + dat.w2 * samples2[i]);
+    const mean = dat.w1 * means[dat.idx1] + dat.w2 * means[dat.idx2];
+    return { ys, mean };
   };
-  $: atX1 = getDataAt(getIndexInSorted(xs, $x1));
-  $: atX2 = getDataAt(getIndexInSorted(xs, $x2));
+  $: atX1 = getDataAt(getIndicesAndFrac(xs, $x1));
+  $: atX2 = getDataAt(getIndicesAndFrac(xs, $x2));
 
   $: covY1Y2 = gp.cov([$x1, $x2]);
   $: covProps = covEllipse(covY1Y2);

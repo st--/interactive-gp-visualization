@@ -8,3 +8,14 @@ export function getIndexInSorted(array, target) {
   }
   return low;
 }
+
+export function getIndicesAndFrac(xs, xnew) {
+  const idx = getIndexInSorted(xs, xnew);
+  const idx1 = idx > 0 ? idx - 1 : idx;
+  const idx2 = idx > 0 ? idx : idx + 1;
+  const x1 = xs[idx1];
+  const x2 = xs[idx2];
+  const w1 = (x2 - xnew) / (x2 - x1);
+  const w2 = (xnew - x1) / (x2 - x1);
+  return { idx1, idx2, w1, w2 };
+}
