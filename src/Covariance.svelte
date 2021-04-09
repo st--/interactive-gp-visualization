@@ -52,6 +52,7 @@
   <g transform="rotate({covProps.angle} {xScale(0)} {yScale(0)})">
     {#each sigmaContours as sigma}
       <ellipse
+        class="path-area"
         cx={xScale(0)}
         cy={yScale(0)}
         rx={yFactor * sigma * covProps.width}
@@ -76,9 +77,6 @@
     height: 100%;
   }
 
-  ellipse {
-    fill-opacity: 0.1;
-  }
   circle {
     fill: orange;
     fill-opacity: 0.6;
