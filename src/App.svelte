@@ -5,7 +5,6 @@ To dos:
 - Covariance plot: square aspect ratio
 - Covariance plot: fix covariance ellipse
 - Kernel plot: automatic y-axis scaling?
-- change Line plot to allow changing $x1 (with Shift+Click?)
 - marginal distribution plots for Covariance and Lineplot
 - Lineplot: 1 and 2 sigma
 
@@ -17,6 +16,7 @@ More features:
 - smoothly animated samples (see http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf)
 - include log marginal likelihood
 - include 2D visualisation of covariance function
+- better support for mobile / touch
 
 Future thoughts:
 - per-data point noise scale - how to do UI?

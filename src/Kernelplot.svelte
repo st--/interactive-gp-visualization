@@ -41,10 +41,12 @@
     ({ width, height } = svg.getBoundingClientRect());
   }
   function handleClick(event) {
-    x1.set(xScale.invert(getSVGpoint(svg, event).x));
+    const newX = xScale.invert(getSVGpoint(svg, event).x);
+    x1.set(newX);
   }
   function handleMousemove(event) {
-    x2.set(xScale.invert(getSVGpoint(svg, event).x));
+    const newX = xScale.invert(getSVGpoint(svg, event).x);
+    x2.set(newX);
   }
 </script>
 

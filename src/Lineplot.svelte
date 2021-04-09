@@ -55,14 +55,22 @@
   function resize() {
     ({ width, height } = svg.getBoundingClientRect());
   }
+  function addPoint(newX, newY) {
+    points = points.concat({ x: newX, y: newY });
+  }
   function handleClick(event) {
     const pt = getSVGpoint(svg, event);
     const newX = xScale.invert(pt.x);
     const newY = yScale.invert(pt.y);
-    points = points.concat({ x: newX, y: newY });
+    if (event.shiftKey) {
+      x1.set(newX);
+    } else {
+      addPoint(newX, newY);
+    }
   }
   function handleMousemove(event) {
-    x2.set(xScale.invert(getSVGpoint(svg, event).x));
+    const newX = xScale.invert(getSVGpoint(svg, event).x);
+    x2.set(newX);
   }
   function removePoint(point, event) {
     event.stopPropagation();
