@@ -1,19 +1,21 @@
 <!--
 To dos:
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
-- axis & line labels (LaTeX/ketex?)
 - Covariance plot: square aspect ratio so that covariance ellipse is correct
+- axis & line labels (LaTeX/ketex?)
+- adjust axis ticks when resizing
 - Kernel plot: automatic y-axis scaling?
 - marginal distribution plots for Covariance and Lineplot
 
 More features:
 - checkbox for showing/hiding mean/credible intervals
+- mouse move in covariance plot: map to small bars in lineplot
 - select prior mean function (linear, quadratic, sine?)
 - select prior kernel function (sqexp, mat32, mat12, periodic?)
 - adjustable likelihood noise scale (input slider?)
 - smoothly animated samples (see http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf)
 - include log marginal likelihood
-- include 2D visualisation of covariance function
+- include 2D visualisation of covariance function (contour plot)
 - better support for mobile / touch
 
 Future thoughts:
@@ -72,16 +74,37 @@ Future thoughts:
 <div>
   <h2>Visualization</h2>
 
-  <div>
-    <h3>Instructions</h3>
-    Top-left: visualises slice through covariance function k(x1, .) where x1 can
-    be changed by clicking (red line). Right: visualises covariance k(x1, x2) where
-    x1 can be changed by clicking in top-left plot and x2 follows mouse in top-left
-    and bottom-left plots (orange line). Dots correspond to function values at the
-    samples in the bottom-left plot. Bottom-left: visualises mean (solid blue line),
-    marginal variance (shaded blue area), and samples from the GP. Clicking adds
-    data points (black circles); clicking on an existing point removes it. Controls:
-    change number of samples; re-draw random samples; remove all points.
+  <div class="text-container">
+    <div class="text-explanation" style="grid-area: line;">
+      <em>Bottom left:</em>
+      Visualises the Gaussian process f(x). Shaded areas and central line: +/- 1
+      and 2 sigma confidence bands and mean. Colored lines: samples from the Gaussian
+      process. Black circles: observations. Vertical lines at x1 (red) and x2 (orange).
+      <br />
+      <strong>Click on empty space:</strong> add a new observation.
+      <strong>Click on black circle:</strong>
+      remove observation.
+      <strong>Shift+Click:</strong> change x1.
+      <strong>Move mouse:</strong> change x2.
+    </div>
+    <div class="text-explanation" style="grid-area: kernel;">
+      <em>Top left:</em>
+      Visualises a slice through the covariance function or kernel k(x1, .) as a
+      function of the second argument.
+      <br />
+      <strong>Click:</strong> change x1.
+      <strong>Move mouse:</strong> change x2.
+    </div>
+    <div class="text-explanation" style="grid-area: covariance;">
+      <em>Right:</em>
+      Visualises the covariance between f(x1) and f(x2) (shaded areas) and the samples
+      evaluated at those points (colored circles, corresponding to the colored lines
+      in bottom-left plot).
+    </div>
+    <div class="text-explanation" style="grid-area: controls;">
+      <em>Controls (below plots):</em>
+      change number of samples; re-draw random samples; remove all points.
+    </div>
   </div>
 
   <div class="plot-container">
@@ -113,6 +136,17 @@ Future thoughts:
 </div>
 
 <style>
+  .text-container {
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 60% auto;
+    grid-template-areas:
+      "kernel covariance"
+      "line controls";
+  }
+  .text-explanation {
+    margin: 10px;
+  }
   .plot-container {
     display: grid;
     grid-template-rows: 30% 70%;
