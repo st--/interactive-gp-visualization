@@ -43,11 +43,19 @@
   }
   function handleClick(event) {
     const newX = xScale.invert(getSVGpoint(svg, event).x);
-    x1.set(newX);
+    if (event.shiftKey) {
+      x2.set(newX);
+    } else {
+      x1.set(newX);
+    }
   }
   function handleMousemove(event) {
     const newX = xScale.invert(getSVGpoint(svg, event).x);
-    x2.set(newX);
+    if (event.shiftKey) {
+      x1.set(newX);
+    } else {
+      x2.set(newX);
+    }
   }
 </script>
 

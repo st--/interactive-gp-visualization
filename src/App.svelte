@@ -90,15 +90,15 @@ Future thoughts:
       <strong>Click on black circle:</strong>
       remove observation.
       <strong>Shift+Click:</strong> change x1.
-      <strong>Move mouse:</strong> change x2.
+      <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
     </div>
     <div class="text-explanation" style="grid-area: kernel;">
       <em>Top left:</em>
       Visualises a slice through the covariance function or kernel k(x1, .) as a
       function of the second argument.
       <br />
-      <strong>Click:</strong> change x1.
-      <strong>Move mouse:</strong> change x2.
+      <strong>Click:</strong> change x1 (<strong> + Shift:</strong> change x2).
+      <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
     </div>
     <div class="text-explanation" style="grid-area: covariance;">
       <em>Right:</em>
