@@ -7,6 +7,7 @@
   import { x1, x2, y1, y2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
   import { linspace, gaussian } from "./mymath.js";
+  import { pathGenerator, offset } from "./myplot.js";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
   import YIndicatorBar from "./YIndicatorBar.svelte";
@@ -35,13 +36,6 @@
   $: minY = Math.min.apply(null, yTicks);
   $: maxY = Math.max.apply(null, yTicks);
 
-  function pathGenerator(xScale, yScale) {
-    return (xs, ys, reversed) => {
-      const zipped = reversed ? zip(xs, ys).reverse() : zip(xs, ys);
-      const points = zipped.map((p) => `${xScale(p[0])},${yScale(p[1])}`);
-      return `M${points.join("L")}`;
-    };
-  }
   $: makePath = pathGenerator(xScale, yScale);
 
   // mean and samples
@@ -52,13 +46,11 @@
     .map((ys) => makePath(xs, ys));
 
   // marginal y distributions at x1 and x2
+  // TODO unify with Covariance?
   let num_grid = 60;
   $: ys = linspace(minY, maxY, num_grid);
   $: marginalDistX1 = gaussian(atX1.mean, atX1.variance);
   $: marginalDistX2 = gaussian(atX2.mean, atX2.variance);
-  function offset(delta, func) {
-    return (y) => delta + func(y);
-  }
   $: pathMarginal1 = makePath(ys.map(offset($x1, marginalDistX1)), ys);
   $: pathMarginal2 = makePath(ys.map(offset($x2, marginalDistX2)), ys);
 

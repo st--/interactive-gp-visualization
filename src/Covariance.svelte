@@ -6,6 +6,8 @@
   import { zip } from "d3-array";
   import { y1, y2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
+  import { linspace, gaussian } from "./mymath.js";
+  import { pathGenerator, offset } from "./myplot.js";
   import Axes from "./Axes.svelte";
   import YIndicatorCross from "./YIndicatorCross.svelte";
   export let atX1, atX2, covProps;
@@ -37,6 +39,16 @@
   $: minY = Math.min.apply(null, yTicks);
   $: maxY = Math.max.apply(null, yTicks);
 
+  $: makePath = pathGenerator(xScale, yScale);
+  // marginal y distributions at x1 and x2
+  // TODO unify with Lineplot?
+  let num_grid = 60;
+  $: ys = linspace(minY, maxY, num_grid);
+  $: marginalDistX1 = gaussian(atX1.mean, atX1.variance);
+  $: marginalDistX2 = gaussian(atX2.mean, atX2.variance);
+  $: pathMarginal1 = makePath(ys, ys.map(offset(maxY, marginalDistX1)));
+  $: pathMarginal2 = makePath(ys.map(offset(maxY, marginalDistX2)), ys);
+
   onMount(resize);
 
   function resize() {
@@ -61,6 +73,17 @@
   <YIndicatorCross {xScale} {yScale} {minY} {maxY} />
 
   <!-- data -->
+  <path
+    class="path-line"
+    d={pathMarginal1}
+    style="stroke: red; stroke-width: 2;"
+  />
+  <path
+    class="path-line"
+    d={pathMarginal2}
+    style="stroke: orange; stroke-width: 2;"
+  />
+
   <g
     transform="translate({scaleFactor * atX1.mean} {-scaleFactor * atX2.mean})"
   >
