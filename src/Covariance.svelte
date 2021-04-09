@@ -3,7 +3,10 @@
   import { scaleLinear, scaleOrdinal } from "d3-scale";
   import { schemeCategory10 } from "d3-scale-chromatic";
   import { zip } from "d3-array";
+  import { y1, y2 } from "./store.js";
+  import { getSVGpoint } from "./getsvgpoint.js";
   import Axes from "./Axes.svelte";
+  import YIndicatorCross from "./YIndicatorCross.svelte";
   export let atX1, atX2, covProps;
 
   let svg;
@@ -38,6 +41,13 @@
   function resize() {
     ({ width, height } = svg.getBoundingClientRect());
   }
+  function handleMousemove(event) {
+    const pt = getSVGpoint(svg, event);
+    const newX = xScale.invert(pt.x);
+    const newY = yScale.invert(pt.y);
+    y1.set(newX);
+    y2.set(newY);
+  }
 
   // TODO unify with Lineplot.svelte?
   const sampleColor = scaleOrdinal(schemeCategory10);
@@ -45,8 +55,9 @@
 
 <svelte:window on:resize={resize} />
 
-<svg bind:this={svg}>
+<svg bind:this={svg} on:mousemove={handleMousemove}>
   <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
+  <YIndicatorCross {xScale} {yScale} {minY} {maxY} />
 
   <!-- data -->
   <g

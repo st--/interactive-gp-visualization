@@ -3,10 +3,11 @@
   import { scaleLinear, scaleOrdinal } from "d3-scale";
   import { schemeCategory10 } from "d3-scale-chromatic";
   import { zip } from "d3-array";
-  import { x1, x2 } from "./store.js";
+  import { x1, x2, y1, y2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
+  import YIndicatorBar from "./YIndicatorBar.svelte";
   export let xs, means, marginalVariances, samples, points, atX1, atX2;
 
   let svg;
@@ -72,8 +73,12 @@
     }
   }
   function handleMousemove(event) {
-    const newX = xScale.invert(getSVGpoint(svg, event).x);
+    const pt = getSVGpoint(svg, event);
+    const newX = xScale.invert(pt.x);
+    const newY = yScale.invert(pt.y);
     x2.set(newX);
+    y1.set(newY);
+    y2.set(newY);
   }
   function removePoint(point, event) {
     event.stopPropagation();
@@ -88,7 +93,8 @@
 
 <svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
   <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
-  <XIndicators {xScale} y1={yScale(minY)} y2={yScale(maxY)} />
+  <XIndicators {xScale} {yScale} y1={minY} y2={maxY} />
+  <YIndicatorBar {xScale} {yScale} />
 
   <!-- data -->
   <path class="path-area" d={areaConfidence2} />

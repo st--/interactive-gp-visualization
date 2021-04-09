@@ -54,7 +54,7 @@
 
 <svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
   <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
-  <XIndicators {xScale} y1={yScale(yTicks[0])} y2={yScale(2)} />
+  <XIndicators {xScale} {yScale} y1={yTicks[0]} y2={2} />
 
   <!-- data -->
   <path class="path-line" d={path} />

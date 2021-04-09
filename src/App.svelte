@@ -9,7 +9,6 @@ To dos:
 
 More features:
 - checkbox for showing/hiding mean/credible intervals
-- mouse move in covariance plot: map to small bars in lineplot
 - select prior mean function (linear, quadratic, sine?)
 - select prior kernel function (sqexp, mat32, mat12, periodic?)
 - adjustable likelihood noise scale (input slider?)
