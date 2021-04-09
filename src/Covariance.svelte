@@ -4,7 +4,7 @@
   import { schemeCategory10 } from "d3-scale-chromatic";
   import { zip } from "d3-array";
   import Axes from "./Axes.svelte";
-  export let ysAtX1, ysAtX2, covProps;
+  export let atX1, atX2, covProps;
 
   let svg;
   let width = 300;
@@ -26,9 +26,9 @@
     .domain([minY, maxY])
     .range([height - padding.bottom, padding.top]);
 
-  $: yFactor = Math.abs((yScale(maxY) - yScale(minY)) / (maxY - minY)); // TODO: is this right?
+  $: scaleFactor = Math.abs((yScale(maxY) - yScale(minY)) / (maxY - minY)); // TODO: is this right?
 
-  $: yPairs = zip(ysAtX1, ysAtX2);
+  $: yPairs = zip(atX1.ys, atX2.ys);
 
   $: minY = Math.min.apply(null, yTicks);
   $: maxY = Math.max.apply(null, yTicks);
@@ -49,16 +49,20 @@
   <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
 
   <!-- data -->
-  <g transform="rotate({covProps.angle} {xScale(0)} {yScale(0)})">
-    {#each sigmaContours as sigma}
-      <ellipse
-        class="path-area"
-        cx={xScale(0)}
-        cy={yScale(0)}
-        rx={yFactor * sigma * covProps.width}
-        ry={yFactor * sigma * covProps.length}
-      />
-    {/each}
+  <g
+    transform="translate({scaleFactor * atX1.mean} {-scaleFactor * atX2.mean})"
+  >
+    <g transform="rotate({covProps.angle} {xScale(0)} {yScale(0)})">
+      {#each sigmaContours as sigma}
+        <ellipse
+          class="path-area"
+          cx={xScale(0)}
+          cy={yScale(0)}
+          rx={scaleFactor * sigma * covProps.width}
+          ry={scaleFactor * sigma * covProps.length}
+        />
+      {/each}
+    </g>
   </g>
 
   {#each yPairs as ys, i}

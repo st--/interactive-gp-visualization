@@ -7,7 +7,7 @@
   import { getSVGpoint } from "./getsvgpoint.js";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
-  export let xs, means, marginalVariances, samples, points, ysAtX1, ysAtX2;
+  export let xs, means, marginalVariances, samples, points, atX1, atX2;
 
   let svg;
   let width = 500;
@@ -99,7 +99,7 @@
     <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />
   {/each}
 
-  {#each ysAtX1 as y1, i}
+  {#each atX1.ys as y1, i}
     <circle
       cx={xScale($x1)}
       cy={yScale(y1)}
@@ -107,7 +107,7 @@
       style="fill: {sampleColor(i)};"
     />
   {/each}
-  {#each ysAtX2 as y2, i}
+  {#each atX2.ys as y2, i}
     <circle
       cx={xScale($x2)}
       cy={yScale(y2)}

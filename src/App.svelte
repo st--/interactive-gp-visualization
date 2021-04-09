@@ -57,10 +57,12 @@ Future thoughts:
   $: samples = sampleMvn(means, covSqrt, $vs);
 
   // TODO: linear interpolation between two points
-  $: ysAtX1 = samples.getRow(getIndexInSorted(xs, $x1));
-  $: ysAtX2 = samples.getRow(getIndexInSorted(xs, $x2));
+  $: getDataAt = (idx) => {
+    return { ys: samples.getRow(idx), mean: means[idx] };
+  };
+  $: atX1 = getDataAt(getIndexInSorted(xs, $x1));
+  $: atX2 = getDataAt(getIndexInSorted(xs, $x2));
 
-  // TODO: either subtract mean or shift axes in Covariance plot accordingly
   $: covY1Y2 = gp.cov([$x1, $x2]);
   $: covProps = covEllipse(covY1Y2);
 
@@ -93,12 +95,12 @@ Future thoughts:
         {marginalVariances}
         {samples}
         bind:points
-        {ysAtX1}
-        {ysAtX2}
+        {atX1}
+        {atX2}
       />
     </div>
     <div class="squarechart" style="grid-area: covariance;">
-      <Covariance {ysAtX1} {ysAtX2} {covProps} />
+      <Covariance {atX1} {atX2} {covProps} />
     </div>
   </div>
   <RandomSample xsLength={num_grid} {numSamples} />
