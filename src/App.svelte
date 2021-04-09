@@ -30,6 +30,7 @@ Future thoughts:
   import Kernelplot from "./Kernelplot.svelte";
   import Covariance from "./Covariance.svelte";
   import RandomSample from "./RandomSample.svelte";
+  import KernelTwoD from "./KernelTwoD.svelte";
   import { x1, x2, vs } from "./store.js";
   import { sqexp, matern12, white, sumKernel } from "./kernels.js";
   import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
@@ -132,6 +133,9 @@ Future thoughts:
     <div class="squarechart" style="grid-area: covariance;">
       <Covariance {atX1} {atX2} {covProps} />
     </div>
+    <div class="squarechart" style="grid-area: kernel2d;">
+      <KernelTwoD {covMat} />
+    </div>
   </div>
   <RandomSample xsLength={xs.length} />
   <button
@@ -166,7 +170,7 @@ Future thoughts:
     grid-template-rows: 30% 70%;
     grid-template-columns: 70% 30%;
     grid-template-areas:
-      "kernel ."
+      "kernel kernel2d"
       "line covariance";
   }
   .chart {
