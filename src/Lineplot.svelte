@@ -11,7 +11,14 @@
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
   import YIndicatorBar from "./YIndicatorBar.svelte";
-  export let xs, means, marginalVariances, samples, points, atX1, atX2;
+  export let xs,
+    means,
+    marginalVariances,
+    samples,
+    points,
+    atX1,
+    atX2,
+    plotProps;
 
   let svg;
   let width = 500;
@@ -114,40 +121,48 @@
   <YIndicatorBar {xScale} {yScale} />
 
   <!-- data -->
-  <path class="path-area" d={areaConfidence2} />
-  <path class="path-area" d={areaConfidence1} />
-  <path class="path-line" d={pathMean} />
-  <path
-    class="path-line"
-    d={pathMarginal1}
-    style="stroke: red; stroke-width: 2;"
-  />
-  <path
-    class="path-line"
-    d={pathMarginal2}
-    style="stroke: orange; stroke-width: 2;"
-  />
-
-  {#each samplePaths as path, i}
-    <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />
-  {/each}
-
-  {#each atX1.ys as y1, i}
-    <circle
-      cx={xScale($x1)}
-      cy={yScale(y1)}
-      r="3"
-      style="fill: {sampleColor(i)};"
+  {#if plotProps.confidence}
+    <path class="path-area" d={areaConfidence2} />
+    <path class="path-area" d={areaConfidence1} />
+  {/if}
+  {#if plotProps.mean}
+    <path class="path-line" d={pathMean} style="stroke-dasharray: 5;" />
+  {/if}
+  {#if plotProps.marginals}
+    <path
+      class="path-line"
+      d={pathMarginal1}
+      style="stroke: red; stroke-width: 2;"
     />
-  {/each}
-  {#each atX2.ys as y2, i}
-    <circle
-      cx={xScale($x2)}
-      cy={yScale(y2)}
-      r="3"
-      style="fill: {sampleColor(i)};"
+    <path
+      class="path-line"
+      d={pathMarginal2}
+      style="stroke: orange; stroke-width: 2;"
     />
-  {/each}
+  {/if}
+
+  {#if plotProps.samples}
+    {#each samplePaths as path, i}
+      <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />
+    {/each}
+
+    {#each atX1.ys as y1, i}
+      <circle
+        cx={xScale($x1)}
+        cy={yScale(y1)}
+        r="3"
+        style="fill: {sampleColor(i)};"
+      />
+    {/each}
+    {#each atX2.ys as y2, i}
+      <circle
+        cx={xScale($x2)}
+        cy={yScale(y2)}
+        r="3"
+        style="fill: {sampleColor(i)};"
+      />
+    {/each}
+  {/if}
 
   {#each points as point}
     <circle

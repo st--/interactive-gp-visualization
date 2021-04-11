@@ -8,9 +8,9 @@ To dos:
 - Kernel plot: automatic y-axis scaling?
 - can we unify XIndicators/YIndicatorBar/YIndicatorCross in a single component?
 - make pixel-scale of marginal distributions in Lineplot / Covariance equal to each other
+- convert 1 and 2 sigma to 50/95% confidence ?
 
 More features:
-- checkbox for showing/hiding mean/credible intervals
 - add two observations when clicking in Covariance plot?
 - select prior mean function (linear, quadratic, sine?)
 - select prior kernel function (sqexp, mat32, mat12, periodic?)
@@ -35,6 +35,13 @@ Future thoughts:
   import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
+
+  let plotProps = {
+    mean: true,
+    confidence: true,
+    samples: true,
+    marginals: true,
+  };
 
   let num_grid = 40;
   $: xs = linspace(0, 6, num_grid);
@@ -127,19 +134,36 @@ Future thoughts:
         bind:points
         {atX1}
         {atX2}
+        {plotProps}
       />
     </div>
     <div class="squarechart" style="grid-area: covariance;">
-      <Covariance {atX1} {atX2} {covProps} />
+      <Covariance {atX1} {atX2} {covProps} {plotProps} />
     </div>
   </div>
-  <RandomSample xsLength={xs.length} />
-  <button
-    class="btn"
-    on:click={(event) => {
-      points = [];
-    }}>Reset points</button
-  >
+  <div>
+    <RandomSample xsLength={xs.length} />
+    <button
+      class="btn"
+      on:click={(event) => {
+        points = [];
+      }}>Reset points</button
+    >
+    <label
+      ><input type="checkbox" bind:checked={plotProps.mean} />Plot mean</label
+    >
+    <label
+      ><input type="checkbox" bind:checked={plotProps.confidence} />Plot 1 and 2
+      sigma confidence</label
+    >
+    <label
+      ><input type="checkbox" bind:checked={plotProps.samples} />Plot samples</label
+    >
+    <label
+      ><input type="checkbox" bind:checked={plotProps.marginals} />Plot
+      marginals</label
+    >
+  </div>
   <div>
     [
     <a href="https://github.com/st--/interactive-gp-visualization/"

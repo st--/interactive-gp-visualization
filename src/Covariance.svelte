@@ -10,7 +10,7 @@
   import { pathGenerator, offset } from "./myplot.js";
   import Axes from "./Axes.svelte";
   import YIndicatorCross from "./YIndicatorCross.svelte";
-  export let atX1, atX2, covProps;
+  export let atX1, atX2, covProps, plotProps;
 
   let svg;
   let width = 300;
@@ -83,41 +83,56 @@
   <YIndicatorCross {xScale} {yScale} {minY} {maxY} />
 
   <!-- data -->
-  <path
-    class="path-line"
-    d={pathMarginal1}
-    style="stroke: red; stroke-width: 2;"
-  />
-  <path
-    class="path-line"
-    d={pathMarginal2}
-    style="stroke: orange; stroke-width: 2;"
-  />
-
-  <g
-    transform="translate({scaleFactor * atX1.mean} {-scaleFactor * atX2.mean})"
-  >
-    <g transform="rotate({covProps.angle} {xScale(0)} {yScale(0)})">
-      {#each sigmaContours as sigma}
-        <ellipse
-          class="path-area"
-          cx={xScale(0)}
-          cy={yScale(0)}
-          rx={scaleFactor * sigma * covProps.width}
-          ry={scaleFactor * sigma * covProps.length}
-        />
-      {/each}
-    </g>
-  </g>
-
-  {#each yPairs as ys, i}
-    <circle
-      cx={xScale(ys[0])}
-      cy={yScale(ys[1])}
-      r="3"
-      style="fill: {sampleColor(i)};"
+  {#if plotProps.marginals}
+    <path
+      class="path-line"
+      d={pathMarginal1}
+      style="stroke: red; stroke-width: 2;"
     />
-  {/each}
+    <path
+      class="path-line"
+      d={pathMarginal2}
+      style="stroke: orange; stroke-width: 2;"
+    />
+  {/if}
+
+  {#if plotProps.confidence}
+    <g
+      transform="translate({scaleFactor * atX1.mean} {-scaleFactor *
+        atX2.mean})"
+    >
+      <g transform="rotate({covProps.angle} {xScale(0)} {yScale(0)})">
+        {#each sigmaContours as sigma}
+          <ellipse
+            class="path-area"
+            cx={xScale(0)}
+            cy={yScale(0)}
+            rx={scaleFactor * sigma * covProps.width}
+            ry={scaleFactor * sigma * covProps.length}
+          />
+        {/each}
+      </g>
+    </g>
+  {/if}
+  {#if plotProps.mean}
+    <circle
+      cx={xScale(atX1.mean)}
+      cy={yScale(atX2.mean)}
+      r="1"
+      style="fill: rgba(0, 100, 100);"
+    />
+  {/if}
+
+  {#if plotProps.samples}
+    {#each yPairs as ys, i}
+      <circle
+        cx={xScale(ys[0])}
+        cy={yScale(ys[1])}
+        r="3"
+        style="fill: {sampleColor(i)};"
+      />
+    {/each}
+  {/if}
 </svg>
 
 <style>
