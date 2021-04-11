@@ -78,105 +78,143 @@ Future thoughts:
   let points = [];
 </script>
 
-<div>
-  <h2>Visualization</h2>
+<div class="container">
+  <div class="centered">
+    <h2>Visualization</h2>
+    <div>A Gaussian Process visualisation.</div>
 
-  <div class="text-container">
-    <div class="text-explanation" style="grid-area: line;">
-      <em>Bottom left:</em>
-      Visualises the Gaussian process f(x). Shaded areas and central line: +/- 1
-      and 2 sigma confidence bands and mean. Colored lines: samples from the Gaussian
-      process. Black circles: observations. Vertical lines at x1 (red) and x2 (orange).
-      <br />
-      <strong>Click on empty space:</strong> add a new observation.
-      <strong>Click on black circle:</strong>
-      remove observation.
-      <strong>Shift+Click:</strong> change x1.
-      <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
+    <div class="grid">
+      <div class="chart kernel">
+        <h3>Kernel</h3>
+        <div class="widget">
+          <Kernelplot {xs} ys={k1s} />
+        </div>
+        <div class="widget-description">
+          Visualises a slice through the covariance function or kernel k(x1, .) as a
+          function of the second argument.
+          <br />
+          <strong>Click:</strong> change x1 (<strong> + Shift:</strong> change x2).
+          <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
+        </div>
+      </div>
+      <div class="chart line">
+        <h3>Line</h3>
+        <div class="widget">
+          <Lineplot
+            {xs}
+            {means}
+            {marginalVariances}
+            {samples}
+            bind:points
+            {atX1}
+            {atX2}
+          />
+        </div>
+        <div class="widget-description">
+          Visualises the Gaussian process f(x). Shaded areas and central line: +/- 1
+          and 2 sigma confidence bands and mean. Colored lines: samples from the Gaussian
+          process. Black circles: observations. Vertical lines at x1 (red) and x2 (orange).
+          <br />
+          <strong>Click on empty space:</strong> add a new observation.
+          <strong>Click on black circle:</strong>
+          remove observation.
+          <strong>Shift+Click:</strong> change x1.
+          <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
+        </div>
+      </div>
+      <div class="chart covariance">
+        <h3>Covariance</h3>
+        <div class="widget">
+          <Covariance {atX1} {atX2} {covProps} />
+        </div>
+        <div class="widget-description">
+          Visualises the covariance between f(x1) and f(x2) (shaded areas) and the samples
+          evaluated at those points (colored circles, corresponding to the colored lines
+          in bottom-left plot).
+        </div>
+      </div>
+      <div class="controls">
+        <h3>Controls</h3>
+        <div class="widget">
+          <RandomSample xsLength={xs.length} />
+          <button
+            class="btn"
+            on:click={(event) => {
+              points = [];
+            }}>Reset points</button>
+        </div>
+        <div class="widget-description">
+          <em>Controls (below plots):</em>
+          change number of samples; re-draw random samples; remove all points.
+        </div>
+      </div>
     </div>
-    <div class="text-explanation" style="grid-area: kernel;">
-      <em>Top left:</em>
-      Visualises a slice through the covariance function or kernel k(x1, .) as a
-      function of the second argument.
-      <br />
-      <strong>Click:</strong> change x1 (<strong> + Shift:</strong> change x2).
-      <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
-    </div>
-    <div class="text-explanation" style="grid-area: covariance;">
-      <em>Right:</em>
-      Visualises the covariance between f(x1) and f(x2) (shaded areas) and the samples
-      evaluated at those points (colored circles, corresponding to the colored lines
-      in bottom-left plot).
-    </div>
-    <div class="text-explanation" style="grid-area: controls;">
-      <em>Controls (below plots):</em>
-      change number of samples; re-draw random samples; remove all points.
-    </div>
-  </div>
-
-  <div class="plot-container">
-    <div class="chart" style="grid-area: kernel;">
-      <Kernelplot {xs} ys={k1s} />
-    </div>
-    <div class="chart" style="grid-area: line;">
-      <Lineplot
-        {xs}
-        {means}
-        {marginalVariances}
-        {samples}
-        bind:points
-        {atX1}
-        {atX2}
-      />
-    </div>
-    <div class="squarechart" style="grid-area: covariance;">
-      <Covariance {atX1} {atX2} {covProps} />
-    </div>
-  </div>
-  <RandomSample xsLength={xs.length} />
-  <button
-    class="btn"
-    on:click={(event) => {
-      points = [];
-    }}>Reset points</button
-  >
-  <div>
-    [
-    <a href="https://github.com/st--/interactive-gp-visualization/"
-      >Source on GitHub</a
-    >
-    ]
   </div>
 </div>
 
 <style>
-  .text-container {
+  .container {
+    display: flex;
+    justify-content: center;
+  }
+  .centered {
+    margin: 20px;
     max-width: 1200px;
-    display: grid;
-    grid-template-columns: 60% auto;
-    grid-template-areas:
-      "kernel covariance"
-      "line controls";
   }
-  .text-explanation {
-    margin: 10px;
-  }
-  .plot-container {
+
+  .grid {
+    margin: 30px 0px;
     display: grid;
-    grid-template-rows: 30% 70%;
-    grid-template-columns: 70% 30%;
+    justify-content: center;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: 7fr 3fr;
+    grid-gap: 30px;
     grid-template-areas:
       "kernel ."
-      "line covariance";
+      "line covariance"
+      "controls .";
   }
-  .chart {
-    margin: 20px 20px;
+
+  .chart.kernel {
+    grid-area: kernel;
+  }
+  .chart.kernel .widget {
+    height: 150px;
     background-color: #fafafa;
   }
-  .squarechart {
-    min-width: 200px;
-    min-height: 200px;
-    margin: 20px 20px;
+
+  .chart.line {
+    grid-area: line;
+  }
+  .chart.line .widget {
+    height: 300px;
     background-color: #fafafa;
+  }
+
+  .chart.covariance {
+    grid-area: covariance;
+  }
+  .chart.covariance .widget {
+    height: 300px;
+    background-color: #fafafa;
+  }
+
+  .controls {
+    grid-area: controls;
+  }
+
+  .widget-description {
+    margin-top: 10px;
+  }
+
+  @media (max-width: 800px) {
+    .grid {
+      grid-template-columns: auto;
+      grid-template-areas:
+        "kernel"
+        "line"
+        "covariance"
+        "controls";
+    }
   }
 </style>
