@@ -17,7 +17,7 @@
   let width = 500;
   let height = 200;
 
-  const padding = { top: 20, right: 40, bottom: 40, left: 25 };
+  const padding = { top: 25, right: 40, bottom: 40, left: 25 };
 
   $: xTicks = [0, 1, 2, 3, 4, 5, 6];
 

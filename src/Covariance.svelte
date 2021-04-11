@@ -20,17 +20,19 @@
 
   const sigmaContours = [1, 2];
 
-  $: yTicks = height > 180 ? [-3, -2, -1, 0, 1, 2, 3] : [-3, 0, 3];
+  $: yTicks = size > 180 ? [-3, -2, -1, 0, 1, 2, 3] : [-3, 0, 3];
   $: xTicks = yTicks;
 
-  // TODO: fix aspect ratio to be square!
+  // fix aspect ratio to be square:
+  $: size = Math.min(width, height);
+
   $: xScale = scaleLinear()
     .domain([minY, maxY])
-    .range([padding.left, width - padding.right]);
+    .range([padding.left, size - padding.right]);
 
   $: yScale = scaleLinear()
     .domain([minY, maxY])
-    .range([height - padding.bottom, padding.top]);
+    .range([size - padding.bottom, padding.top]);
 
   $: scaleFactor = Math.abs((yScale(maxY) - yScale(minY)) / (maxY - minY)); // TODO: is this right?
 
@@ -69,7 +71,15 @@
 <svelte:window on:resize={resize} />
 
 <svg bind:this={svg} on:mousemove={handleMousemove}>
-  <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
+  <Axes
+    {xScale}
+    {yScale}
+    {xTicks}
+    {yTicks}
+    width={size}
+    height={size}
+    {padding}
+  />
   <YIndicatorCross {xScale} {yScale} {minY} {maxY} />
 
   <!-- data -->
