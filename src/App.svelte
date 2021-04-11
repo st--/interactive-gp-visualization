@@ -6,12 +6,12 @@ To dos:
 - axis & line labels (LaTeX/ketex?)
 - adjust axis ticks when resizing
 - Kernel plot: automatic y-axis scaling?
-- marginal distribution plots for Covariance and Lineplot
 - can we unify XIndicators/YIndicatorBar/YIndicatorCross in a single component?
 - make pixel-scale of marginal distributions in Lineplot / Covariance equal to each other
 
 More features:
 - checkbox for showing/hiding mean/credible intervals
+- add two observations when clicking in Covariance plot?
 - select prior mean function (linear, quadratic, sine?)
 - select prior kernel function (sqexp, mat32, mat12, periodic?)
 - adjustable likelihood noise scale (input slider?)
