@@ -7,7 +7,7 @@
   import { y1, y2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
   import { linspace, gaussian } from "./mymath.js";
-  import { pathGenerator, offset } from "./myplot.js";
+  import { pathGenerator } from "./myplot.js";
   import Axes from "./Axes.svelte";
   import YIndicatorCross from "./YIndicatorCross.svelte";
   export let atX1, atX2, covProps, plotProps;
@@ -42,14 +42,32 @@
   $: maxY = Math.max.apply(null, yTicks);
 
   $: makePath = pathGenerator(xScale, yScale);
+
   // marginal y distributions at x1 and x2
   // TODO unify with Lineplot?
-  let num_grid = 60;
+  const num_grid = 60;
   $: ys = linspace(minY, maxY, num_grid);
+  const mMax = 1;
+  const mWidth = 50;
+  $: mScale = scaleLinear().domain([0, mMax]).range([0, mWidth]);
+
   $: marginalDistX1 = gaussian(atX1.mean, atX1.variance);
   $: marginalDistX2 = gaussian(atX2.mean, atX2.variance);
-  $: pathMarginal1 = makePath(ys, ys.map(offset(maxY, marginalDistX1)));
-  $: pathMarginal2 = makePath(ys.map(offset(maxY, marginalDistX2)), ys);
+  $: pathMarginal1 = pathGenerator(
+    xScale,
+    mScale,
+    0,
+    yScale(maxY)
+  )(
+    ys,
+    ys.map(marginalDistX1).map((p) => -p) // negate to avoid two separate mScales
+  );
+  $: pathMarginal2 = pathGenerator(
+    mScale,
+    yScale,
+    xScale(maxY),
+    0
+  )(ys.map(marginalDistX2), ys);
 
   onMount(resize);
 

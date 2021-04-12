@@ -7,7 +7,7 @@
   import { x1, x2, y1, y2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
   import { linspace, gaussian } from "./mymath.js";
-  import { pathGenerator, offset } from "./myplot.js";
+  import { pathGenerator } from "./myplot.js";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
   import YIndicatorBar from "./YIndicatorBar.svelte";
@@ -54,12 +54,26 @@
 
   // marginal y distributions at x1 and x2
   // TODO unify with Covariance?
-  let num_grid = 60;
+  const num_grid = 60;
   $: ys = linspace(minY, maxY, num_grid);
+  const mMax = 1;
+  const mWidth = 50;
+  $: mScale = scaleLinear().domain([0, mMax]).range([0, mWidth]);
+
   $: marginalDistX1 = gaussian(atX1.mean, atX1.variance);
   $: marginalDistX2 = gaussian(atX2.mean, atX2.variance);
-  $: pathMarginal1 = makePath(ys.map(offset($x1, marginalDistX1)), ys);
-  $: pathMarginal2 = makePath(ys.map(offset($x2, marginalDistX2)), ys);
+  $: pathMarginal1 = pathGenerator(
+    mScale,
+    yScale,
+    xScale($x1),
+    0
+  )(ys.map(marginalDistX1), ys);
+  $: pathMarginal2 = pathGenerator(
+    mScale,
+    yScale,
+    xScale($x2),
+    0
+  )(ys.map(marginalDistX2), ys);
 
   // one and two sigma confidence intervals
   $: sigma = marginalVariances.map((v) => Math.sqrt(v));

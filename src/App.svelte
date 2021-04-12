@@ -7,7 +7,6 @@ To dos:
 - adjust axis ticks when resizing
 - Kernel plot: automatic y-axis scaling?
 - can we unify XIndicators/YIndicatorBar/YIndicatorCross in a single component?
-- make pixel-scale of marginal distributions in Lineplot / Covariance equal to each other
 - convert 1 and 2 sigma to 50/95% confidence ?
 
 More features:
