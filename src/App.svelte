@@ -29,6 +29,7 @@ Future thoughts:
   import Kernelplot from "./Kernelplot.svelte";
   import Covariance from "./Covariance.svelte";
   import RandomSample from "./RandomSample.svelte";
+  import ConfigPlot from "./ConfigPlot.svelte";
   import { x1, x2, vs } from "./store.js";
   import { sqexp, matern12, white, sumKernel } from "./kernels.js";
   import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
@@ -148,20 +149,7 @@ Future thoughts:
         points = [];
       }}>Reset points</button
     >
-    <label
-      ><input type="checkbox" bind:checked={plotProps.mean} />Plot mean</label
-    >
-    <label
-      ><input type="checkbox" bind:checked={plotProps.confidence} />Plot 1 and 2
-      sigma confidence</label
-    >
-    <label
-      ><input type="checkbox" bind:checked={plotProps.samples} />Plot samples</label
-    >
-    <label
-      ><input type="checkbox" bind:checked={plotProps.marginals} />Plot
-      marginals</label
-    >
+    <ConfigPlot bind:plotProps bind:num_grid />
   </div>
   <div>
     [
