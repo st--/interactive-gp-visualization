@@ -2,6 +2,7 @@
 
 import * as m from "ml-matrix";
 import { covMatrix } from "./kernels.js";
+import { cholesky, symmetrise } from "./mymath.js";
 
 export function prior(kernel) {
   function mean(xs) {
@@ -13,7 +14,7 @@ export function prior(kernel) {
   return { mean, cov, kernel };
 }
 
-export function posterior(kernel, X, Y) {
+export function posterior(kernel, X, Y, noiseVariance = 0.0) {
   // mean(*) = K*x (Kxx⁻¹ Y)
   // cov(*, *') = K**' - K*x Kxx⁻¹ Kx*'
   function covYf(xs) {
@@ -26,8 +27,11 @@ export function posterior(kernel, X, Y) {
     return kyf;
   }
 
-  const kyy = covMatrix(kernel, X);
+  const noiseVarianceMatrix = m.Matrix.eye(X.length, X.length, noiseVariance);
+  const kyy = covMatrix(kernel, X).add(noiseVarianceMatrix);
+  //const L = cholesky(symmetrise(kyy));
   const kyyinv_Y = m.solve(kyy, m.Matrix.columnVector(Y));
+  //const kyyinv_Y = m.solve(L.transpose(), m.solve(L, m.Matrix.columnVector(Y)));
 
   function mean(xs) {
     const kyf = covYf(xs);
@@ -39,7 +43,9 @@ export function posterior(kernel, X, Y) {
     const kyf = covYf(xs);
     // TODO: replace with symmetric Cholesky solve
     const kyyinv_kyf = m.solve(kyy, kyf);
+    //const Linv_kyf = m.solve(L.transpose(), m.solve(L, kyf));
     const kfy_kyyinv_kyf = kyf.transpose().mmul(kyyinv_kyf);
+    //const kfy_kyyinv_kyf = Linv_kyf.transpose().mmul(Linv_kyf);
     return kff.subtract(kfy_kyyinv_kyf);
   }
 

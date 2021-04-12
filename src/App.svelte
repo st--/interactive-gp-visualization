@@ -1,6 +1,7 @@
 <!-- Copyright (c) 2021 ST John
 
 To dos:
+- Bug: changing number of grid points to larger than initial value leads to hanging
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
 - fix relative size when window too small...
 - axis & line labels (LaTeX/ketex?)
@@ -13,7 +14,6 @@ More features:
 - add two observations when clicking in Covariance plot?
 - select prior mean function (linear, quadratic, sine?)
 - select prior kernel function (sqexp, mat32, mat12, periodic?)
-- adjustable likelihood noise scale (input slider?)
 - smoothly animated samples (see http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf)
 - include log marginal likelihood
 - include 2D visualisation of covariance function (contour plot)
@@ -30,6 +30,7 @@ Future thoughts:
   import Covariance from "./Covariance.svelte";
   import RandomSample from "./RandomSample.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
+  import ConfigData from "./ConfigData.svelte";
   import { x1, x2, vs } from "./store.js";
   import { sqexp, matern12, white, sumKernel } from "./kernels.js";
   import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
@@ -43,7 +44,8 @@ Future thoughts:
     marginals: true,
   };
 
-  let num_grid = 40;
+  let num_grid = 100;
+  let noiseScale = 0.0;
   $: xs = linspace(0, 6, num_grid);
 
   const k = sqexp();
@@ -54,7 +56,8 @@ Future thoughts:
       ? posterior(
           kernelWithJitter,
           points.map((p) => p.x),
-          points.map((p) => p.y)
+          points.map((p) => p.y),
+          noiseScale * noiseScale
         )
       : prior(kernelWithJitter);
 
@@ -149,6 +152,7 @@ Future thoughts:
         points = [];
       }}>Reset points</button
     >
+    <ConfigData bind:noiseScale />
     <ConfigPlot bind:plotProps bind:num_grid />
   </div>
   <div>
