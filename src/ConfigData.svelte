@@ -19,3 +19,19 @@
     </option>
   {/each}
 </select>
+{#each selectedKernel.parameters as parameter}
+  <label>
+    {parameter.name}:
+    <input
+      type="number"
+      bind:value={parameter.value}
+      step={parameter.step}
+    /><input
+      type="range"
+      bind:value={parameter.value}
+      min={parameter.min}
+      max={parameter.max}
+      step={parameter.step}
+    />
+  </label>
+{/each}

@@ -2,6 +2,21 @@
 
 import * as m from "ml-matrix";
 
+const paramVariance = {
+  name: "variance",
+  value: 1.0,
+  min: 0.1,
+  max: 10.0,
+  step: 0.1,
+};
+const paramLengthscale = {
+  name: "lengthscale",
+  value: 1.0,
+  min: 0.1,
+  max: 10.0,
+  step: 0.1,
+};
+
 export function sqexp(variance = 1, lengthscale = 1) {
   const twosqlength = 2 * lengthscale * lengthscale;
   return (x1, x2) => {
@@ -10,10 +25,26 @@ export function sqexp(variance = 1, lengthscale = 1) {
   };
 }
 
+export function makeSqexp() {
+  return {
+    description: "squared exponential (exponentiated quadratic)",
+    parameters: [paramVariance, paramLengthscale],
+    kernel: sqexp,
+  };
+}
+
 export function matern12(variance = 1, lengthscale = 1) {
   return (x1, x2) => {
     const dist = Math.abs(x1 - x2);
     return variance * Math.exp(-dist / lengthscale);
+  };
+}
+
+export function makeMatern12() {
+  return {
+    description: "exponential (Matérn 1/2)",
+    parameters: [paramVariance, paramLengthscale],
+    kernel: matern12,
   };
 }
 
@@ -32,9 +63,42 @@ export function periodic(variance = 1, lengthscale = 1.4, period = 2) {
   };
 }
 
+const paramPeriod = {
+  name: "period",
+  value: 2.0,
+  min: 1.0,
+  max: 5.0,
+  step: 0.1,
+};
+
+export function makePeriodic() {
+  return {
+    description: "periodic",
+    parameters: [paramVariance, paramLengthscale, paramPeriod],
+    kernel: periodic,
+  };
+}
+
+const paramBias = { name: "bias", value: 0.0, min: 0.0, max: 5.0, step: 0.1 };
+const paramCenter = {
+  name: "center",
+  value: 2.0,
+  min: -2.0,
+  max: 8.0,
+  step: 0.1,
+};
+
 export function linear(variance = 1, bias = 0, center = 0) {
   return (x1, x2) => {
     return bias + variance * (x1 - center) * (x2 - center);
+  };
+}
+
+export function makeLinear() {
+  return {
+    description: "linear",
+    parameters: [paramVariance, paramBias, paramCenter],
+    kernel: linear,
   };
 }
 

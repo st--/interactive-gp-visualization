@@ -15,7 +15,6 @@ More features:
 - add two observations when clicking in Covariance plot?
 - select prior mean function (linear, quadratic, sine?)
 - add more kernels (matern32, matern52, ...)
-- make kernel parameters (variance/lengthscale, period etc.) configurable
 - smoothly animated samples (see http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf)
 - include log marginal likelihood
 - include 2D visualisation of covariance function (contour plot)
@@ -35,18 +34,24 @@ Future thoughts:
   import ConfigPlot from "./ConfigPlot.svelte";
   import ConfigData from "./ConfigData.svelte";
   import { x1, x2, vs } from "./store.js";
-  import { sqexp, matern12, periodic, white, sumKernel } from "./kernels.js";
+  import {
+    sqexp,
+    makeSqexp,
+    makeMatern12,
+    makePeriodic,
+    makeLinear,
+    white,
+    sumKernel,
+  } from "./kernels.js";
   import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
   let kernelChoices = [
-    {
-      kernel: sqexp,
-      description: "squared exponential (exponentiated quadratic)",
-    },
-    { kernel: matern12, description: "exponential (Matérn 1/2)" },
-    { kernel: periodic, description: "periodic (period=2)" },
+    makeSqexp(),
+    makeMatern12(),
+    makePeriodic(),
+    makeLinear(),
   ];
   let selectedKernel = kernelChoices[0];
 
@@ -62,7 +67,9 @@ Future thoughts:
   $: xs = linspace(0, 6, num_grid);
 
   $: kernelWithJitter = sumKernel([
-    selectedKernel ? selectedKernel.kernel() : sqexp(),
+    selectedKernel
+      ? selectedKernel.kernel(...selectedKernel.parameters.map((p) => p.value))
+      : sqexp(),
     white(1e-6),
   ]);
 
