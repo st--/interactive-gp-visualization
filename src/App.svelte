@@ -1,7 +1,6 @@
 <!-- Copyright (c) 2021 ST John
 
 To dos:
-- Bug: changing number of grid points to larger than initial value leads to hanging
 - Bug: changing MathJax's settings (e.g. inlineMath) does not seem to get picked up
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
 - fix relative size when window too small...
@@ -62,7 +61,7 @@ Future thoughts:
     marginals: true,
   };
 
-  let num_grid = 100;
+  let num_grid = 200;
   let noiseScale = 0.0;
   $: xs = linspace(0, 6, num_grid);
 

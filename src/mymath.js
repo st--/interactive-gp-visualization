@@ -67,9 +67,7 @@ export function randn(rows, cols, seed) {
 }
 
 export function sampleMvn(meanVec, covSqrt, v) {
-  //export function sampleMvn(meanVec, covSqrt, numSamples=1) {
-  //const v = randn(meanVec.length, numSamples);
-  if (v === undefined) {
+  if (!v || covSqrt.columns != v.rows) {
     return m.Matrix.zeros(meanVec.length, 1);
   }
   const Lv = covSqrt.mmul(v);
