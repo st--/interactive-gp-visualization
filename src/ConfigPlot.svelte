@@ -4,8 +4,8 @@
 
 <label><input type="checkbox" bind:checked={plotProps.mean} />Plot mean</label>
 <label
-  ><input type="checkbox" bind:checked={plotProps.confidence} />Plot 1 and 2
-  sigma confidence</label
+  ><input type="checkbox" bind:checked={plotProps.confidence} />Plot \( \pm
+  \sigma \) and \( \pm 2 \sigma \) confidence</label
 >
 <label
   ><input type="checkbox" bind:checked={plotProps.samples} />Plot samples</label

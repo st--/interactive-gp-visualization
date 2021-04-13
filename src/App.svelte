@@ -188,6 +188,7 @@ Future thoughts:
     </div>
   </div>
   <div>
+    <h4>Settings</h4>
     <RandomSample xsLength={xs.length} />
     <button
       class="btn"
@@ -195,7 +196,13 @@ Future thoughts:
         points = [];
       }}>Reset points</button
     >
+  </div>
+  <div>
+    <h4>Hyperparameters</h4>
     <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
+  </div>
+  <div>
+    <h4>Plotting options</h4>
     <ConfigPlot bind:plotProps bind:num_grid />
   </div>
   <div>
