@@ -3,7 +3,8 @@
   export let noiseScale, selectedKernel, kernelChoices;
 
   let noiseVarianceProps = {
-    name: "standard deviation of noise",
+    name: "standard deviation",
+    formula: "\\sigma_\\text{noise}",
     min: 0.0,
     max: 3.0,
     step: 0.1,
@@ -22,6 +23,7 @@
       </option>
     {/each}
   </select>
+  \( k(x, x') = {selectedKernel.formula} \)
 
   {#each selectedKernel.parameters as parameter}
     <ParameterSlider bind:value={parameter.value} {...parameter} />

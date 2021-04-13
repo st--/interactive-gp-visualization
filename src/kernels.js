@@ -4,6 +4,7 @@ import * as m from "ml-matrix";
 
 const paramVariance = {
   name: "variance",
+  formula: "\\sigma^2",
   value: 1.0,
   min: 0.1,
   max: 10.0,
@@ -11,6 +12,7 @@ const paramVariance = {
 };
 const paramLengthscale = {
   name: "lengthscale",
+  formula: "\\ell",
   value: 1.0,
   min: 0.1,
   max: 10.0,
@@ -28,6 +30,7 @@ export function sqexp(variance = 1, lengthscale = 1) {
 export function makeSqexp() {
   return {
     description: "squared-exponential",
+    formula: "\\sigma^2 \\exp\\Big(-\\frac{(x-x')^2}{2\\ell^2}\\Big)",
     parameters: [paramVariance, paramLengthscale],
     kernel: sqexp,
   };
@@ -43,6 +46,7 @@ export function matern12(variance = 1, lengthscale = 1) {
 export function makeMatern12() {
   return {
     description: "exponential (Matérn 1/2)",
+    formula: "\\sigma^2 \\exp\\Big(-\\frac{|x-x'|}{\\ell}\\Big)",
     parameters: [paramVariance, paramLengthscale],
     kernel: matern12,
   };
@@ -65,6 +69,7 @@ export function periodic(variance = 1, lengthscale = 1.4, period = 2) {
 
 const paramPeriod = {
   name: "period",
+  formula: "p",
   value: 2.0,
   min: 1.0,
   max: 5.0,
@@ -74,14 +79,24 @@ const paramPeriod = {
 export function makePeriodic() {
   return {
     description: "periodic",
+    formula:
+      "\\sigma^2 \\exp\\Big(- 2 \\frac{\\sin^2(\\pi |x-x'|/p)}{ell^2}\\Big)",
     parameters: [paramVariance, paramLengthscale, paramPeriod],
     kernel: periodic,
   };
 }
 
-const paramBias = { name: "bias", value: 0.0, min: 0.0, max: 5.0, step: 0.1 };
+const paramBias = {
+  name: "bias",
+  formula: "\\sigma^2_b",
+  value: 0.0,
+  min: 0.0,
+  max: 5.0,
+  step: 0.1,
+};
 const paramCenter = {
   name: "center",
+  formula: "x_c",
   value: 2.0,
   min: -2.0,
   max: 8.0,
@@ -97,6 +112,7 @@ export function linear(variance = 1, bias = 0, center = 0) {
 export function makeLinear() {
   return {
     description: "linear",
+    formula: "\\sigma^2 (x - x_c)(x' - x_c) + \\sigma^2_b",
     parameters: [paramVariance, paramBias, paramCenter],
     kernel: linear,
   };
