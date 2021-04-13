@@ -2,6 +2,7 @@
 
 To dos:
 - Bug: changing number of grid points to larger than initial value leads to hanging
+- Bug: changing MathJax's settings (e.g. inlineMath) does not seem to get picked up
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
 - fix relative size when window too small...
 - axis & line labels (LaTeX/ketex?)
@@ -26,6 +27,7 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
+  import { onMount } from "svelte";
   import Lineplot from "./Lineplot.svelte";
   import Kernelplot from "./Kernelplot.svelte";
   import Covariance from "./Covariance.svelte";
@@ -99,6 +101,24 @@ Future thoughts:
   $: covProps = covEllipse(covY1Y2);
 
   let points = [];
+
+  onMount(() => {
+    let script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+
+    script.onload = () => {
+      MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+        },
+        svg: { fontCache: "global" },
+      };
+    };
+    document.head.append(script);
+  });
 </script>
 
 <div>
@@ -107,29 +127,33 @@ Future thoughts:
   <div class="text-container">
     <div class="text-explanation" style="grid-area: line;">
       <em>Bottom left:</em>
-      Visualises the Gaussian process f(x). Shaded areas and central line: +/- 1
-      and 2 sigma confidence bands and mean. Colored lines: samples from the Gaussian
-      process. Black circles: observations. Vertical lines at x1 (red) and x2 (orange).
+      Visualises the Gaussian process \( f(x) \). Shaded areas and central line:
+      \( \pm \sigma \) and \( \pm 2 \sigma \) confidence bands and mean. Colored
+      lines: samples from the Gaussian process. Black circles: observations. Vertical
+      lines at \( x_1 \) (red) and \( x_2 \) (orange).
       <br />
       <strong>Click on empty space:</strong> add a new observation.
       <strong>Click on black circle:</strong>
       remove observation.
-      <strong>Shift+Click:</strong> change x1.
-      <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
+      <strong>Shift+Click:</strong> change \( x_1 \).
+      <strong>Move mouse:</strong> change \( x_2 \) (<strong> + Shift:</strong> change
+      \(x_1 \)).
     </div>
     <div class="text-explanation" style="grid-area: kernel;">
       <em>Top left:</em>
-      Visualises a slice through the covariance function or kernel k(x1, .) as a
-      function of the second argument.
+      Visualises a slice through the covariance function or kernel \( k(x_1, \cdot)
+      \) as a function of the second argument.
       <br />
-      <strong>Click:</strong> change x1 (<strong> + Shift:</strong> change x2).
-      <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
+      <strong>Click:</strong> change \( x_1 \) (<strong> + Shift:</strong>
+      change \( x_2 \)).
+      <strong>Move mouse:</strong> change \( x_2 \) (<strong> + Shift:</strong> change
+      \( x_1 \)).
     </div>
     <div class="text-explanation" style="grid-area: covariance;">
       <em>Right:</em>
-      Visualises the covariance between f(x1) and f(x2) (shaded areas) and the samples
-      evaluated at those points (colored circles, corresponding to the colored lines
-      in bottom-left plot).
+      Visualises the covariance between \( f(x_1) \) and \( f(x_2) \) (shaded areas)
+      and the samples evaluated at those points (colored circles, corresponding to
+      the colored lines in bottom-left plot).
     </div>
     <div class="text-explanation" style="grid-area: controls;">
       <em>Controls (below plots):</em>
