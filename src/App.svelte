@@ -190,15 +190,17 @@ Future thoughts:
   <div>
     <h4>Settings</h4>
     <RandomSample xsLength={xs.length} />
-    <button
-      class="btn"
-      on:click={(event) => {
-        points = [];
-      }}>Reset points</button
-    >
+    <div>
+      <button
+        class="btn"
+        on:click={(event) => {
+          points = [];
+        }}>Reset points</button
+      >
+    </div>
   </div>
   <div>
-    <h4>Hyperparameters</h4>
+    <h4>Kernel and likelihood</h4>
     <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
   </div>
   <div>

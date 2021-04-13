@@ -27,7 +27,7 @@ export function sqexp(variance = 1, lengthscale = 1) {
 
 export function makeSqexp() {
   return {
-    description: "squared exponential (exponentiated quadratic)",
+    description: "squared-exponential",
     parameters: [paramVariance, paramLengthscale],
     kernel: sqexp,
   };
