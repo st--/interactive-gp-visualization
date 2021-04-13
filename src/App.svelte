@@ -13,7 +13,8 @@ To dos:
 More features:
 - add two observations when clicking in Covariance plot?
 - select prior mean function (linear, quadratic, sine?)
-- select prior kernel function (sqexp, mat32, mat12, periodic?)
+- add more kernels (matern32, matern52, ...)
+- make kernel parameters (variance/lengthscale, period etc.) configurable
 - smoothly animated samples (see http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf)
 - include log marginal likelihood
 - include 2D visualisation of covariance function (contour plot)
@@ -32,10 +33,20 @@ Future thoughts:
   import ConfigPlot from "./ConfigPlot.svelte";
   import ConfigData from "./ConfigData.svelte";
   import { x1, x2, vs } from "./store.js";
-  import { sqexp, matern12, white, sumKernel } from "./kernels.js";
+  import { sqexp, matern12, periodic, white, sumKernel } from "./kernels.js";
   import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
+
+  let kernelChoices = [
+    {
+      kernel: sqexp,
+      description: "squared exponential (exponentiated quadratic)",
+    },
+    { kernel: matern12, description: "exponential (Matérn 1/2)" },
+    { kernel: periodic, description: "periodic (period=2)" },
+  ];
+  let selectedKernel = kernelChoices[0];
 
   let plotProps = {
     mean: true,
@@ -48,8 +59,10 @@ Future thoughts:
   let noiseScale = 0.0;
   $: xs = linspace(0, 6, num_grid);
 
-  const k = sqexp();
-  $: kernelWithJitter = sumKernel([k, white(1e-6)]);
+  $: kernelWithJitter = sumKernel([
+    selectedKernel ? selectedKernel.kernel() : sqexp(),
+    white(1e-6),
+  ]);
 
   $: gp =
     points.length > 0
@@ -152,7 +165,7 @@ Future thoughts:
         points = [];
       }}>Reset points</button
     >
-    <ConfigData bind:noiseScale />
+    <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
     <ConfigPlot bind:plotProps bind:num_grid />
   </div>
   <div>

@@ -1,5 +1,5 @@
 <script>
-  export let noiseScale;
+  export let noiseScale, selectedKernel, kernelChoices;
 </script>
 
 <label>
@@ -12,3 +12,10 @@
     step="0.1"
   />
 </label>
+<select bind:value={selectedKernel}>
+  {#each kernelChoices as choice}
+    <option value={choice}>
+      {choice.description}
+    </option>
+  {/each}
+</select>
