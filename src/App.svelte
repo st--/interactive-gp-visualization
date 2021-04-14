@@ -24,6 +24,7 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
+  import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
   import Lineplot from "./Lineplot.svelte";
   import Kernelplot from "./Kernelplot.svelte";
@@ -113,55 +114,58 @@ Future thoughts:
 <div>
   <h2>Visualization</h2>
 
-  <div class="text-container">
-    <div class="text-explanation" style="grid-area: line;">
-      <em>Bottom left:</em>
-      Visualises the Gaussian process <Katex math="f(x)" />. Shaded areas and
-      central line:
-      <Katex math="\pm \sigma" /> and <Katex math="\pm 2 \sigma" /> confidence bands
-      and mean. Colored lines: samples from the Gaussian process. Black circles:
-      observations. Vertical lines at <Katex math="x_1" /> (red) and <Katex
-        math="x_2"
-      /> (orange).
-      <br />
-      <strong>Click on empty space:</strong> add a new observation.
-      <strong>Click on black circle:</strong>
-      remove observation.
-      <strong>Shift+Click:</strong> change <Katex math="x_1" />.
-      <strong>Move mouse:</strong> change <Katex math="x_2" /> (<strong>
-        + Shift:</strong
-      >
-      change
-      <Katex math="x_1" />).
+  <CollapsibleCard open={false}>
+    <h4 slot="header">Instructions</h4>
+    <div slot="body" class="text-container">
+      <div class="text-explanation" style="grid-area: line;">
+        <em>Bottom left:</em>
+        Visualises the Gaussian process <Katex math="f(x)" />. Shaded areas and
+        central line:
+        <Katex math="\pm \sigma" /> and <Katex math="\pm 2 \sigma" /> confidence
+        bands and mean. Colored lines: samples from the Gaussian process. Black circles:
+        observations. Vertical lines at <Katex math="x_1" /> (red) and <Katex
+          math="x_2"
+        /> (orange).
+        <br />
+        <strong>Click on empty space:</strong> add a new observation.
+        <strong>Click on black circle:</strong>
+        remove observation.
+        <strong>Shift+Click:</strong> change <Katex math="x_1" />.
+        <strong>Move mouse:</strong> change <Katex math="x_2" /> (<strong>
+          + Shift:</strong
+        >
+        change
+        <Katex math="x_1" />).
+      </div>
+      <div class="text-explanation" style="grid-area: kernel;">
+        <em>Top left:</em>
+        Visualises a slice through the covariance function or kernel <Katex
+          math="k(x_1, \cdot)"
+        /> as a function of the second argument.
+        <br />
+        <strong>Click:</strong> change <Katex math="x_1" /> (<strong>
+          + Shift:</strong
+        >
+        change <Katex math="x_2" />).
+        <strong>Move mouse:</strong> change <Katex math="x_2" /> (<strong>
+          + Shift:</strong
+        >
+        change
+        <Katex math="x_1" />).
+      </div>
+      <div class="text-explanation" style="grid-area: covariance;">
+        <em>Right:</em>
+        Visualises the covariance between <Katex math="f(x_1)" /> and <Katex
+          math="f(x_2)"
+        /> (shaded areas) and the samples evaluated at those points (colored circles,
+        corresponding to the colored lines in bottom-left plot).
+      </div>
+      <div class="text-explanation" style="grid-area: controls;">
+        <em>Controls (below plots):</em>
+        change number of samples; re-draw random samples; remove all points.
+      </div>
     </div>
-    <div class="text-explanation" style="grid-area: kernel;">
-      <em>Top left:</em>
-      Visualises a slice through the covariance function or kernel <Katex
-        math="k(x_1, \cdot)"
-      /> as a function of the second argument.
-      <br />
-      <strong>Click:</strong> change <Katex math="x_1" /> (<strong>
-        + Shift:</strong
-      >
-      change <Katex math="x_2" />).
-      <strong>Move mouse:</strong> change <Katex math="x_2" /> (<strong>
-        + Shift:</strong
-      >
-      change
-      <Katex math="x_1" />).
-    </div>
-    <div class="text-explanation" style="grid-area: covariance;">
-      <em>Right:</em>
-      Visualises the covariance between <Katex math="f(x_1)" /> and <Katex
-        math="f(x_2)"
-      /> (shaded areas) and the samples evaluated at those points (colored circles,
-      corresponding to the colored lines in bottom-left plot).
-    </div>
-    <div class="text-explanation" style="grid-area: controls;">
-      <em>Controls (below plots):</em>
-      change number of samples; re-draw random samples; remove all points.
-    </div>
-  </div>
+  </CollapsibleCard>
 
   <div class="plot-container">
     <div class="chart" style="grid-area: kernel;">
@@ -183,26 +187,32 @@ Future thoughts:
       <Covariance {atX1} {atX2} {covProps} {plotProps} />
     </div>
   </div>
-  <div>
-    <h4>Settings</h4>
-    <RandomSample xsLength={xs.length} />
-    <div>
-      <button
-        class="btn"
-        on:click={(_event) => {
-          points = [];
-        }}>Reset points</button
-      >
+  <CollapsibleCard>
+    <h4 slot="header">Settings</h4>
+    <div slot="body">
+      <RandomSample xsLength={xs.length} />
+      <div>
+        <button
+          class="btn"
+          on:click={(_event) => {
+            points = [];
+          }}>Reset points</button
+        >
+      </div>
     </div>
-  </div>
-  <div>
-    <h4>Kernel and likelihood</h4>
-    <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
-  </div>
-  <div>
-    <h4>Plotting options</h4>
-    <ConfigPlot bind:plotProps bind:num_grid />
-  </div>
+  </CollapsibleCard>
+  <CollapsibleCard>
+    <h4 slot="header">Kernel and likelihood</h4>
+    <div slot="body">
+      <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
+    </div>
+  </CollapsibleCard>
+  <CollapsibleCard open={false}>
+    <h4 slot="header">Plotting options</h4>
+    <div slot="body">
+      <ConfigPlot bind:plotProps bind:num_grid />
+    </div>
+  </CollapsibleCard>
   <div>
     [
     <a href="https://github.com/st--/interactive-gp-visualization/"
