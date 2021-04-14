@@ -24,7 +24,7 @@
       </option>
     {/each}
   </select>
-  <Katex math={"k(x, x') = " + selectedKernel.formula} />
+  <Katex math="k(x, x') = {selectedKernel.formula}" />
 
   {#each selectedKernel.parameters as parameter}
     <ParameterSlider bind:value={parameter.value} {...parameter} />
@@ -32,8 +32,12 @@
 
   Likelihood:
   <label
-    ><input type="checkbox" bind:checked={useLikelihood} />observations with
-    Gaussian noise, <Katex
+    ><input type="radio" bind:group={useLikelihood} value={false} />noise-free
+    observations</label
+  >
+  <label
+    ><input type="radio" bind:group={useLikelihood} value={true} />observations
+    with Gaussian noise, <Katex
       math={"p(y\\, | \\,f(x)) = \\mathcal{N}(f(x), \\sigma_\\text{noise}^2)"}
     /></label
   >

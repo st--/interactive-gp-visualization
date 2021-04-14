@@ -6,7 +6,7 @@
 <label>
   {name}
   <Katex math="{formula} =" />
-  <input type="number" bind:value {step} />
+  <input type="number" bind:value {min} {max} {step} />
   <input type="range" bind:value {min} {max} {step} />
 </label>
 
