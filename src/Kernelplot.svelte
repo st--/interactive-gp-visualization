@@ -75,12 +75,6 @@
     height: 100%;
   }
 
-  circle {
-    fill: orange;
-    fill-opacity: 0.6;
-    stroke: rgba(0, 0, 0, 0.5);
-  }
-
   .path-line {
     fill: none;
     stroke: rgb(0, 100, 100);

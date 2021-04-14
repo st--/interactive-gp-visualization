@@ -92,7 +92,9 @@ Future thoughts:
     // TODO improve using d3-interpolate?
     const samples1 = samples.getRow(dat.idx1);
     const samples2 = samples.getRow(dat.idx2);
-    const ys = samples1.map((y1, i) => dat.w1 * y1 + dat.w2 * samples2[i]);
+    const ys = samples1.map(
+      (y1: number, i: number) => dat.w1 * y1 + dat.w2 * samples2[i]
+    );
     const mean = dat.w1 * means[dat.idx1] + dat.w2 * means[dat.idx2];
     const variance =
       dat.w1 * marginalVariances[dat.idx1] +
@@ -187,7 +189,7 @@ Future thoughts:
     <div>
       <button
         class="btn"
-        on:click={(event) => {
+        on:click={(_event) => {
           points = [];
         }}>Reset points</button
       >

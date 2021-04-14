@@ -3,7 +3,6 @@
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";
   import { schemeCategory10 } from "d3-scale-chromatic";
-  import { zip } from "d3-array";
   import { x1, x2, y1, y2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
   import { linspace, gaussian } from "./mymath.js";

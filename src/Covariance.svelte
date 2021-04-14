@@ -41,8 +41,6 @@
   $: minY = Math.min.apply(null, yTicks);
   $: maxY = Math.max.apply(null, yTicks);
 
-  $: makePath = pathGenerator(xScale, yScale);
-
   // marginal y distributions at x1 and x2
   // TODO unify with Lineplot?
   const num_grid = 60;
