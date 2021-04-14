@@ -80,7 +80,7 @@ export function makePeriodic() {
   return {
     description: "periodic",
     formula:
-      "\\sigma^2 \\exp\\Big(- 2 \\frac{\\sin^2(\\pi |x-x'|/p)}{ell^2}\\Big)",
+      "\\sigma^2 \\exp\\Big(- 2 \\frac{\\sin^2(\\pi |x-x'|/p)}{\\ell^2}\\Big)",
     parameters: [paramVariance, paramLengthscale, paramPeriod],
     kernel: periodic,
   };

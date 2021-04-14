@@ -1,4 +1,5 @@
 <script>
+  import Katex from "./Katex.svelte";
   import ParameterSlider from "./ParameterSlider.svelte";
   export let noiseScale, selectedKernel, kernelChoices;
 
@@ -23,7 +24,7 @@
       </option>
     {/each}
   </select>
-  \( k(x, x') = {selectedKernel.formula} \)
+  <Katex math="k(x, x') = {selectedKernel.formula}" displayMath />
 
   {#each selectedKernel.parameters as parameter}
     <ParameterSlider bind:value={parameter.value} {...parameter} />
