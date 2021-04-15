@@ -1,5 +1,6 @@
 <!-- Copyright (c) 2021 ST John -->
 <script>
+  import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear } from "d3-scale";
   import { zip } from "d3-array";
@@ -13,7 +14,7 @@
   let width = 500;
   let height = 200;
 
-  const padding = { top: 20, right: 40, bottom: 40, left: 25 };
+  const padding = { top: 25, right: 15, bottom: 40, left: 50 };
 
   $: xTicks = [0, 1, 2, 3, 4, 5, 6];
 
@@ -61,15 +62,41 @@
 
 <svelte:window on:resize={resize} />
 
-<svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
-  <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
-  <XIndicators {xScale} {yScale} y1={yTicks[0]} y2={2} />
+<div id="container">
+  <div class="label" style="bottom: 2px; left: {xScale($x1) - 5}px;">
+    <Katex math="x_1" />
+  </div>
+  <div class="label" style="bottom: 2px; left: {xScale($x2) - 5}px;">
+    <Katex math="x_2" />
+  </div>
+  <div
+    class="label"
+    style="bottom: {yScale((minY + maxY) / 2)}px; left: {xScale(0) -
+      60}px; transform: rotate(-90deg);"
+  >
+    <Katex math="k(x_1, \cdot)" />
+  </div>
 
-  <!-- data -->
-  <path class="path-line" d={path} />
-</svg>
+  <svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
+    <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
+    <XIndicators {xScale} {yScale} y1={yTicks[0]} y2={2} />
+
+    <!-- data -->
+    <path class="path-line" d={path} />
+  </svg>
+</div>
 
 <style>
+  #container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .label {
+    position: absolute;
+  }
+
   svg {
     width: 100%;
     height: 100%;

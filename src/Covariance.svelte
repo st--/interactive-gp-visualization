@@ -1,5 +1,6 @@
 <!-- Copyright (c) 2021 ST John -->
 <script>
+  import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";
   import { schemeCategory10 } from "d3-scale-chromatic";
@@ -16,7 +17,7 @@
   let width = 300;
   let height = 300;
 
-  const padding = { top: 25, right: 40, bottom: 40, left: 25 };
+  const padding = { top: 25, right: 15, bottom: 45, left: 50 };
 
   const sigmaContours = [1, 2];
 
@@ -86,72 +87,98 @@
 
 <svelte:window on:resize={resize} />
 
-<svg bind:this={svg} on:mousemove={handleMousemove}>
-  <Axes
-    {xScale}
-    {yScale}
-    {xTicks}
-    {yTicks}
-    width={size}
-    height={size}
-    {padding}
-  />
-  <YIndicatorCross {xScale} {yScale} {minY} {maxY} />
+<div id="container">
+  <div
+    class="label"
+    style="bottom: {yScale((minY + maxY) / 2) + 10}px; left: {xScale(minY) -
+      55}px; transform: rotate(-90deg);"
+  >
+    <Katex math="f(x_2)" />
+  </div>
+  <div
+    class="label"
+    style="bottom: 2px; left: {xScale((minY + maxY) / 2) - 20}px;"
+  >
+    <Katex math="f(x_1)" />
+  </div>
 
-  <!-- data -->
-  {#if plotProps.marginals}
-    <path
-      class="path-line"
-      d={pathMarginal1}
-      style="stroke: red; stroke-width: 2;"
+  <svg bind:this={svg} on:mousemove={handleMousemove}>
+    <Axes
+      {xScale}
+      {yScale}
+      {xTicks}
+      {yTicks}
+      width={size}
+      height={size}
+      {padding}
     />
-    <path
-      class="path-line"
-      d={pathMarginal2}
-      style="stroke: orange; stroke-width: 2;"
-    />
-  {/if}
+    <YIndicatorCross {xScale} {yScale} {minY} {maxY} />
 
-  {#if plotProps.confidence}
-    <g
-      transform="translate({scaleFactor * atX1.mean} {-scaleFactor *
-        atX2.mean})"
-    >
-      <g transform="rotate({covProps.angle} {xScale(0)} {yScale(0)})">
-        {#each sigmaContours as sigma}
-          <ellipse
-            class="path-area"
-            cx={xScale(0)}
-            cy={yScale(0)}
-            rx={scaleFactor * sigma * covProps.width}
-            ry={scaleFactor * sigma * covProps.length}
-          />
-        {/each}
-      </g>
-    </g>
-  {/if}
-  {#if plotProps.mean}
-    <circle
-      cx={xScale(atX1.mean)}
-      cy={yScale(atX2.mean)}
-      r="1"
-      style="fill: rgba(0, 100, 100);"
-    />
-  {/if}
-
-  {#if plotProps.samples}
-    {#each yPairs as ys, i}
-      <circle
-        cx={xScale(ys[0])}
-        cy={yScale(ys[1])}
-        r="3"
-        style="fill: {sampleColor(i)};"
+    <!-- data -->
+    {#if plotProps.marginals}
+      <path
+        class="path-line"
+        d={pathMarginal1}
+        style="stroke: red; stroke-width: 2;"
       />
-    {/each}
-  {/if}
-</svg>
+      <path
+        class="path-line"
+        d={pathMarginal2}
+        style="stroke: orange; stroke-width: 2;"
+      />
+    {/if}
+
+    {#if plotProps.confidence}
+      <g
+        transform="translate({scaleFactor * atX1.mean} {-scaleFactor *
+          atX2.mean})"
+      >
+        <g transform="rotate({covProps.angle} {xScale(0)} {yScale(0)})">
+          {#each sigmaContours as sigma}
+            <ellipse
+              class="path-area"
+              cx={xScale(0)}
+              cy={yScale(0)}
+              rx={scaleFactor * sigma * covProps.width}
+              ry={scaleFactor * sigma * covProps.length}
+            />
+          {/each}
+        </g>
+      </g>
+    {/if}
+    {#if plotProps.mean}
+      <circle
+        cx={xScale(atX1.mean)}
+        cy={yScale(atX2.mean)}
+        r="1"
+        style="fill: rgba(0, 100, 100);"
+      />
+    {/if}
+
+    {#if plotProps.samples}
+      {#each yPairs as ys, i}
+        <circle
+          cx={xScale(ys[0])}
+          cy={yScale(ys[1])}
+          r="3"
+          style="fill: {sampleColor(i)};"
+        />
+      {/each}
+    {/if}
+  </svg>
+</div>
 
 <style>
+  #container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .label {
+    position: absolute;
+  }
+
   svg {
     width: 100%;
     height: 100%;

@@ -3,7 +3,7 @@
 To dos:
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
 - fix relative size when window too small...
-- axis & line labels (LaTeX/ketex?)
+- center/right-align labels instead of manual pixel shifts
 - adjust axis ticks when resizing
 - Kernel plot: automatic y-axis scaling?
 - can we unify XIndicators/YIndicatorBar/YIndicatorCross in a single component?

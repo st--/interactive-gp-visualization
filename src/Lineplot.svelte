@@ -1,5 +1,6 @@
 <!-- Copyright (c) 2021 ST John -->
 <script>
+  import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";
   import { schemeCategory10 } from "d3-scale-chromatic";
@@ -23,7 +24,7 @@
   let width = 500;
   let height = 200;
 
-  const padding = { top: 25, right: 40, bottom: 40, left: 25 };
+  const padding = { top: 25, right: 15, bottom: 45, left: 50 };
 
   $: xTicks = [0, 1, 2, 3, 4, 5, 6];
 
@@ -128,67 +129,93 @@
 
 <svelte:window on:resize={resize} />
 
-<svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
-  <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
-  <XIndicators {xScale} {yScale} y1={minY} y2={maxY} />
-  <YIndicatorBar {xScale} {yScale} />
+<div id="container">
+  <div
+    class="label"
+    style="bottom: 2px; left: {xScale((minX + maxX) / 2) - 5}px;"
+  >
+    <Katex math="x" />
+  </div>
+  <div
+    class="label"
+    style="bottom: {yScale((minY + maxY) / 2) + 10}px; left: {xScale(0) -
+      50}px; transform: rotate(-90deg);"
+  >
+    <Katex math="f(\cdot)" />
+  </div>
 
-  <!-- data -->
-  {#if plotProps.confidence}
-    <path class="path-area" d={areaConfidence2} />
-    <path class="path-area" d={areaConfidence1} />
-  {/if}
-  {#if plotProps.mean}
-    <path class="path-line" d={pathMean} style="stroke-dasharray: 5;" />
-  {/if}
-  {#if plotProps.marginals}
-    <path
-      class="path-line"
-      d={pathMarginal1}
-      style="stroke: red; stroke-width: 2;"
-    />
-    <path
-      class="path-line"
-      d={pathMarginal2}
-      style="stroke: orange; stroke-width: 2;"
-    />
-  {/if}
+  <svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
+    <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
+    <XIndicators {xScale} {yScale} y1={minY} y2={maxY} />
+    <YIndicatorBar {xScale} {yScale} />
 
-  {#if plotProps.samples}
-    {#each samplePaths as path, i}
-      <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />
-    {/each}
-
-    {#each atX1.ys as y1, i}
-      <circle
-        cx={xScale($x1)}
-        cy={yScale(y1)}
-        r="3"
-        style="fill: {sampleColor(i)};"
+    <!-- data -->
+    {#if plotProps.confidence}
+      <path class="path-area" d={areaConfidence2} />
+      <path class="path-area" d={areaConfidence1} />
+    {/if}
+    {#if plotProps.mean}
+      <path class="path-line" d={pathMean} style="stroke-dasharray: 5;" />
+    {/if}
+    {#if plotProps.marginals}
+      <path
+        class="path-line"
+        d={pathMarginal1}
+        style="stroke: red; stroke-width: 2;"
       />
-    {/each}
-    {#each atX2.ys as y2, i}
-      <circle
-        cx={xScale($x2)}
-        cy={yScale(y2)}
-        r="3"
-        style="fill: {sampleColor(i)};"
+      <path
+        class="path-line"
+        d={pathMarginal2}
+        style="stroke: orange; stroke-width: 2;"
       />
-    {/each}
-  {/if}
+    {/if}
 
-  {#each points as point}
-    <circle
-      cx={xScale(point.x)}
-      cy={yScale(point.y)}
-      r="5"
-      on:click={(event) => removePoint(point, event)}
-    />
-    <!-- see https://svelte.dev/examples#7guis-circles -->
-  {/each}
-</svg>
+    {#if plotProps.samples}
+      {#each samplePaths as path, i}
+        <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />
+      {/each}
+
+      {#each atX1.ys as y1, i}
+        <circle
+          cx={xScale($x1)}
+          cy={yScale(y1)}
+          r="3"
+          style="fill: {sampleColor(i)};"
+        />
+      {/each}
+      {#each atX2.ys as y2, i}
+        <circle
+          cx={xScale($x2)}
+          cy={yScale(y2)}
+          r="3"
+          style="fill: {sampleColor(i)};"
+        />
+      {/each}
+    {/if}
+
+    {#each points as point}
+      <circle
+        cx={xScale(point.x)}
+        cy={yScale(point.y)}
+        r="5"
+        on:click={(event) => removePoint(point, event)}
+      />
+      <!-- see https://svelte.dev/examples#7guis-circles -->
+    {/each}
+  </svg>
+</div>
 
 <style>
+  #container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .label {
+    position: absolute;
+  }
+
   svg {
     width: 100%;
     height: 100%;
