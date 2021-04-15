@@ -1,27 +1,34 @@
 <!-- Copyright (c) 2021 ST John -->
 <script>
+  import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";
   import { schemeCategory10 } from "d3-scale-chromatic";
-  import { zip } from "d3-array";
   import { x1, x2, y1, y2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
   import { linspace, gaussian } from "./mymath.js";
-  import { pathGenerator, offset } from "./myplot.js";
+  import { pathGenerator } from "./myplot.js";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
   import YIndicatorBar from "./YIndicatorBar.svelte";
-  export let xs, means, marginalVariances, samples, points, atX1, atX2;
+  export let xs,
+    means,
+    marginalVariances,
+    samples,
+    points,
+    atX1,
+    atX2,
+    plotProps;
 
   let svg;
   let width = 500;
   let height = 200;
 
-  const padding = { top: 20, right: 40, bottom: 40, left: 25 };
+  const padding = { top: 25, right: 15, bottom: 45, left: 50 };
 
   $: xTicks = [0, 1, 2, 3, 4, 5, 6];
 
-  $: yTicks = height > 180 ? [-3, -2, -1, 0, 1, 2, 3] : [-3, 0, 3];
+  $: yTicks = height > 180 ? [-4, -3, -2, -1, 0, 1, 2, 3, 4] : [-4, 0, 4];
 
   $: xScale = scaleLinear()
     .domain([minX, maxX])
@@ -47,12 +54,35 @@
 
   // marginal y distributions at x1 and x2
   // TODO unify with Covariance?
-  let num_grid = 60;
-  $: ys = linspace(minY, maxY, num_grid);
+  const num_grid = 100;
+  function makeYs(dat) {
+    return linspace(
+      dat.mean - 4 * Math.sqrt(dat.variance),
+      dat.mean + 4 * Math.sqrt(dat.variance),
+      num_grid
+    );
+  }
+  $: ys1 = makeYs(atX1);
+  $: ys2 = makeYs(atX2);
+
+  const mMax = 1;
+  const mWidth = 50;
+  $: mScale = scaleLinear().domain([0, mMax]).range([0, mWidth]);
+
   $: marginalDistX1 = gaussian(atX1.mean, atX1.variance);
   $: marginalDistX2 = gaussian(atX2.mean, atX2.variance);
-  $: pathMarginal1 = makePath(ys.map(offset($x1, marginalDistX1)), ys);
-  $: pathMarginal2 = makePath(ys.map(offset($x2, marginalDistX2)), ys);
+  $: pathMarginal1 = pathGenerator(
+    mScale,
+    yScale,
+    xScale($x1),
+    0
+  )(ys1.map(marginalDistX1), ys1);
+  $: pathMarginal2 = pathGenerator(
+    mScale,
+    yScale,
+    xScale($x2),
+    0
+  )(ys2.map(marginalDistX2), ys2);
 
   // one and two sigma confidence intervals
   $: sigma = marginalVariances.map((v) => Math.sqrt(v));
@@ -108,59 +138,98 @@
 
 <svelte:window on:resize={resize} />
 
-<svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
-  <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
-  <XIndicators {xScale} {yScale} y1={minY} y2={maxY} />
-  <YIndicatorBar {xScale} {yScale} />
+<div id="container">
+  <div
+    class="label"
+    style="bottom: 2px; left: {xScale((minX + maxX) / 2) - 5}px;"
+  >
+    <Katex math="x" />
+  </div>
+  <div
+    class="label"
+    style="bottom: {yScale((minY + maxY) / 2) + 10}px; left: {xScale(0) -
+      50}px; transform: rotate(-90deg);"
+  >
+    <Katex math="f(\cdot)" />
+  </div>
 
-  <!-- data -->
-  <path class="path-area" d={areaConfidence2} />
-  <path class="path-area" d={areaConfidence1} />
-  <path class="path-line" d={pathMean} />
-  <path
-    class="path-line"
-    d={pathMarginal1}
-    style="stroke: red; stroke-width: 2;"
-  />
-  <path
-    class="path-line"
-    d={pathMarginal2}
-    style="stroke: orange; stroke-width: 2;"
-  />
+  <svg
+    bind:this={svg}
+    on:mousemove={handleMousemove}
+    on:click={handleClick}
+    overflow="visible"
+  >
+    <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
+    <XIndicators {xScale} {yScale} y1={minY} y2={maxY} />
+    <YIndicatorBar {xScale} {yScale} />
 
-  {#each samplePaths as path, i}
-    <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />
-  {/each}
+    <!-- data -->
+    {#if plotProps.confidence}
+      <path class="path-area" d={areaConfidence2} />
+      <path class="path-area" d={areaConfidence1} />
+    {/if}
+    {#if plotProps.mean}
+      <path class="path-line" d={pathMean} style="stroke-dasharray: 5;" />
+    {/if}
+    {#if plotProps.marginals}
+      <path
+        class="path-line"
+        d={pathMarginal1}
+        style="stroke: red; stroke-width: 2;"
+      />
+      <path
+        class="path-line"
+        d={pathMarginal2}
+        style="stroke: orange; stroke-width: 2;"
+      />
+    {/if}
 
-  {#each atX1.ys as y1, i}
-    <circle
-      cx={xScale($x1)}
-      cy={yScale(y1)}
-      r="3"
-      style="fill: {sampleColor(i)};"
-    />
-  {/each}
-  {#each atX2.ys as y2, i}
-    <circle
-      cx={xScale($x2)}
-      cy={yScale(y2)}
-      r="3"
-      style="fill: {sampleColor(i)};"
-    />
-  {/each}
+    {#if plotProps.samples}
+      {#each samplePaths as path, i}
+        <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />
+      {/each}
 
-  {#each points as point}
-    <circle
-      cx={xScale(point.x)}
-      cy={yScale(point.y)}
-      r="5"
-      on:click={(event) => removePoint(point, event)}
-    />
-    <!-- see https://svelte.dev/examples#7guis-circles -->
-  {/each}
-</svg>
+      {#each atX1.ys as y1, i}
+        <circle
+          cx={xScale($x1)}
+          cy={yScale(y1)}
+          r="3"
+          style="fill: {sampleColor(i)};"
+        />
+      {/each}
+      {#each atX2.ys as y2, i}
+        <circle
+          cx={xScale($x2)}
+          cy={yScale(y2)}
+          r="3"
+          style="fill: {sampleColor(i)};"
+        />
+      {/each}
+    {/if}
+
+    {#each points as point}
+      <circle
+        cx={xScale(point.x)}
+        cy={yScale(point.y)}
+        r="5"
+        on:click={(event) => removePoint(point, event)}
+      />
+      <!-- see https://svelte.dev/examples#7guis-circles -->
+    {/each}
+  </svg>
+</div>
 
 <style>
+  #container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .label {
+    position: absolute;
+  }
+
   svg {
     width: 100%;
     height: 100%;

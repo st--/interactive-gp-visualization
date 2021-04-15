@@ -2,19 +2,16 @@
 
 To dos:
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
-- Covariance plot: square aspect ratio so that covariance ellipse is correct
-- axis & line labels (LaTeX/ketex?)
+- fix relative size when window too small...
+- center/right-align labels instead of manual pixel shifts
 - adjust axis ticks when resizing
 - Kernel plot: automatic y-axis scaling?
-- marginal distribution plots for Covariance and Lineplot
 - can we unify XIndicators/YIndicatorBar/YIndicatorCross in a single component?
-- make pixel-scale of marginal distributions in Lineplot / Covariance equal to each other
+- convert 1 and 2 sigma to 50/95% confidence ?
 
 More features:
-- checkbox for showing/hiding mean/credible intervals
+- add two observations when clicking in Covariance plot?
 - select prior mean function (linear, quadratic, sine?)
-- select prior kernel function (sqexp, mat32, mat12, periodic?)
-- adjustable likelihood noise scale (input slider?)
 - smoothly animated samples (see http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf)
 - include log marginal likelihood
 - include 2D visualisation of covariance function (contour plot)
@@ -26,29 +23,66 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
+  import { CollapsibleCard } from "svelte-collapsible";
+  import Katex from "./Katex.svelte";
   import Lineplot from "./Lineplot.svelte";
   import Kernelplot from "./Kernelplot.svelte";
   import Covariance from "./Covariance.svelte";
   import RandomSample from "./RandomSample.svelte";
   import KernelTwoD from "./KernelTwoD.svelte";
+  import ConfigPlot from "./ConfigPlot.svelte";
+  import ConfigData from "./ConfigData.svelte";
   import { x1, x2, vs } from "./store.js";
-  import { sqexp, matern12, white, sumKernel } from "./kernels.js";
+  import {
+    sqexp,
+    makeSqexp,
+    makeMatern12,
+    makeMatern32,
+    makeMatern52,
+    makePeriodic,
+    makeLinear,
+    white,
+    sumKernel,
+  } from "./kernels.js";
   import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
-  let num_grid = 40;
+  let kernelChoices = [
+    makeMatern12(), // 0
+    makeMatern32(), // 1
+    makeMatern52(), // 2
+    makeSqexp(), // 3
+    makePeriodic(), // 4
+    makeLinear(), // 5
+  ];
+  let selectedKernel = kernelChoices[3];
+
+  let plotProps = {
+    mean: true,
+    confidence: true,
+    samples: true,
+    marginals: true,
+  };
+
+  let num_grid = 200;
+  let noiseScale = 0.0;
   $: xs = linspace(0, 6, num_grid);
 
-  const k = sqexp();
-  $: kernelWithJitter = sumKernel([k, white(1e-6)]);
+  $: kernelWithJitter = sumKernel([
+    selectedKernel
+      ? selectedKernel.kernel(...selectedKernel.parameters.map((p) => p.value))
+      : sqexp(),
+    white(1e-6),
+  ]);
 
   $: gp =
     points.length > 0
       ? posterior(
           kernelWithJitter,
           points.map((p) => p.x),
-          points.map((p) => p.y)
+          points.map((p) => p.y),
+          noiseScale * noiseScale
         )
       : prior(kernelWithJitter);
 
@@ -63,7 +97,9 @@ Future thoughts:
     // TODO improve using d3-interpolate?
     const samples1 = samples.getRow(dat.idx1);
     const samples2 = samples.getRow(dat.idx2);
-    const ys = samples1.map((y1, i) => dat.w1 * y1 + dat.w2 * samples2[i]);
+    const ys = samples1.map(
+      (y1: number, i: number) => dat.w1 * y1 + dat.w2 * samples2[i]
+    );
     const mean = dat.w1 * means[dat.idx1] + dat.w2 * means[dat.idx2];
     const variance =
       dat.w1 * marginalVariances[dat.idx1] +
@@ -80,40 +116,62 @@ Future thoughts:
 </script>
 
 <div>
-  <h2>Visualization</h2>
+  <h2>Interactive Gaussian Process Visualization</h2>
 
-  <div class="text-container">
-    <div class="text-explanation" style="grid-area: line;">
-      <em>Bottom left:</em>
-      Visualises the Gaussian process f(x). Shaded areas and central line: +/- 1
-      and 2 sigma confidence bands and mean. Colored lines: samples from the Gaussian
-      process. Black circles: observations. Vertical lines at x1 (red) and x2 (orange).
-      <br />
-      <strong>Click on empty space:</strong> add a new observation.
-      <strong>Click on black circle:</strong>
-      remove observation.
-      <strong>Shift+Click:</strong> change x1.
-      <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
-    </div>
-    <div class="text-explanation" style="grid-area: kernel;">
-      <em>Top left:</em>
-      Visualises a slice through the covariance function or kernel k(x1, .) as a
-      function of the second argument.
-      <br />
-      <strong>Click:</strong> change x1 (<strong> + Shift:</strong> change x2).
-      <strong>Move mouse:</strong> change x2 (<strong> + Shift:</strong> change x1).
-    </div>
-    <div class="text-explanation" style="grid-area: covariance;">
-      <em>Right:</em>
-      Visualises the covariance between f(x1) and f(x2) (shaded areas) and the samples
-      evaluated at those points (colored circles, corresponding to the colored lines
-      in bottom-left plot).
-    </div>
-    <div class="text-explanation" style="grid-area: controls;">
-      <em>Controls (below plots):</em>
-      change number of samples; re-draw random samples; remove all points.
-    </div>
-  </div>
+  <CollapsibleCard open={false}>
+    <h4 slot="header">&#187; Instructions</h4>
+    <div slot="body" class="text-container">
+      <div class="text-explanation" style="grid-area: line;">
+        <em>Bottom left:</em>
+        Visualises the Gaussian process <Katex math="f(\cdot)" /> through its mean
+        (central <span style="color: rgb(0, 100, 100);">d-a-s-h-e-d</span> line)
+        and
+        <Katex math="\pm \sigma" /> and <Katex math="\pm 2 \sigma" /> confidence
+        bands (<span style="background-color: rgb(0, 100, 100, 0.2);"
+          >sha<span style="background-color: rgb(0, 100, 100, 0.2);"
+            >ded ar</span
+          >eas</span
+        >). Samples from the Gaussian process are drawn in colored lines. The
+        marginal distributions of <Katex math="f(x_1)" /> and <Katex
+          math="f(x_2)"
+        /> are plotted at the vertical lines at <Katex math="x_1" /> (<span
+          style="color: red;">red</span
+        >) and <Katex math="x_2" /> (<span style="color: orange;">orange</span
+        >). You can change their location by <strong>moving the mouse</strong>
+        with or without holding the <strong>Shift key</strong>. You can add
+        observations on which to condition the Gaussian process by
+        <strong>clicking</strong>
+        anywhere in the plot; these observations are drawn as black circles
+        (clicking on an observation removes it again).
+        <small
+          ><em>Note:</em> Two observations too close to each other can lead to numerical
+          issues and long compute times - you may have to reload the page.</small
+        >
+      </div>
+      <div class="text-explanation" style="grid-area: kernel;">
+        <em>Top left:</em>
+        Visualises a slice through the covariance function or kernel <Katex
+          math="k(x_1, \cdot)"
+        /> as a function of the second argument. You can change the location of <Katex
+          math="x_1"
+        /> and <Katex math="x_2" /> by <strong>moving the mouse</strong> with or
+        without holding the
+        <strong>Shift key</strong>.
+      </div>
+      <div class="text-explanation" style="grid-area: covariance;">
+        <em>Right:</em>
+        Visualises the covariance between <Katex math="f(x_1)" /> and <Katex
+          math="f(x_2)"
+        />
+        (<span style="background-color: rgb(0, 100, 100, 0.2);"
+          >sha<span style="background-color: rgb(0, 100, 100, 0.2);"
+            >ded ar</span
+          >eas</span
+        >) and the samples evaluated at those points (colored circles,
+        corresponding to the colored lines in the bottom-left plot).
+      </div>
+    </div></CollapsibleCard
+  >
 
   <div class="plot-container">
     <div class="chart" style="grid-area: kernel;">
@@ -128,22 +186,43 @@ Future thoughts:
         bind:points
         {atX1}
         {atX2}
+        {plotProps}
       />
     </div>
     <div class="squarechart" style="grid-area: covariance;">
-      <Covariance {atX1} {atX2} {covProps} />
+      <Covariance {atX1} {atX2} {covProps} {plotProps} />
     </div>
     <div class="squarechart" style="grid-area: kernel2d;">
       <KernelTwoD {covMat} />
     </div>
   </div>
-  <RandomSample xsLength={xs.length} />
-  <button
-    class="btn"
-    on:click={(event) => {
-      points = [];
-    }}>Reset points</button
-  >
+  <CollapsibleCard>
+    <h4 slot="header">&#187; Visualization settings</h4>
+    <div slot="body">
+      <RandomSample xsLength={xs.length} />
+      <div>
+        <button
+          class="btn"
+          disabled={points.length == 0}
+          on:click={(_event) => {
+            points = [];
+          }}>Remove all observations</button
+        >
+      </div>
+    </div>
+  </CollapsibleCard>
+  <CollapsibleCard>
+    <h4 slot="header">&#187; Kernel and likelihood</h4>
+    <div slot="body">
+      <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
+    </div>
+  </CollapsibleCard>
+  <CollapsibleCard open={false}>
+    <h4 slot="header">&#187; Plotting options</h4>
+    <div slot="body">
+      <ConfigPlot bind:plotProps bind:num_grid />
+    </div>
+  </CollapsibleCard>
   <div>
     [
     <a href="https://github.com/st--/interactive-gp-visualization/"
@@ -157,10 +236,10 @@ Future thoughts:
   .text-container {
     max-width: 1200px;
     display: grid;
-    grid-template-columns: 60% auto;
+    grid-template-columns: 70% auto;
     grid-template-areas:
-      "kernel covariance"
-      "line controls";
+      "kernel ."
+      "line covariance";
   }
   .text-explanation {
     margin: 10px;
@@ -174,13 +253,11 @@ Future thoughts:
       "line covariance";
   }
   .chart {
-    margin: 20px 20px;
     background-color: #fafafa;
   }
   .squarechart {
     min-width: 200px;
     min-height: 200px;
-    margin: 20px 20px;
     background-color: #fafafa;
   }
 </style>

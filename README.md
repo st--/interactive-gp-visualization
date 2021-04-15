@@ -1,5 +1,8 @@
 # Interactive Visualisation of Gaussian processes
 
+This is an interactive extension of a visualisation I developed for an invited talk at the FAI seminar series at University College London.
+It is built using [Svelte](https://svelte.dev/), [D3](https://d3js.org/), and [ml-matrix](https://github.com/mljs/matrix).
+
 ## Other visualisations
 
 There are plenty of other Gaussian process visualisations out there; here are some I came across so far (if you know of others you like, please let me know!):
@@ -21,7 +24,7 @@ There are plenty of other Gaussian process visualisations out there; here are so
 Install the dependencies...
 
 ```bash
-cd svelte-app
+# cd into this directory
 npm install
 ```
 
@@ -42,10 +45,15 @@ If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommen
 ### Using TypeScript
 
 This repository is set up to use TypeScript.
+Run the checks with
+```bash
+npx svelte-check
+```
 
 ### Using Prettier
 
 This repository is set up to use Prettier.
+Before committing code, run
 ```bash
 npx prettier -w src
 ```

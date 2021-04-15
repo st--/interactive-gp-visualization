@@ -15,11 +15,6 @@ export function gaussian(mean, variance) {
     Math.sqrt(2 * Math.PI * variance);
 }
 
-export function cholesky(A) {
-  const chol = new m.CholeskyDecomposition(A);
-  return chol.lowerTriangularMatrix; // L such that LL^T = A
-}
-
 export function covEllipse(covMat) {
   // https://www.visiondummy.com/2014/04/draw-error-ellipse-representing-covariance-matrix/
   // http://cs229.stanford.edu/section/gaussians.pdf
@@ -34,6 +29,11 @@ export function covEllipse(covMat) {
   };
 }
 
+export function cholesky(A) {
+  const chol = new m.CholeskyDecomposition(A);
+  return chol.lowerTriangularMatrix; // L such that LL^T = A
+}
+
 export function svdSqrt(A) {
   const e = new m.EigenvalueDecomposition(A);
   const r = e.eigenvectorMatrix;
@@ -44,8 +44,15 @@ export function svdSqrt(A) {
   return r.mmul(d);
 }
 
+export function symmetrise(A) {
+  const At = A.transpose();
+  const symA = A.clone().add(At).div(2);
+  // clone is necessary as operations are in-place
+  return symA;
+}
+
 export function matrixSqrt(A) {
-  return svdSqrt(A);
+  return cholesky(symmetrise(A));
 }
 
 export function randn(rows, cols, seed) {
@@ -59,17 +66,8 @@ export function randn(rows, cols, seed) {
   return v;
 }
 
-// export function sampleMvn(meanVec, covChol, numSamples=1) {
-// 	const v = randn(meanVec.length, numSamples)
-// 	const meanMat = m.Matrix.columnVector(meanVec);  // TODO fix for numSamples>1
-// 	const samples = m.Matrix.add(meanMat, covChol.mmul(v));
-// 	return samples;
-// }
-
 export function sampleMvn(meanVec, covSqrt, v) {
-  //export function sampleMvn(meanVec, covSqrt, numSamples=1) {
-  //const v = randn(meanVec.length, numSamples);
-  if (v === undefined) {
+  if (!v || covSqrt.columns != v.rows) {
     return m.Matrix.zeros(meanVec.length, 1);
   }
   const Lv = covSqrt.mmul(v);
