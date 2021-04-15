@@ -136,11 +136,16 @@ Future thoughts:
         /> are plotted at the vertical lines at <Katex math="x_1" /> (<span
           style="color: red;">red</span
         >) and <Katex math="x_2" /> (<span style="color: orange;">orange</span
-        >). You can change their location by moving the mouse with or without
-        holding the Shift key. You can add observations on which to condition
-        the Gaussian process by clicking anywhere in the plot; these
-        observations are drawn as black circles (clicking on an observation
-        removes it again).
+        >). You can change their location by <strong>moving the mouse</strong>
+        with or without holding the <strong>Shift key</strong>. You can add
+        observations on which to condition the Gaussian process by
+        <strong>clicking</strong>
+        anywhere in the plot; these observations are drawn as black circles
+        (clicking on an observation removes it again).
+        <small
+          ><em>Note:</em> Two observations too close to each other can lead to numerical
+          issues and long compute times - you may have to reload the page.</small
+        >
       </div>
       <div class="text-explanation" style="grid-area: kernel;">
         <em>Top left:</em>
@@ -148,8 +153,9 @@ Future thoughts:
           math="k(x_1, \cdot)"
         /> as a function of the second argument. You can change the location of <Katex
           math="x_1"
-        /> and <Katex math="x_2" /> by moving the mouse with or without holding the
-        Shift key.
+        /> and <Katex math="x_2" /> by <strong>moving the mouse</strong> with or
+        without holding the
+        <strong>Shift key</strong>.
       </div>
       <div class="text-explanation" style="grid-area: covariance;">
         <em>Right:</em>
@@ -226,7 +232,7 @@ Future thoughts:
   .text-container {
     max-width: 1200px;
     display: grid;
-    grid-template-columns: 60% auto;
+    grid-template-columns: 70% auto;
     grid-template-areas:
       "kernel ."
       "line covariance";
