@@ -44,7 +44,7 @@
 
   // marginal y distributions at x1 and x2
   // TODO unify with Lineplot?
-  const num_grid = 60;
+  const num_grid = 100;
   $: ys = linspace(minY, maxY, num_grid);
   const mMax = 1;
   const mWidth = 50;
@@ -102,7 +102,7 @@
     <Katex math="f(x_1)" />
   </div>
 
-  <svg bind:this={svg} on:mousemove={handleMousemove}>
+  <svg bind:this={svg} on:mousemove={handleMousemove} overflow="visible">
     <Axes
       {xScale}
       {yScale}

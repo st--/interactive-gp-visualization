@@ -112,60 +112,56 @@ Future thoughts:
 </script>
 
 <div>
-  <h2>Visualization</h2>
+  <h2>Interactive Gaussian Process Visualization</h2>
 
   <CollapsibleCard open={false}>
-    <h4 slot="header">Instructions</h4>
+    <h4 slot="header">&#187; Instructions</h4>
     <div slot="body" class="text-container">
       <div class="text-explanation" style="grid-area: line;">
         <em>Bottom left:</em>
-        Visualises the Gaussian process <Katex math="f(x)" />. Shaded areas and
-        central line:
+        Visualises the Gaussian process <Katex math="f(\cdot)" /> through its mean
+        (central <span style="color: rgb(0, 100, 100);">d-a-s-h-e-d</span> line)
+        and
         <Katex math="\pm \sigma" /> and <Katex math="\pm 2 \sigma" /> confidence
-        bands and mean. Colored lines: samples from the Gaussian process. Black circles:
-        observations. Vertical lines at <Katex math="x_1" /> (red) and <Katex
-          math="x_2"
-        /> (orange).
-        <br />
-        <strong>Click on empty space:</strong> add a new observation.
-        <strong>Click on black circle:</strong>
-        remove observation.
-        <strong>Shift+Click:</strong> change <Katex math="x_1" />.
-        <strong>Move mouse:</strong> change <Katex math="x_2" /> (<strong>
-          + Shift:</strong
-        >
-        change
-        <Katex math="x_1" />).
+        bands (<span style="background-color: rgb(0, 100, 100, 0.2);"
+          >sha<span style="background-color: rgb(0, 100, 100, 0.2);"
+            >ded ar</span
+          >eas</span
+        >). Samples from the Gaussian process are drawn in colored lines. The
+        marginal distributions of <Katex math="f(x_1)" /> and <Katex
+          math="f(x_2)"
+        /> are plotted at the vertical lines at <Katex math="x_1" /> (<span
+          style="color: red;">red</span
+        >) and <Katex math="x_2" /> (<span style="color: orange;">orange</span
+        >). You can change their location by moving the mouse with or without
+        holding the Shift key. You can add observations on which to condition
+        the Gaussian process by clicking anywhere in the plot; these
+        observations are drawn as black circles (clicking on an observation
+        removes it again).
       </div>
       <div class="text-explanation" style="grid-area: kernel;">
         <em>Top left:</em>
         Visualises a slice through the covariance function or kernel <Katex
           math="k(x_1, \cdot)"
-        /> as a function of the second argument.
-        <br />
-        <strong>Click:</strong> change <Katex math="x_1" /> (<strong>
-          + Shift:</strong
-        >
-        change <Katex math="x_2" />).
-        <strong>Move mouse:</strong> change <Katex math="x_2" /> (<strong>
-          + Shift:</strong
-        >
-        change
-        <Katex math="x_1" />).
+        /> as a function of the second argument. You can change the location of <Katex
+          math="x_1"
+        /> and <Katex math="x_2" /> by moving the mouse with or without holding the
+        Shift key.
       </div>
       <div class="text-explanation" style="grid-area: covariance;">
         <em>Right:</em>
         Visualises the covariance between <Katex math="f(x_1)" /> and <Katex
           math="f(x_2)"
-        /> (shaded areas) and the samples evaluated at those points (colored circles,
-        corresponding to the colored lines in bottom-left plot).
+        />
+        (<span style="background-color: rgb(0, 100, 100, 0.2);"
+          >sha<span style="background-color: rgb(0, 100, 100, 0.2);"
+            >ded ar</span
+          >eas</span
+        >) and the samples evaluated at those points (colored circles,
+        corresponding to the colored lines in the bottom-left plot).
       </div>
-      <div class="text-explanation" style="grid-area: controls;">
-        <em>Controls (below plots):</em>
-        change number of samples; re-draw random samples; remove all points.
-      </div>
-    </div>
-  </CollapsibleCard>
+    </div></CollapsibleCard
+  >
 
   <div class="plot-container">
     <div class="chart" style="grid-area: kernel;">
@@ -188,7 +184,7 @@ Future thoughts:
     </div>
   </div>
   <CollapsibleCard>
-    <h4 slot="header">Settings</h4>
+    <h4 slot="header">&#187; Visualization settings</h4>
     <div slot="body">
       <RandomSample xsLength={xs.length} />
       <div>
@@ -202,13 +198,13 @@ Future thoughts:
     </div>
   </CollapsibleCard>
   <CollapsibleCard>
-    <h4 slot="header">Kernel and likelihood</h4>
+    <h4 slot="header">&#187; Kernel and likelihood</h4>
     <div slot="body">
       <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
     </div>
   </CollapsibleCard>
   <CollapsibleCard open={false}>
-    <h4 slot="header">Plotting options</h4>
+    <h4 slot="header">&#187; Plotting options</h4>
     <div slot="body">
       <ConfigPlot bind:plotProps bind:num_grid />
     </div>
@@ -228,8 +224,8 @@ Future thoughts:
     display: grid;
     grid-template-columns: 60% auto;
     grid-template-areas:
-      "kernel covariance"
-      "line controls";
+      "kernel ."
+      "line covariance";
   }
   .text-explanation {
     margin: 10px;
@@ -243,13 +239,11 @@ Future thoughts:
       "line covariance";
   }
   .chart {
-    margin: 20px 20px;
     background-color: #fafafa;
   }
   .squarechart {
     min-width: 200px;
     min-height: 200px;
-    margin: 20px 20px;
     background-color: #fafafa;
   }
 </style>

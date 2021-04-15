@@ -54,7 +54,7 @@
 
   // marginal y distributions at x1 and x2
   // TODO unify with Covariance?
-  const num_grid = 60;
+  const num_grid = 100;
   $: ys = linspace(minY, maxY, num_grid);
   const mMax = 1;
   const mWidth = 50;
@@ -144,7 +144,12 @@
     <Katex math="f(\cdot)" />
   </div>
 
-  <svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
+  <svg
+    bind:this={svg}
+    on:mousemove={handleMousemove}
+    on:click={handleClick}
+    overflow="visible"
+  >
     <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
     <XIndicators {xScale} {yScale} y1={minY} y2={maxY} />
     <YIndicatorBar {xScale} {yScale} />

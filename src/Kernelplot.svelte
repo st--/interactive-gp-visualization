@@ -77,9 +77,19 @@
     <Katex math="k(x_1, \cdot)" />
   </div>
 
-  <svg bind:this={svg} on:mousemove={handleMousemove} on:click={handleClick}>
+  <svg
+    bind:this={svg}
+    on:mousemove={handleMousemove}
+    on:click={handleClick}
+    overflow="visible"
+  >
     <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
-    <XIndicators {xScale} {yScale} y1={yTicks[0]} y2={2} />
+    <XIndicators
+      {xScale}
+      {yScale}
+      y1={yTicks[0]}
+      y2={yTicks[yTicks.length - 1]}
+    />
 
     <!-- data -->
     <path class="path-line" d={path} />
