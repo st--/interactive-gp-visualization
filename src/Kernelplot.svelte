@@ -19,7 +19,7 @@
   $: xTicks = [0, 1, 2, 3, 4, 5, 6];
 
   // TODO add negative y-ticks when conditioning
-  $: yTicks = height > 180 ? [0, 0.5, 1] : [0, 1];
+  $: yTicks = height > 180 ? [-1, -0.5, 0, 0.5, 1] : [-1, 0, 1];
 
   $: xScale = scaleLinear()
     .domain([minX, maxX])
@@ -84,6 +84,13 @@
     overflow="visible"
   >
     <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
+    <line
+      x1={xScale(xTicks[0])}
+      x2={xScale(xTicks[xTicks.length - 1])}
+      y1={yScale(0)}
+      y2={yScale(0)}
+      style="stroke: #ddd;"
+    />
     <XIndicators
       {xScale}
       {yScale}
