@@ -211,7 +211,7 @@
       <circle
         cx={xScale(point.x)}
         cy={yScale(point.y)}
-        r="5"
+        r="6"
         on:click={(event) => removePoint(point, event)}
       />
       <!-- see https://svelte.dev/examples#7guis-circles -->

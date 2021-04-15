@@ -140,8 +140,8 @@ Future thoughts:
         with or without holding the <strong>Shift key</strong>. You can add
         observations on which to condition the Gaussian process by
         <strong>clicking</strong>
-        anywhere in the plot; these observations are drawn as black circles (clicking
-        on an observation removes it again).
+        anywhere in the plot; these observations are drawn as black circles &#9899;.
+        Clicking on an observation removes it again.
         <small
           ><em>Note:</em> Two observations too close to each other can lead to numerical
           issues and long compute times. If the app seems to hang, reload the page
