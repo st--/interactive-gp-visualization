@@ -21,3 +21,13 @@
   </label>
   <button class="btn" on:click={resampleClick}>Resample</button>
 </div>
+
+<style>
+  .randomize-box {
+    display: flex;
+    align-items: center;
+  }
+  input[type="number"] {
+    width: 50px;
+  }
+</style>

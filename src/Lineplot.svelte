@@ -209,6 +209,7 @@
 
     {#each points as point}
       <circle
+        class="observation"
         cx={xScale(point.x)}
         cy={yScale(point.y)}
         r="6"
@@ -235,7 +236,7 @@
     height: 100%;
   }
 
-  circle {
+  .observation {
     fill: black;
     fill-opacity: 0.6;
     stroke: rgba(0, 0, 0, 0.5);

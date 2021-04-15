@@ -45,3 +45,9 @@
     <ParameterSlider bind:value={noiseScaleInternal} {...noiseVarianceProps} />
   {/if}
 </div>
+
+<style>
+  input[type="radio"] {
+    margin-right: 5px;
+  }
+</style>

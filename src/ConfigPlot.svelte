@@ -29,3 +29,9 @@
     <input type="range" bind:value={num_grid} min="10" max="500" step="5" />
   </label>
 </div>
+
+<style>
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+</style>
