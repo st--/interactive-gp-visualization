@@ -7,8 +7,8 @@
     name: "standard deviation",
     formula: "\\sigma_\\text{noise}",
     min: 0.0,
-    max: 3.0,
-    step: 0.1,
+    max: 4.0,
+    step: 0.01,
   };
   let noiseScaleInternal = noiseScale;
   let useLikelihood = true;

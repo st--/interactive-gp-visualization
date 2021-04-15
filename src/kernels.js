@@ -6,17 +6,17 @@ const paramVariance = {
   name: "variance",
   formula: "\\sigma^2",
   value: 1.0,
-  min: 0.1,
-  max: 10.0,
-  step: 0.1,
+  min: 0.0,
+  max: 4.0,
+  step: 0.01,
 };
 const paramLengthscale = {
   name: "lengthscale",
   formula: "\\ell",
   value: 1.0,
-  min: 0.1,
+  min: 0.05,
   max: 10.0,
-  step: 0.1,
+  step: 0.01,
 };
 
 export function sqexp(variance = 1, lengthscale = 1) {
@@ -71,9 +71,9 @@ const paramPeriod = {
   name: "period",
   formula: "p",
   value: 2.0,
-  min: 1.0,
-  max: 5.0,
-  step: 0.1,
+  min: 0.5,
+  max: 10.0,
+  step: 0.01,
 };
 
 export function makePeriodic() {
@@ -91,8 +91,8 @@ const paramBias = {
   formula: "\\sigma^2_b",
   value: 0.0,
   min: 0.0,
-  max: 5.0,
-  step: 0.1,
+  max: 4.0,
+  step: 0.01,
 };
 const paramCenter = {
   name: "center",

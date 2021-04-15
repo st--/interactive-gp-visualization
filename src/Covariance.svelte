@@ -21,7 +21,7 @@
 
   const sigmaContours = [1, 2];
 
-  $: yTicks = size > 180 ? [-3, -2, -1, 0, 1, 2, 3] : [-3, 0, 3];
+  $: yTicks = size > 180 ? [-4, -3, -2, -1, 0, 1, 2, 3, 4] : [-4, 0, 4];
   $: xTicks = yTicks;
 
   // fix aspect ratio to be square:
