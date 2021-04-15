@@ -52,6 +52,44 @@ export function makeMatern12() {
   };
 }
 
+export function matern32(variance = 1, lengthscale = 1) {
+  return (x1, x2) => {
+    const scaledDist = (Math.sqrt(3) * Math.abs(x1 - x2)) / lengthscale;
+    return variance * (1 + scaledDist) * Math.exp(-scaledDist);
+  };
+}
+
+export function makeMatern32() {
+  return {
+    description: "Matérn 3/2",
+    formula:
+      "\\sigma^2 \\big( 1 + \\frac{\\sqrt{3} |x-x'|}{\\ell} \\big) \\exp\\Big(-\\frac{\\sqrt{3} |x-x'|}{\\ell}\\Big)",
+    parameters: [paramVariance, paramLengthscale],
+    kernel: matern32,
+  };
+}
+
+export function matern52(variance = 1, lengthscale = 1) {
+  return (x1, x2) => {
+    const scaledDist = (Math.sqrt(5) * Math.abs(x1 - x2)) / lengthscale;
+    return (
+      variance *
+      (1 + scaledDist + (scaledDist * scaledDist) / 3) *
+      Math.exp(-scaledDist)
+    );
+  };
+}
+
+export function makeMatern52() {
+  return {
+    description: "Matérn 5/2",
+    formula:
+      "\\sigma^2 \\big( 1 + \\frac{\\sqrt{5} |x-x'|}{\\ell} + \\frac{5 |x-x'|}{3 \\ell^2} \\big) \\exp\\Big(-\\frac{\\sqrt{5} |x-x'|}{\\ell}\\Big)",
+    parameters: [paramVariance, paramLengthscale],
+    kernel: matern52,
+  };
+}
+
 export function white(variance) {
   return (x1, x2) => {
     return x1 == x2 ? variance : 0.0;
@@ -71,7 +109,7 @@ const paramPeriod = {
   name: "period",
   formula: "p",
   value: 2.0,
-  min: 0.5,
+  min: 0.1,
   max: 10.0,
   step: 0.01,
 };

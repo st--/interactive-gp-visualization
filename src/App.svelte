@@ -12,7 +12,6 @@ To dos:
 More features:
 - add two observations when clicking in Covariance plot?
 - select prior mean function (linear, quadratic, sine?)
-- add more kernels (matern32, matern52, ...)
 - smoothly animated samples (see http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf)
 - include log marginal likelihood
 - include 2D visualisation of covariance function (contour plot)
@@ -37,6 +36,8 @@ Future thoughts:
     sqexp,
     makeSqexp,
     makeMatern12,
+    makeMatern32,
+    makeMatern52,
     makePeriodic,
     makeLinear,
     white,
@@ -47,12 +48,14 @@ Future thoughts:
   import { posterior, prior } from "./gpposterior.js";
 
   let kernelChoices = [
-    makeSqexp(),
-    makeMatern12(),
-    makePeriodic(),
-    makeLinear(),
+    makeMatern12(), // 0
+    makeMatern32(), // 1
+    makeMatern52(), // 2
+    makeSqexp(), // 3
+    makePeriodic(), // 4
+    makeLinear(), // 5
   ];
-  let selectedKernel = kernelChoices[0];
+  let selectedKernel = kernelChoices[3];
 
   let plotProps = {
     mean: true,

@@ -16,7 +16,7 @@
 </script>
 
 <div>
-  Kernel:
+  <strong>Kernel:</strong>
   <select bind:value={selectedKernel}>
     {#each kernelChoices as choice}
       <option value={choice}>
@@ -30,7 +30,7 @@
     <ParameterSlider bind:value={parameter.value} {...parameter} />
   {/each}
 
-  Likelihood:
+  <strong>Likelihood:</strong>
   <label
     ><input type="radio" bind:group={useLikelihood} value={false} />noise-free
     observations</label
