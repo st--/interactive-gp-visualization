@@ -190,9 +190,10 @@ Future thoughts:
       <div>
         <button
           class="btn"
+          disabled={points.length == 0}
           on:click={(_event) => {
             points = [];
-          }}>Reset points</button
+          }}>Remove all observations</button
         >
       </div>
     </div>
