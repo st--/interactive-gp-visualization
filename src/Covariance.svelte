@@ -17,7 +17,8 @@
   let width = 300;
   let height = 300;
 
-  const padding = { top: 25, right: 15, bottom: 45, left: 50 };
+  const padding = { top: 25, bottom: 45, left: 50 };
+  padding.right = padding.top + padding.bottom - padding.left; // 20
 
   const sigmaContours = [1, 2];
 
