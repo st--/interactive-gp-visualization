@@ -55,7 +55,16 @@
   // marginal y distributions at x1 and x2
   // TODO unify with Covariance?
   const num_grid = 100;
-  $: ys = linspace(minY, maxY, num_grid);
+  function makeYs(dat) {
+    return linspace(
+      dat.mean - 4 * Math.sqrt(dat.variance),
+      dat.mean + 4 * Math.sqrt(dat.variance),
+      num_grid
+    );
+  }
+  $: ys1 = makeYs(atX1);
+  $: ys2 = makeYs(atX2);
+
   const mMax = 1;
   const mWidth = 50;
   $: mScale = scaleLinear().domain([0, mMax]).range([0, mWidth]);
@@ -67,13 +76,13 @@
     yScale,
     xScale($x1),
     0
-  )(ys.map(marginalDistX1), ys);
+  )(ys1.map(marginalDistX1), ys1);
   $: pathMarginal2 = pathGenerator(
     mScale,
     yScale,
     xScale($x2),
     0
-  )(ys.map(marginalDistX2), ys);
+  )(ys2.map(marginalDistX2), ys2);
 
   // one and two sigma confidence intervals
   $: sigma = marginalVariances.map((v) => Math.sqrt(v));
