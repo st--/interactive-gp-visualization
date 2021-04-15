@@ -15,19 +15,23 @@
   let width = 300;
   let height = 300;
 
-  const padding = { top: 25, right: 40, bottom: 40, left: 25 };
+  // const padding = { top: 25, right: 40, bottom: 40, left: 25 };
+  const padding = { top: 25, bottom: 45, left: 50 };
+  padding.right = padding.top + padding.bottom - padding.left; // 20
 
-  $: xTicks = height > 180 ? linspace(0, 40, 5) : linspace(0, 40, 3);
+  $: xTicks = size > 180 ? linspace(0, 6, 7) : linspace(0, 6, 3);
   $: yTicks = xTicks;
 
-  // TODO: fix aspect ratio to be square!
+  // fix aspect ratio to be square:
+  $: size = Math.min(width, height);
+
   $: xScale = scaleLinear()
     .domain([minX, maxX])
-    .range([padding.left, width - padding.right]);
+    .range([padding.left, size - padding.right]);
 
   $: yScale = scaleLinear()
-    .domain([minX, maxX])
-    .range([height - padding.bottom, padding.top]);
+    .domain([maxX, minX])
+    .range([size - padding.bottom, padding.top]);
 
   $: minX = Math.min.apply(null, xTicks);
   $: maxX = Math.max.apply(null, xTicks);
@@ -35,14 +39,35 @@
   $: contourGenerator = contours().size([covMat.rows, covMat.columns]);
   $: flatCov = covMat.transpose().to1DArray();
   $: console.log(flatCov);
-  $: contourGeo = linspace(-1, 1, 10).map((threshold) =>
+  let numContours = 30;
+  $: contourGeo = linspace(-1, 1, numContours).map((threshold) =>
     contourGenerator.contour(flatCov, threshold)
   );
-  $: contourPaths = contourGeo.map(geoPath(geoIdentity().scale(5)));
+
+  // https://observablehq.com/@d3/contours
+  const grid = flatCov;
+
+  // Converts from grid coordinates (indexes) to screen coordinates (pixels).
+  function mytransform({ type, value, coordinates }) {
+    return {
+      type,
+      value,
+      coordinates: coordinates.map((rings) => {
+        return rings.map((points) => {
+          return points.map(([x, y]) => [
+            xScale((x / covMat.rows) * 6 + 0),
+            yScale((y / covMat.rows) * 6 + 0),
+          ]);
+        });
+      }),
+    };
+  }
+  $: contourPaths = contourGeo.map(mytransform).map(geoPath());
   $: console.log(contourPaths);
 
-  $: color = scaleSequential([10, 0], interpolateSpectral);
+  $: color = scaleSequential([numContours, 0], interpolateSpectral);
   onMount(resize);
+  $: console.log("width", width, "height", height);
 
   function resize() {
     ({ width, height } = svg.getBoundingClientRect());
@@ -58,14 +83,28 @@
 
 <svelte:window on:resize={resize} />
 
-<svg bind:this={svg} on:mousemove={handleMousemove}>
-  <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />
-  {#each contourPaths as contourPath, i}
-    <path d={contourPath} style="fill: {color(i)};" />
-  {/each}
-</svg>
+<div>
+  <svg bind:this={svg} on:mousemove={handleMousemove}>
+    <Axes
+      {xScale}
+      {yScale}
+      {xTicks}
+      {yTicks}
+      width={size}
+      height={size}
+      {padding}
+    />
+    {#each contourPaths as contourPath, i}
+      <path d={contourPath} style="fill: {color(i)};" />
+    {/each}
+  </svg>
+</div>
 
 <style>
+  div {
+    width: 400px;
+    height: 400px;
+  }
   svg {
     width: 100%;
     height: 100%;

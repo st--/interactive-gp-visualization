@@ -192,10 +192,13 @@ Future thoughts:
     <div class="squarechart" style="grid-area: covariance;">
       <Covariance {atX1} {atX2} {covProps} {plotProps} />
     </div>
-    <div class="squarechart" style="grid-area: kernel2d;">
+  </div>
+  <CollapsibleCard open={true}>
+    <h4 slot="header">&#187; Full covariance</h4>
+    <div slot="body" class="fullcovchart">
       <KernelTwoD {covMat} />
     </div>
-  </div>
+  </CollapsibleCard>
   <CollapsibleCard>
     <h4 slot="header">&#187; Visualization settings</h4>
     <div slot="body">
@@ -253,6 +256,11 @@ Future thoughts:
       "line covariance";
   }
   .chart {
+    background-color: #fafafa;
+  }
+  .fullcovchart {
+    min-width: 400px;
+    min-height: 400px;
     background-color: #fafafa;
   }
   .squarechart {
