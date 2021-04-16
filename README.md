@@ -1,7 +1,7 @@
 # Interactive Visualisation of Gaussian processes
 
 This is an interactive extension of a visualisation I developed for an invited talk at the FAI seminar series at University College London.
-It is built using [Svelte](https://svelte.dev/), [D3](https://d3js.org/), and [ml-matrix](https://github.com/mljs/matrix).
+It is built using [Svelte](https://svelte.dev/), [D3.js](https://d3js.org/), and [ml-matrix](https://github.com/mljs/matrix).
 
 ## Other visualisations
 
@@ -9,7 +9,7 @@ There are plenty of other Gaussian process visualisations out there; here are so
 
 * [A Visual Exploration of Gaussian Processes (distill.pub)](https://distill.pub/2019/visual-exploration-gaussian-processes/) ([source](https://github.com/distillpub/post%2d-visual-exploration-gaussian-processes), using D3.js, ml-matrix)
 * [Demo by Nicolas Durrande](https://durrande.shinyapps.io/gp_playground/) ([source](https://github.com/NicolasDurrande/shinyApps/tree/master/GP_playground), using R and Shiny)
-* [Demo by Johan W&aring;gberg](http://smlbook.org/GP/) ([source](https://github.com/uu-sml/sml-book-page/tree/master/GP), using D3.js, Numeric.js, katex)
+* [Demo by Johan W&aring;gberg](http://smlbook.org/GP/) ([source](https://github.com/uu-sml/sml-book-page/tree/master/GP), using D3.js, Numeric.js)
 * [Demo by Tomi Peltola](http://www.tmpl.fi/gp/) ([source](https://github.com/to-mi/gp-demo-js), using React, D3.js, Numeric.js)
 * [Demo by Chi Feng](https://chi-feng.github.io/gp-demo/) ([source](https://github.com/chi-feng/gp-demo), using dat.gui, jQuery)
 * [Demo by Alex Y. Chan](https://gaussianprocess.herokuapp.com/) ([source](https://github.com/aybchan/gaussianprocess), using D3.js, math.js)
