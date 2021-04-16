@@ -84,7 +84,7 @@ export function makeMatern52() {
   return {
     description: "Matérn 5/2",
     formula:
-      "\\sigma^2 \\big( 1 + \\frac{\\sqrt{5} |x-x'|}{\\ell} + \\frac{5 |x-x'|}{3 \\ell^2} \\big) \\exp\\Big(-\\frac{\\sqrt{5} |x-x'|}{\\ell}\\Big)",
+      "\\sigma^2 \\big( 1 + \\frac{\\sqrt{5} |x-x'|}{\\ell} + \\frac{5 (x-x')^2}{3 \\ell^2} \\big) \\exp\\Big(-\\frac{\\sqrt{5} |x-x'|}{\\ell}\\Big)",
     parameters: [paramVariance, paramLengthscale],
     kernel: matern52,
   };
