@@ -219,7 +219,7 @@ Future thoughts:
       <Covariance {atX1} {atX2} {covProps} {plotProps} />
     </div>
   </div>
-  <CollapsibleCard>
+  <CollapsibleCard open={true}>
     <h4 slot="header">&#187; Visualization settings</h4>
     <div slot="body">
       <RandomSample xsLength={xs.length} bind:doAnimate />
@@ -234,7 +234,7 @@ Future thoughts:
       </div>
     </div>
   </CollapsibleCard>
-  <CollapsibleCard>
+  <CollapsibleCard open={true}>
     <h4 slot="header">&#187; Kernel and likelihood</h4>
     <div slot="body">
       <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
