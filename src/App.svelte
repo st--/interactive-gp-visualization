@@ -13,7 +13,6 @@ To dos:
 More features:
 - add two observations when clicking in Covariance plot?
 - select prior mean function (linear, quadratic, sine?)
-- smoothly animated samples (see http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf)
 - include log marginal likelihood
 - include 2D visualisation of covariance function (contour plot)
 - better support for mobile / touch
@@ -44,7 +43,13 @@ Future thoughts:
     white,
     sumKernel,
   } from "./kernels.js";
-  import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
+  import {
+    linspace,
+    matrixSqrt,
+    sampleMvn,
+    sampleMvnTrajectory,
+    covEllipse,
+  } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
@@ -57,6 +62,8 @@ Future thoughts:
     makeLinear(), // 5
   ];
   let selectedKernel = kernelChoices[3];
+
+  let doAnimate = true;
 
   let plotProps = {
     mean: true,
@@ -91,7 +98,25 @@ Future thoughts:
   $: covMat = gp.cov(xs);
   $: marginalVariances = covMat.diag();
   $: covSqrt = matrixSqrt(covMat);
-  $: samples = sampleMvn(means, covSqrt, $vs);
+
+  //$: samples = sampleMvn(means, covSqrt, $vs);
+  let frameIdx = 0;
+  let numFrames = 20;
+  $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, numFrames);
+  $: samples = sampleFrames[frameIdx];
+
+  function updateFrameIdx() {
+    if (doAnimate) {
+      frameIdx = (frameIdx + 1) % numFrames;
+    }
+  }
+
+  let animationInterval;
+  let animationDelay = 100;
+  $: {
+    clearInterval(animationInterval);
+    setInterval(updateFrameIdx, animationDelay);
+  }
 
   $: getDataAt = (dat) => {
     // TODO improve using d3-interpolate?
@@ -197,7 +222,7 @@ Future thoughts:
   <CollapsibleCard>
     <h4 slot="header">&#187; Visualization settings</h4>
     <div slot="body">
-      <RandomSample xsLength={xs.length} />
+      <RandomSample xsLength={xs.length} bind:doAnimate />
       <div>
         <button
           class="btn"
