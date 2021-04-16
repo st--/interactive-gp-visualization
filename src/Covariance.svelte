@@ -17,7 +17,8 @@
   let width = 300;
   let height = 300;
 
-  const padding = { top: 25, right: 15, bottom: 45, left: 50 };
+  const padding = { top: 25, bottom: 45, left: 50 };
+  padding.right = padding.top + padding.bottom - padding.left; // 20
 
   const sigmaContours = [1, 2];
 
@@ -150,7 +151,7 @@
       <circle
         cx={xScale(atX1.mean)}
         cy={yScale(atX2.mean)}
-        r="1"
+        r="1.5"
         style="fill: rgba(0, 100, 100);"
       />
     {/if}
@@ -158,6 +159,7 @@
     {#if plotProps.samples}
       {#each yPairs as ys, i}
         <circle
+          class="samples"
           cx={xScale(ys[0])}
           cy={yScale(ys[1])}
           r="3"
@@ -184,9 +186,7 @@
     height: 100%;
   }
 
-  circle {
-    fill: orange;
-    fill-opacity: 0.6;
+  .samples {
     stroke: rgba(0, 0, 0, 0.5);
   }
 

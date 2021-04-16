@@ -209,9 +209,10 @@
 
     {#each points as point}
       <circle
+        class="observation"
         cx={xScale(point.x)}
         cy={yScale(point.y)}
-        r="5"
+        r="6"
         on:click={(event) => removePoint(point, event)}
       />
       <!-- see https://svelte.dev/examples#7guis-circles -->
@@ -235,7 +236,7 @@
     height: 100%;
   }
 
-  circle {
+  .observation {
     fill: black;
     fill-opacity: 0.6;
     stroke: rgba(0, 0, 0, 0.5);

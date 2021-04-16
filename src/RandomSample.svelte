@@ -2,7 +2,7 @@
 <script>
   import { randn } from "./mymath.js";
   import { vs, seed } from "./store.js";
-  export let xsLength;
+  export let xsLength, doAnimate;
 
   let numSamples = 3;
 
@@ -20,4 +20,21 @@
     <input type="number" bind:value={numSamples} min="0" max="10" />
   </label>
   <button class="btn" on:click={resampleClick}>Resample</button>
+  <button
+    class="btn"
+    on:click={(e) => {
+      doAnimate = !doAnimate;
+    }}
+    >{#if doAnimate}Pause{:else}Play{/if}</button
+  >
 </div>
+
+<style>
+  .randomize-box {
+    display: flex;
+    align-items: center;
+  }
+  input[type="number"] {
+    width: 50px;
+  }
+</style>

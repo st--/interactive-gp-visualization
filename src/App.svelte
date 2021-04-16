@@ -2,6 +2,7 @@
 
 To dos:
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
+- vertically align range sliders with rest of line
 - fix relative size when window too small...
 - center/right-align labels instead of manual pixel shifts
 - adjust axis ticks when resizing
@@ -12,7 +13,6 @@ To dos:
 More features:
 - add two observations when clicking in Covariance plot?
 - select prior mean function (linear, quadratic, sine?)
-- smoothly animated samples (see http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf)
 - include log marginal likelihood
 - include 2D visualisation of covariance function (contour plot)
 - better support for mobile / touch
@@ -23,7 +23,7 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
-  import { CollapsibleCard } from "svelte-collapsible";
+  import CollapsibleCard from "./CollapsibleCard.svelte";
   import Katex from "./Katex.svelte";
   import Lineplot from "./Lineplot.svelte";
   import Kernelplot from "./Kernelplot.svelte";
@@ -44,7 +44,13 @@ Future thoughts:
     white,
     sumKernel,
   } from "./kernels.js";
-  import { linspace, matrixSqrt, sampleMvn, covEllipse } from "./mymath.js";
+  import {
+    linspace,
+    matrixSqrt,
+    sampleMvn,
+    sampleMvnTrajectory,
+    covEllipse,
+  } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
@@ -57,6 +63,8 @@ Future thoughts:
     makeLinear(), // 5
   ];
   let selectedKernel = kernelChoices[3];
+
+  let doAnimate = true;
 
   let plotProps = {
     mean: true,
@@ -91,7 +99,25 @@ Future thoughts:
   $: covMat = gp.cov(xs);
   $: marginalVariances = covMat.diag();
   $: covSqrt = matrixSqrt(covMat);
-  $: samples = sampleMvn(means, covSqrt, $vs);
+
+  //$: samples = sampleMvn(means, covSqrt, $vs);
+  let frameIdx = 0;
+  let numFrames = 20;
+  $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, numFrames);
+  $: samples = sampleFrames[frameIdx];
+
+  function updateFrameIdx() {
+    if (doAnimate) {
+      frameIdx = (frameIdx + 1) % numFrames;
+    }
+  }
+
+  let animationInterval;
+  let animationDelay = 100;
+  $: {
+    clearInterval(animationInterval);
+    setInterval(updateFrameIdx, animationDelay);
+  }
 
   $: getDataAt = (dat) => {
     // TODO improve using d3-interpolate?
@@ -141,11 +167,12 @@ Future thoughts:
         with or without holding the <strong>Shift key</strong>. You can add
         observations on which to condition the Gaussian process by
         <strong>clicking</strong>
-        anywhere in the plot; these observations are drawn as black circles
-        (clicking on an observation removes it again).
+        anywhere in the plot; these observations are drawn as black circles &#9899;.
+        Clicking on an observation removes it again.
         <small
           ><em>Note:</em> Two observations too close to each other can lead to numerical
-          issues and long compute times - you may have to reload the page.</small
+          issues and long compute times. If the app seems to hang, reload the page
+          to restart.</small
         >
       </div>
       <div class="text-explanation" style="grid-area: kernel;">
@@ -199,10 +226,10 @@ Future thoughts:
       <KernelTwoD {covMat} />
     </div>
   </CollapsibleCard>
-  <CollapsibleCard>
+  <CollapsibleCard open={true}>
     <h4 slot="header">&#187; Visualization settings</h4>
     <div slot="body">
-      <RandomSample xsLength={xs.length} />
+      <RandomSample xsLength={xs.length} bind:doAnimate />
       <div>
         <button
           class="btn"
@@ -214,7 +241,7 @@ Future thoughts:
       </div>
     </div>
   </CollapsibleCard>
-  <CollapsibleCard>
+  <CollapsibleCard open={true}>
     <h4 slot="header">&#187; Kernel and likelihood</h4>
     <div slot="body">
       <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
@@ -256,7 +283,7 @@ Future thoughts:
       "line covariance";
   }
   .chart {
-    background-color: #fafafa;
+    /* background-color: #fafafa; */
   }
   .fullcovchart {
     min-width: 400px;
@@ -266,6 +293,6 @@ Future thoughts:
   .squarechart {
     min-width: 200px;
     min-height: 200px;
-    background-color: #fafafa;
+    /* background-color: #fafafa; */
   }
 </style>
