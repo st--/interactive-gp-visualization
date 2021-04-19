@@ -101,7 +101,7 @@ Future thoughts:
 
   //$: samples = sampleMvn(means, covSqrt, $vs);
   let frameIdx = 0;
-  let numFrames = 20;
+  let numFrames = 45;
   $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, numFrames);
   $: samples = sampleFrames[frameIdx];
 
@@ -112,7 +112,7 @@ Future thoughts:
   }
 
   let animationInterval;
-  let animationDelay = 100;
+  let animationDelay = 50;
   $: {
     clearInterval(animationInterval);
     setInterval(updateFrameIdx, animationDelay);
@@ -167,7 +167,7 @@ Future thoughts:
         observations on which to condition the Gaussian process by
         <strong>clicking</strong>
         anywhere in the plot; these observations are drawn as black circles &#9899;.
-        Clicking on an observation removes it again.
+        To remove an observation again, click on it.
         <small
           ><em>Note:</em> Two observations too close to each other can lead to numerical
           issues and long compute times. If the app seems to hang, reload the page
