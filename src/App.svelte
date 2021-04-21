@@ -292,6 +292,7 @@ Future thoughts:
   .squarechart {
     width: 350px;
     height: 350px;
+    padding-right: 30px;
     /* background-color: #fafafa; */
   }
 </style>
