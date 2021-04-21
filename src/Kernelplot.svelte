@@ -6,9 +6,10 @@
   import { zip } from "d3-array";
   import { x1, x2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
+  import { pathGenerator } from "./myplot.js";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
-  export let xs, ys;
+  export let xs, k1s, k2s, atX1, atX2;
 
   let svg;
   let width = 500;
@@ -33,9 +34,9 @@
   $: maxX = xs[xs.length - 1];
   $: minY = Math.min.apply(null, yTicks);
   $: maxY = Math.max.apply(null, yTicks);
-  $: path = `M${zip(xs, ys)
-    .map((p) => `${xScale(p[0])},${yScale(p[1])}`)
-    .join("L")}`;
+  $: makePath = pathGenerator(xScale, yScale);
+  $: path1 = makePath(xs, k1s);
+  $: path2 = makePath(xs, k2s);
 
   onMount(resize);
 
@@ -74,7 +75,7 @@
     style="bottom: {yScale((minY + maxY) / 2)}px; left: {xScale(0) -
       60}px; transform: rotate(-90deg);"
   >
-    <Katex math="k(x_1, \cdot)" />
+    <Katex math="k(x_i, \cdot)" />
   </div>
 
   <svg
@@ -99,7 +100,22 @@
     />
 
     <!-- data -->
-    <path class="path-line" d={path} />
+    <path class="path-line" style="stroke: red;" d={path1} />
+    <path class="path-line" style="stroke: orange;" d={path2} />
+    <circle style="fill: red;" cx={xScale($x1)} cy={yScale(atX1.k1)} r="3" />
+    <circle
+      style="fill: orange; stroke: red;"
+      cx={xScale($x1)}
+      cy={yScale(atX1.k2)}
+      r="3"
+    />
+    <circle
+      style="fill: red; stroke: orange;"
+      cx={xScale($x2)}
+      cy={yScale(atX2.k1)}
+      r="3"
+    />
+    <circle style="fill: orange;" cx={xScale($x2)} cy={yScale(atX2.k2)} r="3" />
   </svg>
 </div>
 
@@ -125,6 +141,10 @@
     stroke: rgb(0, 100, 100);
     stroke-linejoin: round;
     stroke-linecap: round;
+    stroke-width: 1;
+  }
+
+  circle {
     stroke-width: 2;
   }
 </style>

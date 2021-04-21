@@ -94,6 +94,7 @@ Future thoughts:
       : prior(kernelWithJitter);
 
   $: k1s = xs.map((x) => gp.kernel($x1, x));
+  $: k2s = xs.map((x) => gp.kernel($x2, x));
   $: means = gp.mean(xs);
   $: covMat = gp.cov(xs);
   $: marginalVariances = covMat.diag();
@@ -129,7 +130,9 @@ Future thoughts:
     const variance =
       dat.w1 * marginalVariances[dat.idx1] +
       dat.w2 * marginalVariances[dat.idx2];
-    return { ys, mean, variance };
+    const k1 = dat.w1 * k1s[dat.idx1] + dat.w2 * k1s[dat.idx2];
+    const k2 = dat.w1 * k2s[dat.idx1] + dat.w2 * k2s[dat.idx2];
+    return { ys, mean, variance, k1, k2 };
   };
   $: atX1 = getDataAt(getIndicesAndFrac(xs, $x1));
   $: atX2 = getDataAt(getIndicesAndFrac(xs, $x2));
@@ -201,7 +204,7 @@ Future thoughts:
 
   <div class="plot-container">
     <div class="chart" style="grid-area: kernel;">
-      <Kernelplot {xs} ys={k1s} />
+      <Kernelplot {xs} {k1s} {k2s} {atX1} {atX2} />
     </div>
     <div class="chart" style="grid-area: line;">
       <Lineplot
@@ -269,7 +272,8 @@ Future thoughts:
   }
   .plot-container {
     display: grid;
-    grid-template-rows: 30% 70%;
+    height: 500px;
+    grid-template-rows: 40% 70%;
     grid-template-columns: 70% 30%;
     grid-template-areas:
       "kernel ."
