@@ -146,6 +146,12 @@ Future thoughts:
 
 <div>
   <h1 class="post-title">Interactive Gaussian Process Visualization</h1>
+  <p>
+    <em
+      >Works best in Chrome, works fine in Firefox; not tested in Safari/Edge.
+      Touchscreen support is work-in-progress.</em
+    >
+  </p>
 
   <CollapsibleCard open={false}>
     <h3 slot="header">&#187; Instructions</h3>
@@ -171,7 +177,7 @@ Future thoughts:
         observations on which to condition the Gaussian process by
         <strong>clicking</strong>
         anywhere in the plot; these observations are drawn as black circles &#9899;.
-        To remove an observation again, click on it.
+        To remove an observation, click on it again.
         <small
           ><em>Note:</em> Two observations too close to each other can lead to numerical
           issues and long compute times. If the app seems to hang, reload the page
@@ -181,15 +187,27 @@ Future thoughts:
       <div class="text-explanation" style="grid-area: kernel;">
         <em>Top left:</em>
         Visualises a slice through the covariance function or kernel <Katex
-          math="k(x_1, \cdot)"
-        /> as a function of the second argument. You can change the location of <Katex
+          math="k(x_i, \cdot)"
+        /> as a function of the second argument, for <Katex math="x_i=x_1" />
+        (<span style="color: red;">red</span>) and <Katex math="x_i=x_2" /> (<span
+          style="color: orange;">orange</span
+        >). Circles highlight the values of <Katex math="k(x_1, x_1)" />, <Katex
+          math="k(x_1, x_2) = k(x_2, x_1)"
+        />, and <Katex math="k(x_2, x_2)" />. You can change the location of <Katex
           math="x_1"
         /> and <Katex math="x_2" /> by <strong>moving the mouse</strong> with or
         without holding the
         <strong>Shift key</strong>.
       </div>
+      <div class="text-explanation" style="grid-area: covmat">
+        <em>Top right:</em> Displays the entries of the covariance matrix
+        <Katex
+          math={`\\operatorname{cov}(f(x_1), f(x_2)) = \\begin{pmatrix} k(x_1, x_1) & k(x_1, x_2) \\\\ k(x_2, x_1) & k(x_2, x_2) \\end{pmatrix}`}
+        />, corresponding to the circles in the top-left plot, and shows the
+        correlation coefficient.
+      </div>
       <div class="text-explanation" style="grid-area: covariance;">
-        <em>Right:</em>
+        <em>Bottom right:</em>
         Visualises the covariance between <Katex math="f(x_1)" /> and <Katex
           math="f(x_2)"
         />
@@ -198,7 +216,11 @@ Future thoughts:
             >ded ar</span
           >eas</span
         >) and the samples evaluated at those points (colored circles,
-        corresponding to the colored lines in the bottom-left plot).
+        corresponding to the colored lines in the bottom-left plot) as well as
+        the marginal distributions of <Katex math="f(x_1)" />
+        (<span style="color: red;">red</span>) and
+        <Katex math="f(x_2)" />
+        (<span style="color: orange;">orange</span>).
       </div>
     </div></CollapsibleCard
   >
@@ -268,9 +290,9 @@ Future thoughts:
   .text-container {
     max-width: 1200px;
     display: grid;
-    grid-template-columns: 70% auto;
+    grid-template-columns: auto 350px;
     grid-template-areas:
-      "kernel ."
+      "kernel covmat"
       "line covariance";
   }
   .text-explanation {
