@@ -278,19 +278,20 @@ Future thoughts:
   }
   .plot-container {
     display: grid;
-    height: 500px;
-    grid-template-rows: 40% 70%;
-    grid-template-columns: 70% 30%;
+    height: 550px;
+    grid-template-rows: auto 350px;
+    grid-template-columns: auto 350px;
     grid-template-areas:
       "kernel covmat"
       "line covariance";
   }
   .chart {
+    min-width: 200px;
     /* background-color: #fafafa; */
   }
   .squarechart {
-    min-width: 200px;
-    min-height: 200px;
+    width: 350px;
+    height: 350px;
     /* background-color: #fafafa; */
   }
 </style>
