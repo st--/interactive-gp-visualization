@@ -145,10 +145,10 @@ Future thoughts:
 </script>
 
 <div>
-  <h2>Interactive Gaussian Process Visualization</h2>
+  <h1 class="post-title">Interactive Gaussian Process Visualization</h1>
 
   <CollapsibleCard open={false}>
-    <h4 slot="header">&#187; Instructions</h4>
+    <h3 slot="header">&#187; Instructions</h3>
     <div slot="body" class="text-container">
       <div class="text-explanation" style="grid-area: line;">
         <em>Bottom left:</em>
@@ -229,7 +229,7 @@ Future thoughts:
     </div>
   </div>
   <CollapsibleCard open={true}>
-    <h4 slot="header">&#187; Visualization settings</h4>
+    <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
       <RandomSample xsLength={xs.length} bind:doAnimate />
       <div>
@@ -244,18 +244,18 @@ Future thoughts:
     </div>
   </CollapsibleCard>
   <CollapsibleCard open={true}>
-    <h4 slot="header">&#187; Kernel and likelihood</h4>
+    <h3 slot="header">&#187; Kernel and likelihood</h3>
     <div slot="body">
       <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
     </div>
   </CollapsibleCard>
   <CollapsibleCard open={false}>
-    <h4 slot="header">&#187; Plotting options</h4>
+    <h3 slot="header">&#187; Plotting options</h3>
     <div slot="body">
       <ConfigPlot bind:plotProps bind:num_grid />
     </div>
   </CollapsibleCard>
-  <div>
+  <div style="text-align: center;">
     [
     <a href="https://github.com/st--/interactive-gp-visualization/"
       >Source on GitHub</a
