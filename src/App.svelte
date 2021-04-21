@@ -27,6 +27,7 @@ Future thoughts:
   import Katex from "./Katex.svelte";
   import Lineplot from "./Lineplot.svelte";
   import Kernelplot from "./Kernelplot.svelte";
+  import CovMat from "./CovMat.svelte";
   import Covariance from "./Covariance.svelte";
   import RandomSample from "./RandomSample.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
@@ -202,24 +203,29 @@ Future thoughts:
     </div></CollapsibleCard
   >
 
-  <div class="plot-container">
-    <div class="chart" style="grid-area: kernel;">
-      <Kernelplot {xs} {k1s} {k2s} {atX1} {atX2} />
-    </div>
-    <div class="chart" style="grid-area: line;">
-      <Lineplot
-        {xs}
-        {means}
-        {marginalVariances}
-        {samples}
-        bind:points
-        {atX1}
-        {atX2}
-        {plotProps}
-      />
-    </div>
-    <div class="squarechart" style="grid-area: covariance;">
-      <Covariance {atX1} {atX2} {covProps} {plotProps} />
+  <div>
+    <div class="plot-container">
+      <div class="chart" style="grid-area: kernel;">
+        <Kernelplot {xs} {k1s} {k2s} {atX1} {atX2} />
+      </div>
+      <div class="chart" style="grid-area: covmat;">
+        <CovMat {atX1} {atX2} />
+      </div>
+      <div class="chart" style="grid-area: line;">
+        <Lineplot
+          {xs}
+          {means}
+          {marginalVariances}
+          {samples}
+          bind:points
+          {atX1}
+          {atX2}
+          {plotProps}
+        />
+      </div>
+      <div class="squarechart" style="grid-area: covariance;">
+        <Covariance {atX1} {atX2} {covProps} {plotProps} />
+      </div>
     </div>
   </div>
   <CollapsibleCard open={true}>
@@ -276,7 +282,7 @@ Future thoughts:
     grid-template-rows: 40% 70%;
     grid-template-columns: 70% 30%;
     grid-template-areas:
-      "kernel ."
+      "kernel covmat"
       "line covariance";
   }
   .chart {
