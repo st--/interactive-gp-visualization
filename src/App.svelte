@@ -154,6 +154,13 @@ Future thoughts:
   </p>
 
   <CollapsibleCard open={false}>
+    <h3 slot="header">&#187; Explanation</h3>
+    <div slot="body">
+	    A Gaussian process can be thought of as an extension of the multivariate normal distribution to an infinite number of random variables covering each point on the input domain. The covariance between function values at any two points is given by the evaluation of the <em>kernel</em> of the Gaussian process. For an in-depth explanation, read this <a href="https://distill.pub/2019/visual-exploration-gaussian-processes/">excellent distill.pub article</a> and then come back to this interactive visualisation!
+    </div>
+  </CollapsibleCard>
+
+  <CollapsibleCard open={false}>
     <h3 slot="header">&#187; Instructions</h3>
     <div slot="body" class="text-container">
       <div class="text-explanation" style="grid-area: line;">
