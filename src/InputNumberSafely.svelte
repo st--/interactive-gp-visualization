@@ -2,10 +2,16 @@
   export let value,
     min,
     max,
-    step = 1;
-  let maybeValue = value;
+    step = 1,
+    lowerBound,
+    upperBound;
+  $: maybeValue = value;
   function handleInput() {
     if (maybeValue !== undefined && maybeValue !== null) {
+      if (lowerBound !== undefined && maybeValue < lowerBound)
+        maybeValue = lowerBound;
+      if (upperBound !== undefined && maybeValue > lowerBound)
+        maybeValue = upperBound;
       value = maybeValue;
     }
   }

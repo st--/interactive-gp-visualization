@@ -18,7 +18,12 @@
 <div class="randomize-box">
   <label>
     Number of samples:
-    <InputNumberSafely bind:value={numSamples} min="0" max="10" />
+    <InputNumberSafely
+      bind:value={numSamples}
+      min="0"
+      max="10"
+      lowerBound={0}
+    />
   </label>
   <button class="btn" on:click={resampleClick}>Resample</button>
   <button

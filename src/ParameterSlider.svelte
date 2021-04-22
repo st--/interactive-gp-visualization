@@ -1,13 +1,13 @@
 <script>
   import Katex from "./Katex.svelte";
   import InputNumberSafely from "./InputNumberSafely.svelte";
-  export let name, formula, value, min, max, step;
+  export let name, formula, value, min, max, step, lowerBound;
 </script>
 
 <label>
   {name}
   <Katex math="{formula} =" />
-  <InputNumberSafely bind:value {min} {max} {step} />
+  <InputNumberSafely bind:value {min} {max} {step} {lowerBound} />
   <input type="range" bind:value {min} {max} {step} />
 </label>
 

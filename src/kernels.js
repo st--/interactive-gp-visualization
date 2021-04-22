@@ -9,6 +9,7 @@ const paramVariance = {
   min: 0.0,
   max: 4.0,
   step: 0.01,
+  lowerBound: 0.0,
 };
 const paramLengthscale = {
   name: "lengthscale",
@@ -17,6 +18,7 @@ const paramLengthscale = {
   min: 0.05,
   max: 10.0,
   step: 0.01,
+  lowerBound: 1e-3,
 };
 
 export function sqexp(variance = 1, lengthscale = 1) {
@@ -112,6 +114,7 @@ const paramPeriod = {
   min: 0.1,
   max: 10.0,
   step: 0.01,
+  lowerBound: 1e-3,
 };
 
 export function makePeriodic() {
@@ -131,6 +134,7 @@ const paramBias = {
   min: 0.0,
   max: 4.0,
   step: 0.01,
+  lowerBound: 0.0,
 };
 const paramCenter = {
   name: "center",
