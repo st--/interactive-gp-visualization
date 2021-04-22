@@ -63,6 +63,7 @@ Future thoughts:
     makeLinear(), // 5
   ];
   let selectedKernel = kernelChoices[3];
+  let noiseScale = 0.0;
 
   let doAnimate = true;
 
@@ -73,8 +74,7 @@ Future thoughts:
     marginals: true,
   };
 
-  let num_grid = 200;
-  let noiseScale = 0.0;
+  let num_grid = 150;
   $: xs = linspace(0, 6, num_grid);
 
   $: kernelWithJitter = sumKernel([
@@ -103,7 +103,7 @@ Future thoughts:
 
   //$: samples = sampleMvn(means, covSqrt, $vs);
   let frameIdx = 0;
-  let numFrames = 45;
+  let numFrames = 30;
   $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, numFrames);
   $: samples = sampleFrames[frameIdx];
 
@@ -114,7 +114,7 @@ Future thoughts:
   }
 
   let animationInterval;
-  let animationDelay = 50;
+  let animationDelay = 100;
   $: {
     clearInterval(animationInterval);
     setInterval(updateFrameIdx, animationDelay);
