@@ -32,7 +32,7 @@ Future thoughts:
   import RandomSample from "./RandomSample.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
   import ConfigData from "./ConfigData.svelte";
-  import { x1, x2, vs } from "./store.js";
+  import { x1, x2, vs, us } from "./store.js";
   import {
     sqexp,
     makeSqexp,
@@ -104,7 +104,7 @@ Future thoughts:
   //$: samples = sampleMvn(means, covSqrt, $vs);
   let frameIdx = 0;
   let numFrames = 30;
-  $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, numFrames);
+  $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, $us, numFrames);
   $: samples = sampleFrames[frameIdx];
 
   function updateFrameIdx() {

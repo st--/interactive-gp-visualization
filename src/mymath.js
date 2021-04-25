@@ -76,7 +76,7 @@ export function sampleMvn(meanVec, covSqrt, v) {
   return Lv.addColumnVector(meanVec);
 }
 
-export function sampleMvnTrajectory(meanVec, covSqrt, v, numFrames) {
+export function sampleMvnTrajectory(meanVec, covSqrt, v, u, numFrames) {
   // returns array of smoothly animated samples from a multivariate normal distribution
   // see https://math.stackexchange.com/a/1930880/901583 or the detailed explanation:
   // http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf
@@ -86,16 +86,16 @@ export function sampleMvnTrajectory(meanVec, covSqrt, v, numFrames) {
       m.Matrix.zeros(meanVec.length, 1)
     );
   }
+  // const u = randn(v.rows, v.columns, Math.random()); // u ~ Normal(0, 1)
 
   const vNorm = m.Matrix.pow(v, 2)
     .sum("column")
     .map((c) => Math.sqrt(c)); // ‖v‖
   const vNormed = v.clone().divRowVector(vNorm); // v/‖v‖
 
-  const u = randn(v.rows, v.columns, Math.random()); // u ~ Normal(0, 1)
   const uDotVnormed = m.Matrix.mul(u, vNormed).sum("column"); // uᵀv/‖v‖
 
-  const t = m.Matrix.sub(u, vNormed.clone().mulRowVector(uDotVnormed)); // u - uᵀv/‖v‖
+  const t = m.Matrix.sub(u, vNormed.clone().mulRowVector(uDotVnormed)); // u - (uᵀv/‖v‖) v/‖v‖
   // now t ⟂ v
 
   const tNorm = m.Matrix.pow(t, 2)

@@ -16,4 +16,6 @@ export const x2 = createMinMaxStore(0, 6, 2.1);
 export const y1 = createMinMaxStore(-3, 3, 0);
 export const y2 = createMinMaxStore(-3, 3, 0);
 export const vs = writable();
-export const seed = writable(0.5);
+export const us = writable();
+export const seed1 = writable(0.5);
+export const seed2 = writable(0.5);
