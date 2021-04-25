@@ -4,14 +4,18 @@
     max,
     step = 1,
     lowerBound,
-    upperBound;
+    upperBound,
+    integer = false;
+
   $: maybeValue = value;
+
   function handleInput() {
     if (maybeValue !== undefined && maybeValue !== null) {
       if (lowerBound !== undefined && maybeValue < lowerBound)
         maybeValue = lowerBound;
       if (upperBound !== undefined && maybeValue > lowerBound)
         maybeValue = upperBound;
+      if (integer) maybeValue = Math.round(maybeValue);
       value = maybeValue;
     }
   }

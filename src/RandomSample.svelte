@@ -25,6 +25,7 @@
       min="0"
       max="10"
       lowerBound={0}
+      integer
     />
   </label>
   <button class="btn" on:click={resampleClick}>Resample</button>
