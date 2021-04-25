@@ -2,18 +2,20 @@
 <script>
   import InputNumberSafely from "./InputNumberSafely.svelte";
   import { randn } from "./mymath.js";
-  import { vs, us, seed1, seed2 } from "./store.js";
+  import { vs, us } from "./store.js";
   export let xsLength, doAnimate;
 
   let numSamples = 3;
+  let seed1 = 0.5;
+  let seed2 = 0.5;
 
-  $: vs.set(randn(xsLength, numSamples, $seed1));
-  $: us.set(randn(xsLength, numSamples, $seed2));
+  $: vs.set(randn(xsLength, numSamples, seed1));
+  $: us.set(randn(xsLength, numSamples, seed2));
 
   const resampleClick = (e) => {
     e.preventDefault(); // so page doesn't reload
-    seed1.set(Math.random());
-    seed2.set(Math.random());
+    seed1 = Math.random();
+    seed2 = Math.random();
   };
 </script>
 
