@@ -6,8 +6,8 @@
   export let xsLength, doAnimate;
 
   let numSamples = 3;
-  let seed1 = 0.5;
-  let seed2 = 0.5;
+  let seed1 = 0.1;
+  let seed2 = 0.2;
 
   $: vs.set(randn(xsLength, numSamples, seed1));
   $: us.set(randn(xsLength, numSamples, seed2));
