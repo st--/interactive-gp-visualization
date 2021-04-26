@@ -5,7 +5,8 @@
     step = 1,
     lowerBound,
     upperBound,
-    integer = false;
+    integer = false,
+    style;
 
   $: maybeValue = value;
 
@@ -28,4 +29,5 @@
   {max}
   {step}
   on:input={handleInput}
+  {style}
 />

@@ -7,7 +7,14 @@
 <label>
   {name}
   <Katex math="{formula} =" />
-  <InputNumberSafely bind:value {min} {max} {step} {lowerBound} />
+  <InputNumberSafely
+    bind:value
+    {min}
+    {max}
+    {step}
+    {lowerBound}
+    style="width: 80px;"
+  />
   <input type="range" bind:value {min} {max} {step} />
 </label>
 
@@ -15,8 +22,5 @@
   label {
     max-width: 500px;
     text-align: right;
-  }
-  input[type="number"] {
-    width: 80px;
   }
 </style>

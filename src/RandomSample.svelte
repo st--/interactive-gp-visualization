@@ -28,6 +28,7 @@
       max="10"
       lowerBound={0}
       integer
+      style="width: 50px;"
     />
   </label>
   <button class="btn" on:click={resampleClick}>Resample</button>
@@ -44,8 +45,5 @@
   .randomize-box {
     display: flex;
     align-items: center;
-  }
-  input[type="number"] {
-    width: 50px;
   }
 </style>
