@@ -59,6 +59,16 @@
       x2.set(newX);
     }
   }
+  function handleTouchmove(event) {
+    event.preventDefault();
+    const touches = event.touches;
+    const newX = xScale.invert(getSVGpoint(svg, touches[0]).x);
+    if (touches.length == 1) {
+      x1.set(newX);
+    } else {
+      x2.set(newX);
+    }
+  }
 </script>
 
 <svelte:window on:resize={resize} />
@@ -80,8 +90,9 @@
 
   <svg
     bind:this={svg}
-    on:mousemove={handleMousemove}
     on:click={handleClick}
+    on:mousemove={handleMousemove}
+    on:touchmove={handleTouchmove}
     overflow="visible"
   >
     <Axes {xScale} {yScale} {xTicks} {yTicks} {width} {height} {padding} />

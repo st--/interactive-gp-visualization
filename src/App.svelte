@@ -211,7 +211,9 @@ Future thoughts:
           math="x_1"
         /> and <Katex math="x_2" /> by <strong>moving the mouse</strong> with or
         without holding the
-        <strong>Shift key</strong>.
+        <strong>Shift key</strong> and by <strong>touch-moving</strong> with
+        <strong>one</strong>
+        or <strong>two</strong> fingers.
       </div>
       <div class="text-explanation" style="grid-area: covmat">
         <em>Top right:</em> Displays the entries of the covariance matrix
