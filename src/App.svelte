@@ -149,12 +149,12 @@ Future thoughts:
   <p>
     <em
       >Works best in Chrome, works fine in Firefox; not tested in Safari/Edge.
-      Touchscreen support is work-in-progress.</em
+      Touchscreen interactions supported, but works best on desktop.</em
     >
   </p>
 
   <CollapsibleCard open={false}>
-    <h3 slot="header">&#187; Explanation</h3>
+    <h3 slot="header">&#187; Background</h3>
     <div slot="body">
       A Gaussian process can be thought of as an extension of the multivariate
       normal distribution to an infinite number of random variables covering
