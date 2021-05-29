@@ -3,7 +3,6 @@
   import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear } from "d3-scale";
-  import { zip } from "d3-array";
   import { x1, x2 } from "./store.js";
   import { getSVGpoint } from "./getsvgpoint.js";
   import { pathGenerator } from "./myplot.js";

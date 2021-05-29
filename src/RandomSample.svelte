@@ -12,8 +12,8 @@
   $: vs.set(randn(xsLength, numSamples, seed1));
   $: us.set(randn(xsLength, numSamples, seed2));
 
-  const resampleClick = (e) => {
-    e.preventDefault(); // so page doesn't reload
+  const resampleClick = (event) => {
+    event.preventDefault(); // so page doesn't reload
     seed1 = Math.random();
     seed2 = Math.random();
   };
@@ -34,7 +34,7 @@
   <button class="btn" on:click={resampleClick}>Resample</button>
   <button
     class="btn"
-    on:click={(e) => {
+    on:click={(_event) => {
       doAnimate = !doAnimate;
     }}
     >{#if doAnimate}Pause{:else}Play{/if}</button

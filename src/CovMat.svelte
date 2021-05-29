@@ -1,11 +1,12 @@
 <!-- Copyright (c) 2021 ST John -->
 <script>
   import Katex from "./Katex.svelte";
-  import { x1, x2 } from "./store.js";
   export let atX1, atX2;
+
   let numDigits = 3;
   const unicodeMinusSign = "\u2212";
   const unicodeFigureSpace = "\u2007";
+
   function format(val, addSpace = true) {
     const str = `${val.toFixed(numDigits)}`;
     if (val < 0) {
@@ -18,7 +19,9 @@
       }
     }
   }
+
   $: correlation = atX1.k2 / Math.sqrt(atX1.k1 * atX2.k2);
+
   $: rho = format(correlation, false);
   $: k11 = format(atX1.k1);
   $: k12 = format(atX1.k2);

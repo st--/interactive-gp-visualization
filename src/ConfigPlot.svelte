@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2021 ST John -->
 <script>
   import Katex from "./Katex.svelte";
 

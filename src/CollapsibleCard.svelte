@@ -66,8 +66,9 @@
     else openCard();
   }
   onMount(() => {
-    prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
-      .matches;
+    prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
   });
 </script>
 

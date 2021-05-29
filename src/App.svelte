@@ -62,7 +62,7 @@ Future thoughts:
     makePeriodic(), // 4
     makeLinear(), // 5
   ];
-  let selectedKernel = kernelChoices[3];
+  let selectedKernel = kernelChoices[3]; // = Sqexp
   let noiseScale = 0.0;
 
   let doAnimate = true;
@@ -266,6 +266,7 @@ Future thoughts:
       </div>
     </div>
   </div>
+
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
@@ -281,18 +282,21 @@ Future thoughts:
       </div>
     </div>
   </CollapsibleCard>
+
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Kernel and likelihood</h3>
     <div slot="body">
       <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
     </div>
   </CollapsibleCard>
+
   <CollapsibleCard open={false}>
     <h3 slot="header">&#187; Plotting options</h3>
     <div slot="body">
       <ConfigPlot bind:plotProps bind:num_grid />
     </div>
   </CollapsibleCard>
+
   <div style="text-align: center;">
     [
     <a href="https://github.com/st--/interactive-gp-visualization/"
