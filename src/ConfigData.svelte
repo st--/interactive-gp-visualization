@@ -2,7 +2,12 @@
 <script>
   import Katex from "./Katex.svelte";
   import ParameterSlider from "./ParameterSlider.svelte";
-  export let noiseScale, selectedKernel, kernelChoices;
+  export let noiseScale,
+    selectedKernel,
+    kernelChoices,
+    selectedKernel2,
+    kernelChoices2,
+    kernelCombination;
 
   let noiseScaleProps = {
     name: "standard deviation",
@@ -31,6 +36,33 @@
   {#each selectedKernel.parameters as parameter}
     <ParameterSlider bind:value={parameter.value} {...parameter} />
   {/each}
+
+  <label
+    ><input type="radio" bind:group={kernelCombination} value={""} />simple
+    kernel</label
+  >
+  <label
+    ><input type="radio" bind:group={kernelCombination} value={"+"} />kernel sum</label
+  >
+  <label
+    ><input type="radio" bind:group={kernelCombination} value={"*"} />kernel
+    product</label
+  >
+  {#if kernelCombination !== ""}
+    <strong>{kernelCombination}</strong>
+    <select bind:value={selectedKernel2}>
+      {#each kernelChoices2 as choice}
+        <option value={choice}>
+          {choice.description}
+        </option>
+      {/each}
+    </select>
+    <Katex math="k(x, x') = {selectedKernel2.formula}" />
+
+    {#each selectedKernel2.parameters as parameter}
+      <ParameterSlider bind:value={parameter.value} {...parameter} />
+    {/each}
+  {/if}
 
   <strong>Likelihood:</strong>
   <label

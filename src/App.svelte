@@ -43,6 +43,7 @@ Future thoughts:
     makeLinear,
     white,
     sumKernel,
+    productKernel,
   } from "./kernels.js";
   import {
     linspace,
@@ -63,6 +64,16 @@ Future thoughts:
     makeLinear(), // 5
   ];
   let selectedKernel = kernelChoices[3]; // = Sqexp
+  let kernelChoices2 = [
+    makeMatern12(), // 0
+    makeMatern32(), // 1
+    makeMatern52(), // 2
+    makeSqexp(), // 3
+    makePeriodic(), // 4
+    makeLinear(), // 5
+  ];
+  let selectedKernel2 = kernelChoices2[3]; // = Sqexp
+  let kernelCombination = "";
   let noiseScale = 0.0;
 
   let doAnimate = true;
@@ -77,12 +88,23 @@ Future thoughts:
   let num_grid = 150;
   $: xs = linspace(0, 6, num_grid);
 
-  $: kernelWithJitter = sumKernel([
-    selectedKernel
-      ? selectedKernel.kernel(...selectedKernel.parameters.map((p) => p.value))
-      : sqexp(),
-    white(1e-6),
-  ]);
+  $: kernel1 = selectedKernel
+    ? selectedKernel.kernel(...selectedKernel.parameters.map((p) => p.value))
+    : sqexp();
+  $: kernel2 = selectedKernel2
+    ? selectedKernel2.kernel(...selectedKernel2.parameters.map((p) => p.value))
+    : sqexp();
+  function combineKernel(k1, k2, combination) {
+    if (combination == "+") {
+      return sumKernel([k1, k2]);
+    } else if (combination == "*") {
+      return productKernel([k1, k2]);
+    } else {
+      return k1;
+    }
+  }
+  $: kernel = combineKernel(kernel1, kernel2, kernelCombination);
+  $: kernelWithJitter = sumKernel([kernel, white(1e-6)]);
 
   $: gp =
     points.length > 0
@@ -286,7 +308,14 @@ Future thoughts:
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Kernel and likelihood</h3>
     <div slot="body">
-      <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
+      <ConfigData
+        bind:noiseScale
+        bind:selectedKernel
+        {kernelChoices}
+        bind:selectedKernel2
+        {kernelChoices2}
+        bind:kernelCombination
+      />
     </div>
   </CollapsibleCard>
 
