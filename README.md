@@ -1,6 +1,6 @@
 # Interactive Visualisation of Gaussian processes
 
-This is an interactive extension of a visualisation I developed for an invited talk at the FAI seminar series at University College London.
+This is an interactive extension of a visualisation I developed for an invited talk at the FAI seminar series at University College London. Try out the [live demo](http://infinitecuriosity.org/vizgp)!
 
 ## Other visualisations
 
