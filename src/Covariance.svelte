@@ -81,6 +81,10 @@
     y1.set(newX);
     y2.set(newY);
   }
+  function handleTouchmove(event) {
+    event.preventDefault();
+    handleMousemove(event.touches[0]);
+  }
 
   // TODO unify with Lineplot.svelte?
   const sampleColor = scaleOrdinal(schemeCategory10);
@@ -103,7 +107,12 @@
     <Katex math="f(x_1)" />
   </div>
 
-  <svg bind:this={svg} on:mousemove={handleMousemove} overflow="visible">
+  <svg
+    bind:this={svg}
+    on:mousemove={handleMousemove}
+    on:touchmove={handleTouchmove}
+    overflow="visible"
+  >
     <Axes
       {xScale}
       {yScale}

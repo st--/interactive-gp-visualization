@@ -1,14 +1,16 @@
+<!-- Copyright (c) 2021 ST John -->
 <script>
   import Katex from "./Katex.svelte";
   import ParameterSlider from "./ParameterSlider.svelte";
   export let noiseScale, selectedKernel, kernelChoices;
 
-  let noiseVarianceProps = {
+  let noiseScaleProps = {
     name: "standard deviation",
     formula: "\\sigma_\\text{noise}",
     min: 0.0,
     max: 4.0,
     step: 0.01,
+    lowerBound: 0.0,
   };
   let noiseScaleInternal = noiseScale;
   let useLikelihood = true;
@@ -42,7 +44,7 @@
     /></label
   >
   {#if useLikelihood}
-    <ParameterSlider bind:value={noiseScaleInternal} {...noiseVarianceProps} />
+    <ParameterSlider bind:value={noiseScaleInternal} {...noiseScaleProps} />
   {/if}
 </div>
 

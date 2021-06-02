@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2021 ST John -->
 <script>
   import Katex from "./Katex.svelte";
 
@@ -27,6 +28,7 @@
   <label>
     Number of evaluation points: {num_grid}
     <input type="range" bind:value={num_grid} min="10" max="500" step="5" />
+    (low resolution/high reactivity &xharr; high resolution/low reactivity)
   </label>
 </div>
 

@@ -9,15 +9,15 @@
     "validate": "svelte-check"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.0.0",
-    "@tsconfig/svelte": "^1.0.0",
-    "@types/d3-array": "^2.9.0",
+    "@tsconfig/svelte": "^1.0.13",
+    "@types/d3-array": "^2.12.1",
     "@types/d3-contour": "^2.0.0",
     "@types/d3-geo": "^2.0.0",
     "@types/d3-random": "^2.2.0",
-    "@types/d3-scale": "^3.2.2",
+    "@types/d3-scale": "^3.3.0",
     "@types/d3-scale-chromatic": "^2.0.0",
     "@types/katex": "^0.11.0",
     "d3-array": "latest",
@@ -26,22 +26,23 @@
     "d3-random": "^2.2.2",
     "d3-scale": "latest",
     "d3-scale-chromatic": "^2.0.0",
-    "katex": "^0.13.2",
+    "katex": "^0.13.11",
     "ml-matrix": "latest",
-    "prettier": "^2.2.1",
-    "prettier-plugin-svelte": "^2.2.0",
-    "rollup": "^2.3.4",
+    "prettier": "^2.3.0",
+    "prettier-plugin-svelte": "^2.3.0",
+    "rollup": "^2.50.4",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
-    "svelte": "^3.0.0",
-    "svelte-check": "^1.0.0",
-    "svelte-preprocess": "^4.0.0",
+    "svelte": "^3.38.2",
+    "svelte-check": "^2.0.0",
+    "svelte-collapsible-card": "^0.0.1",
+    "svelte-preprocess": "^4.7.3",
     "tslib": "^2.0.0",
-    "typescript": "^4.0.0"
+    "typescript": "^4.3.2"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.0"
+    "sirv-cli": "^1.0.12"
   }
 }

@@ -1,12 +1,20 @@
 <script>
   import Katex from "./Katex.svelte";
-  export let name, formula, value, min, max, step;
+  import InputNumberSafely from "./InputNumberSafely.svelte";
+  export let name, formula, value, min, max, step, lowerBound;
 </script>
 
 <label>
   {name}
   <Katex math="{formula} =" />
-  <input type="number" bind:value {min} {max} {step} />
+  <InputNumberSafely
+    bind:value
+    {min}
+    {max}
+    {step}
+    {lowerBound}
+    style="width: 80px;"
+  />
   <input type="range" bind:value {min} {max} {step} />
 </label>
 
@@ -14,8 +22,5 @@
   label {
     max-width: 500px;
     text-align: right;
-  }
-  input[type="number"] {
-    width: 80px;
   }
 </style>

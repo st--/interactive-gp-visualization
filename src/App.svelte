@@ -23,16 +23,17 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
-  import CollapsibleCard from "./CollapsibleCard.svelte";
+  import CollapsibleCard from "svelte-collapsible-card";
   import Katex from "./Katex.svelte";
   import Lineplot from "./Lineplot.svelte";
   import Kernelplot from "./Kernelplot.svelte";
+  import CovMat from "./CovMat.svelte";
   import Covariance from "./Covariance.svelte";
   import RandomSample from "./RandomSample.svelte";
   import KernelTwoD from "./KernelTwoD.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
   import ConfigData from "./ConfigData.svelte";
-  import { x1, x2, vs } from "./store.js";
+  import { x1, x2, vs, us } from "./store.js";
   import {
     sqexp,
     makeSqexp,
@@ -62,7 +63,8 @@ Future thoughts:
     makePeriodic(), // 4
     makeLinear(), // 5
   ];
-  let selectedKernel = kernelChoices[3];
+  let selectedKernel = kernelChoices[3]; // = Sqexp
+  let noiseScale = 0.0;
 
   let doAnimate = true;
 
@@ -73,8 +75,7 @@ Future thoughts:
     marginals: true,
   };
 
-  let num_grid = 200;
-  let noiseScale = 0.0;
+  let num_grid = 150;
   $: xs = linspace(0, 6, num_grid);
 
   $: kernelWithJitter = sumKernel([
@@ -95,6 +96,7 @@ Future thoughts:
       : prior(kernelWithJitter);
 
   $: k1s = xs.map((x) => gp.kernel($x1, x));
+  $: k2s = xs.map((x) => gp.kernel($x2, x));
   $: means = gp.mean(xs);
   $: covMat = gp.cov(xs);
   $: marginalVariances = covMat.diag();
@@ -102,8 +104,8 @@ Future thoughts:
 
   //$: samples = sampleMvn(means, covSqrt, $vs);
   let frameIdx = 0;
-  let numFrames = 45;
-  $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, numFrames);
+  let numFrames = 30;
+  $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, $us, numFrames);
   $: samples = sampleFrames[frameIdx];
 
   function updateFrameIdx() {
@@ -130,7 +132,9 @@ Future thoughts:
     const variance =
       dat.w1 * marginalVariances[dat.idx1] +
       dat.w2 * marginalVariances[dat.idx2];
-    return { ys, mean, variance };
+    const k1 = dat.w1 * k1s[dat.idx1] + dat.w2 * k1s[dat.idx2];
+    const k2 = dat.w1 * k2s[dat.idx1] + dat.w2 * k2s[dat.idx2];
+    return { ys, mean, variance, k1, k2 };
   };
   $: atX1 = getDataAt(getIndicesAndFrac(xs, $x1));
   $: atX2 = getDataAt(getIndicesAndFrac(xs, $x2));
@@ -142,10 +146,30 @@ Future thoughts:
 </script>
 
 <div>
-  <h2>Interactive Gaussian Process Visualization</h2>
+  <h1 class="post-title">Interactive Gaussian Process Visualization</h1>
+  <p>
+    <em
+      >Works best in Chrome, works fine in Firefox; not tested in Safari/Edge.
+      Touchscreen interactions supported, but works best on desktop.</em
+    >
+  </p>
 
   <CollapsibleCard open={false}>
-    <h4 slot="header">&#187; Instructions</h4>
+    <h3 slot="header">&#187; Background</h3>
+    <div slot="body">
+      A Gaussian process can be thought of as an extension of the multivariate
+      normal distribution to an infinite number of random variables covering
+      each point on the input domain. The covariance between function values at
+      any two points is given by the evaluation of the <em>kernel</em> of the
+      Gaussian process. For an in-depth explanation, read this
+      <a href="https://distill.pub/2019/visual-exploration-gaussian-processes/"
+        >excellent distill.pub article</a
+      > and then come back to this interactive visualisation!
+    </div>
+  </CollapsibleCard>
+
+  <CollapsibleCard open={false}>
+    <h3 slot="header">&#187; Instructions</h3>
     <div slot="body" class="text-container">
       <div class="text-explanation" style="grid-area: line;">
         <em>Bottom left:</em>
@@ -178,15 +202,29 @@ Future thoughts:
       <div class="text-explanation" style="grid-area: kernel;">
         <em>Top left:</em>
         Visualises a slice through the covariance function or kernel <Katex
-          math="k(x_1, \cdot)"
-        /> as a function of the second argument. You can change the location of <Katex
+          math="k(x_i, \cdot)"
+        /> as a function of the second argument, for <Katex math="x_i=x_1" />
+        (<span style="color: red;">red</span>) and <Katex math="x_i=x_2" /> (<span
+          style="color: orange;">orange</span
+        >). Circles highlight the values of <Katex math="k(x_1, x_1)" />, <Katex
+          math="k(x_1, x_2) = k(x_2, x_1)"
+        />, and <Katex math="k(x_2, x_2)" />. You can change the location of <Katex
           math="x_1"
         /> and <Katex math="x_2" /> by <strong>moving the mouse</strong> with or
         without holding the
-        <strong>Shift key</strong>.
+        <strong>Shift key</strong> and by <strong>touch-moving</strong> with
+        <strong>one</strong>
+        or <strong>two</strong> fingers.
+      </div>
+      <div class="text-explanation" style="grid-area: covmat">
+        <em>Top right:</em> Displays the entries of the covariance matrix
+        <Katex
+          math={`\\operatorname{cov}(f(x_1), f(x_2)) = \\begin{pmatrix} k(x_1, x_1) & k(x_1, x_2) \\\\ k(x_2, x_1) & k(x_2, x_2) \\end{pmatrix}`}
+        />, corresponding to the circles in the top-left plot, and shows the
+        correlation coefficient.
       </div>
       <div class="text-explanation" style="grid-area: covariance;">
-        <em>Right:</em>
+        <em>Bottom right:</em>
         Visualises the covariance between <Katex math="f(x_1)" /> and <Katex
           math="f(x_2)"
         />
@@ -195,39 +233,50 @@ Future thoughts:
             >ded ar</span
           >eas</span
         >) and the samples evaluated at those points (colored circles,
-        corresponding to the colored lines in the bottom-left plot).
+        corresponding to the colored lines in the bottom-left plot) as well as
+        the marginal distributions of <Katex math="f(x_1)" />
+        (<span style="color: red;">red</span>) and
+        <Katex math="f(x_2)" />
+        (<span style="color: orange;">orange</span>).
       </div>
     </div></CollapsibleCard
   >
 
-  <div class="plot-container">
-    <div class="chart" style="grid-area: kernel;">
-      <Kernelplot {xs} ys={k1s} />
-    </div>
-    <div class="chart" style="grid-area: line;">
-      <Lineplot
-        {xs}
-        {means}
-        {marginalVariances}
-        {samples}
-        bind:points
-        {atX1}
-        {atX2}
-        {plotProps}
-      />
-    </div>
-    <div class="squarechart" style="grid-area: covariance;">
-      <Covariance {atX1} {atX2} {covProps} {plotProps} />
+  <div>
+    <div class="plot-container">
+      <div class="chart" style="grid-area: kernel;">
+        <Kernelplot {xs} {k1s} {k2s} {atX1} {atX2} />
+      </div>
+      <div class="chart" style="grid-area: covmat;">
+        <CovMat {atX1} {atX2} />
+      </div>
+      <div class="chart" style="grid-area: line;">
+        <Lineplot
+          {xs}
+          {means}
+          {marginalVariances}
+          {samples}
+          bind:points
+          {atX1}
+          {atX2}
+          {plotProps}
+        />
+      </div>
+      <div class="squarechart" style="grid-area: covariance;">
+        <Covariance {atX1} {atX2} {covProps} {plotProps} />
+      </div>
     </div>
   </div>
+
   <CollapsibleCard open={true}>
-    <h4 slot="header">&#187; Full covariance</h4>
+    <h3 slot="header">&#187; Full covariance</h3>
     <div slot="body" class="fullcovchart">
       <KernelTwoD {covMat} />
     </div>
   </CollapsibleCard>
+
   <CollapsibleCard open={true}>
-    <h4 slot="header">&#187; Visualization settings</h4>
+    <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
       <RandomSample xsLength={xs.length} bind:doAnimate />
       <div>
@@ -241,19 +290,22 @@ Future thoughts:
       </div>
     </div>
   </CollapsibleCard>
+
   <CollapsibleCard open={true}>
-    <h4 slot="header">&#187; Kernel and likelihood</h4>
+    <h3 slot="header">&#187; Kernel and likelihood</h3>
     <div slot="body">
       <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
     </div>
   </CollapsibleCard>
+
   <CollapsibleCard open={false}>
-    <h4 slot="header">&#187; Plotting options</h4>
+    <h3 slot="header">&#187; Plotting options</h3>
     <div slot="body">
       <ConfigPlot bind:plotProps bind:num_grid />
     </div>
   </CollapsibleCard>
-  <div>
+
+  <div style="text-align: center;">
     [
     <a href="https://github.com/st--/interactive-gp-visualization/"
       >Source on GitHub</a
@@ -266,9 +318,9 @@ Future thoughts:
   .text-container {
     max-width: 1200px;
     display: grid;
-    grid-template-columns: 70% auto;
+    grid-template-columns: auto 350px;
     grid-template-areas:
-      "kernel ."
+      "kernel covmat"
       "line covariance";
   }
   .text-explanation {
@@ -276,13 +328,15 @@ Future thoughts:
   }
   .plot-container {
     display: grid;
-    grid-template-rows: 30% 70%;
-    grid-template-columns: 70% 30%;
+    height: 550px;
+    grid-template-rows: auto 350px;
+    grid-template-columns: auto 350px;
     grid-template-areas:
-      "kernel kernel2d"
+      "kernel covmat"
       "line covariance";
   }
   .chart {
+    min-width: 200px;
     /* background-color: #fafafa; */
   }
   .fullcovchart {
@@ -291,8 +345,9 @@ Future thoughts:
     background-color: #fafafa;
   }
   .squarechart {
-    min-width: 200px;
-    min-height: 200px;
+    width: 350px;
+    height: 350px;
+    padding-right: 30px;
     /* background-color: #fafafa; */
   }
 </style>
