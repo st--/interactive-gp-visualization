@@ -2,9 +2,15 @@
 
 This is an interactive extension of a visualisation I developed for an invited talk at the FAI seminar series at University College London. Try out the [live demo](http://infinitecuriosity.org/vizgp)!
 
+## Standing on the shoulders of...
+
+This webapp is built using [Svelte](https://svelte.dev/), [D3.js](https://d3js.org/), and [ml-matrix](https://github.com/mljs/matrix). Equations are rendered by [KaTeX](https://katex.org/). Thanks to [Ryan Davis](https://rdavis.io/articles/svelte_collapsible_card_component/) for the [CollapsibleCard](https://github.com/rsdavis/svelte-collapsible-card).
+
+The smooth animation of different samples goes back to Philipp Hennig's technical note [Animating samples from Gaussian distributions](http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf). How to compute the isocontour ellipses of a bivariate Gaussian distribution is explained by Chuong B. Do in [this note](http://cs229.stanford.edu/section/gaussians.pdf).
+
 ## Other visualisations
 
-There are plenty of other Gaussian process visualisations out there; here are some I came across so far that inspired me (if you know of others you like, please let me know!):
+There are plenty of other Gaussian process visualisations out there; here are some I came across so far (if you know of others you like, please let me know, I'm happy to extend the list!):
 
 * Interactive tutorial: [A Visual Exploration of Gaussian Processes (distill.pub)](https://distill.pub/2019/visual-exploration-gaussian-processes/) by Jochen G&ouml;rtler, Rebecca Kehlbeck, Oliver Deussen ([source](https://github.com/distillpub/post%2d-visual-exploration-gaussian-processes), using D3.js, ml-matrix)
 * Interactive tutorial: [A Practical Guide to Gaussian Processes](http://tinyurl.com/guide2gp) by Marc Peter Deisenroth, Yicheng Luo, Mark van der Wilk
@@ -15,11 +21,9 @@ There are plenty of other Gaussian process visualisations out there; here are so
 * [Demo by Alex Y. Chan](https://gaussianprocess.herokuapp.com/) ([source](https://github.com/aybchan/gaussianprocess), using D3.js, math.js)
 * Demo by Artem Artemev, run locally ([source](https://github.com/awav/interactive-gp), using Python, GPflow, holoviews/bokeh)
 
-## Standing on the shoulders of...
+## Comments, bugs, feature suggestions
 
-This webapp is built using [Svelte](https://svelte.dev/), [D3.js](https://d3js.org/), and [ml-matrix](https://github.com/mljs/matrix). Equations are rendered by [KaTeX](https://katex.org/). Thanks to [Ryan Davis](https://rdavis.io/articles/svelte_collapsible_card_component/) for the [CollapsibleCard](https://github.com/rsdavis/svelte-collapsible-card).
-
-The smooth animation of different samples goes back to Philipp Hennig's technical note [Animating samples from Gaussian distributions](http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf). How to compute the isocontour ellipses of a bivariate Gaussian distribution is explained by Chuong B. Do in [this note](http://cs229.stanford.edu/section/gaussians.pdf).
+If you encounter any issues or have ideas for what might make this visualisation even better, please get in touch or [open an issue](https://github.com/st--/interactive-gp-visualization/issues/new) in this repository. :)
 
 ---
 
