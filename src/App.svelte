@@ -23,7 +23,7 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
-  import CollapsibleCard from "svelte-collapsible";
+  import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
   import Lineplot from "./Lineplot.svelte";
   import Kernelplot from "./Kernelplot.svelte";
