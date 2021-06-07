@@ -51,6 +51,8 @@ Future thoughts:
     sampleMvnTrajectory,
     covEllipse,
   } from "./mymath.js";
+  import { HMC } from "./hmc.js";
+  import { interpolateCatmullRom } from "./catmullrom.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
@@ -66,6 +68,7 @@ Future thoughts:
   let noiseScale = 0.0;
 
   let doAnimate = true;
+  let useGreatCircleSampling = false;
 
   let plotProps = {
     mean: true,
@@ -101,15 +104,42 @@ Future thoughts:
   $: marginalVariances = covMat.diag();
   $: covSqrt = matrixSqrt(covMat);
 
-  //$: samples = sampleMvn(means, covSqrt, $vs);
   let frameIdx = 0;
   let numFrames = 30;
-  $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, $us, numFrames);
-  $: samples = sampleFrames[frameIdx];
+  let sampleFrames;
+  $: if (useGreatCircleSampling) {
+    sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, $us, numFrames);
+  }
+  let currentVs;
+  $: samples = useGreatCircleSampling
+    ? sampleFrames[frameIdx]
+    : sampleMvn(means, covSqrt, currentVs);
 
+  let interpolator = (w) => {
+    return $vs;
+  };
+  let Vanchor = [];
+  let hmcEpsilon = 0.1;
+  let hmcL = 15;
   function updateFrameIdx() {
     if (doAnimate) {
-      frameIdx = (frameIdx + 1) % numFrames;
+      if (useGreatCircleSampling) {
+        frameIdx = (frameIdx + 1) % numFrames;
+      } else {
+        frameIdx = (frameIdx + 1) % 10;
+        if (frameIdx == 0) {
+          while (Vanchor.length < 4) {
+            Vanchor.push($vs);
+          }
+          let newVs = HMC($vs.clone(), hmcEpsilon, hmcL);
+          vs.set(newVs);
+          Vanchor.push($vs);
+          Vanchor.shift();
+          interpolator = interpolateCatmullRom(...Vanchor);
+        }
+        const w = frameIdx / 10;
+        currentVs = interpolator(w);
+      }
     }
   }
 
@@ -271,6 +301,14 @@ Future thoughts:
     <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
       <RandomSample xsLength={xs.length} bind:doAnimate />
+      <select bind:value={useGreatCircleSampling}>
+        <option value={true}>great circles</option>
+        <option value={false}>HMC trajectories</option>
+      </select>
+      {#if !useGreatCircleSampling}
+        <input type="number" bind:value={hmcEpsilon} />
+        <input type="number" bind:value={hmcL} />
+      {/if}
       <div>
         <button
           class="btn"
