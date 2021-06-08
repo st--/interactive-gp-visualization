@@ -7,21 +7,21 @@
   export let means, covSqrt, samples;
 
   let doAnimate = true;
-  const animTypes = { greatCircle: 0, samples: 1, hmc: 2 };
-  let animationType = animTypes.samples;
+  const AnimationTypes = Object.freeze({ greatCircle: 0, samples: 1, hmc: 2 });
+  let animationType = AnimationTypes.samples;
 
   let frameIdx = 0;
 
   let numFrames = 30;
   let sampleFrames;
-  $: if (animationType === animTypes.greatCircle) {
+  $: if (animationType === AnimationTypes.greatCircle) {
     sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, $us, numFrames);
   }
 
   let currentVs;
 
   $: samples =
-    animationType === animTypes.greatCircle
+    animationType === AnimationTypes.greatCircle
       ? sampleFrames[frameIdx]
       : sampleMvn(means, covSqrt, currentVs);
 
@@ -32,7 +32,7 @@
   let hmcEpsilon = 0.1,
     hmcL = 15;
   vs.subscribe((value) => {
-    if (animationType !== animTypes.greatCircle) {
+    if (animationType !== AnimationTypes.greatCircle) {
       frameIdx = 0;
       Vanchor = [];
       nextVs = $vs;
@@ -41,7 +41,7 @@
   function updateInterpolator() {
     Vanchor.shift();
     while (Vanchor.length < 4) {
-      if (animationType === animTypes.hmc && nextVs) {
+      if (animationType === AnimationTypes.hmc && nextVs) {
         nextVs = HMC(nextVs, hmcEpsilon, hmcL);
       } else {
         nextVs = randn($vs.rows, $vs.columns, Math.random());
@@ -54,7 +54,7 @@
   let numInterpolate = 8;
   function updateFrame() {
     if (doAnimate) {
-      if (animationType === animTypes.greatCircle) {
+      if (animationType === AnimationTypes.greatCircle) {
         frameIdx = (frameIdx + 1) % numFrames;
       } else {
         if (frameIdx == 0) {
@@ -78,9 +78,9 @@
 <div>
   Animation:
   <select bind:value={animationType}>
-    <option value={animTypes.greatCircle}>great circles</option>
-    <option value={animTypes.samples}>interpolated samples</option>
-    <option value={animTypes.hmc}>interpolated HMC trajectory</option>
+    <option value={AnimationTypes.greatCircle}>great circles</option>
+    <option value={AnimationTypes.samples}>interpolated random samples</option>
+    <option value={AnimationTypes.hmc}>interpolated HMC trajectory</option>
   </select>
   <button
     class="btn"
@@ -90,7 +90,7 @@
     >{#if doAnimate}Pause{:else}Play{/if}</button
   >
   <!--
-  {#if animationType === animTypes.hmc}
+  {#if animationType === AnimationTypes.hmc}
     <input type="number" bind:value={hmcEpsilon} />
     <input type="number" bind:value={hmcL} />
   {/if}
