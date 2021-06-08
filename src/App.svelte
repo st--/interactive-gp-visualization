@@ -150,7 +150,7 @@ Future thoughts:
   <CollapsibleCard open={false}>
     <h3 slot="header">&#187; Instructions</h3>
     <div slot="body" class="text-container">
-      <div class="text-explanation" style="grid-area: line;">
+      <div class="text-explanation" style="grid-area: marginals;">
         <em>Bottom left:</em>
         Visualises the Gaussian process <Katex math="f(\cdot)" /> through its mean
         (central <span style="color: rgb(0, 100, 100);">d-a-s-h-e-d</span> line)
@@ -178,7 +178,7 @@ Future thoughts:
           to restart.</small
         >
       </div>
-      <div class="text-explanation" style="grid-area: kernel;">
+      <div class="text-explanation" style="grid-area: kernelslices;">
         <em>Top left:</em>
         Visualises a slice through the covariance function or kernel <Katex
           math="k(x_i, \cdot)"
@@ -195,14 +195,14 @@ Future thoughts:
         <strong>one</strong>
         or <strong>two</strong> fingers.
       </div>
-      <div class="text-explanation" style="grid-area: covmat">
+      <div class="text-explanation" style="grid-area: bicovmatrix">
         <em>Top right:</em> Displays the entries of the covariance matrix
         <Katex
           math={`\\operatorname{cov}(f(x_1), f(x_2)) = \\begin{pmatrix} k(x_1, x_1) & k(x_1, x_2) \\\\ k(x_2, x_1) & k(x_2, x_2) \\end{pmatrix}`}
         />, corresponding to the circles in the top-left plot, and shows the
         correlation coefficient.
       </div>
-      <div class="text-explanation" style="grid-area: covariance;">
+      <div class="text-explanation" style="grid-area: bicovplot;">
         <em>Bottom right:</em>
         Visualises the covariance between <Katex math="f(x_1)" /> and <Katex
           math="f(x_2)"
@@ -223,13 +223,13 @@ Future thoughts:
 
   <div>
     <div class="plot-container">
-      <div class="chart" style="grid-area: kernel;">
+      <div class="chart" style="grid-area: kernelslices;">
         <PlotKernelSlices {xs} {k1s} {k2s} {atX1} {atX2} />
       </div>
-      <div class="chart" style="grid-area: covmat;">
+      <div class="chart" style="grid-area: bicovmatrix;">
         <ShowBivariateCovarianceMatrix {atX1} {atX2} />
       </div>
-      <div class="chart" style="grid-area: line;">
+      <div class="chart" style="grid-area: marginals;">
         <PlotMarginals
           {xs}
           {means}
@@ -241,7 +241,7 @@ Future thoughts:
           {plotProps}
         />
       </div>
-      <div class="squarechart" style="grid-area: covariance;">
+      <div class="squarechart" style="grid-area: bicovplot;">
         <PlotBivariateCovariance {atX1} {atX2} {covProps} {plotProps} />
       </div>
     </div>
@@ -301,8 +301,8 @@ Future thoughts:
     display: grid;
     grid-template-columns: auto 350px;
     grid-template-areas:
-      "kernel covmat"
-      "line covariance";
+      "kernelslices bicovmatrix"
+      "marginals bicovplot";
   }
   .text-explanation {
     margin: 10px;
@@ -313,8 +313,8 @@ Future thoughts:
     grid-template-rows: auto 350px;
     grid-template-columns: auto 350px;
     grid-template-areas:
-      "kernel covmat"
-      "line covariance";
+      "kernelslices bicovmatrix"
+      "marginals bicovplot";
   }
   .chart {
     min-width: 200px;
