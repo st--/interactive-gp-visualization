@@ -22,19 +22,19 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
-  import { VERSION } from "./version.js";
+  import VERSION from "./version.js";
 
   import * as m from "ml-matrix";
   import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
-  import Lineplot from "./Lineplot.svelte";
-  import Kernelplot from "./Kernelplot.svelte";
-  import CovMat from "./CovMat.svelte";
-  import Covariance from "./Covariance.svelte";
+  import ShowBivariateCovarianceMatrix from "./ShowBivariateCovarianceMatrix.svelte";
+  import PlotMarginals from "./PlotMarginals.svelte";
+  import PlotKernelSlices from "./PlotKernelSlices.svelte";
+  import PlotBivariateCovariance from "./PlotBivariateCovariance.svelte";
   import RandomSample from "./RandomSample.svelte";
   import Animation from "./Animation.svelte";
+  import ConfigModel from "./ConfigModel.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
-  import ConfigData from "./ConfigData.svelte";
 
   import { x1, x2 } from "./store.js";
   import {
@@ -99,7 +99,12 @@ Future thoughts:
 
   let samples: m.Matrix; // bound to Animation component; will be undefined until it was mounted
 
-  $: getDataAt = (dat) => {
+  $: getDataAt = (dat: {
+    idx1: number;
+    idx2: number;
+    w1: number;
+    w2: number;
+  }) => {
     // Computes linear interpolation of all properties for point between two indices
     // TODO improve using d3-interpolate?
     const samples1 = !samples ? [] : samples.getRow(dat.idx1);
@@ -150,7 +155,7 @@ Future thoughts:
   <CollapsibleCard open={false}>
     <h3 slot="header">&#187; Instructions</h3>
     <div slot="body" class="text-container">
-      <div class="text-explanation" style="grid-area: line;">
+      <div class="text-explanation" style="grid-area: marginals;">
         <em>Bottom left:</em>
         Visualises the Gaussian process <Katex math="f(\cdot)" /> through its mean
         (central <span style="color: rgb(0, 100, 100);">d-a-s-h-e-d</span> line)
@@ -178,7 +183,7 @@ Future thoughts:
           to restart.</small
         >
       </div>
-      <div class="text-explanation" style="grid-area: kernel;">
+      <div class="text-explanation" style="grid-area: kernelslices;">
         <em>Top left:</em>
         Visualises a slice through the covariance function or kernel <Katex
           math="k(x_i, \cdot)"
@@ -195,14 +200,14 @@ Future thoughts:
         <strong>one</strong>
         or <strong>two</strong> fingers.
       </div>
-      <div class="text-explanation" style="grid-area: covmat">
+      <div class="text-explanation" style="grid-area: bicovmatrix">
         <em>Top right:</em> Displays the entries of the covariance matrix
         <Katex
           math={`\\operatorname{cov}(f(x_1), f(x_2)) = \\begin{pmatrix} k(x_1, x_1) & k(x_1, x_2) \\\\ k(x_2, x_1) & k(x_2, x_2) \\end{pmatrix}`}
         />, corresponding to the circles in the top-left plot, and shows the
         correlation coefficient.
       </div>
-      <div class="text-explanation" style="grid-area: covariance;">
+      <div class="text-explanation" style="grid-area: bicovplot;">
         <em>Bottom right:</em>
         Visualises the covariance between <Katex math="f(x_1)" /> and <Katex
           math="f(x_2)"
@@ -223,14 +228,14 @@ Future thoughts:
 
   <div>
     <div class="plot-container">
-      <div class="chart" style="grid-area: kernel;">
-        <Kernelplot {xs} {k1s} {k2s} {atX1} {atX2} />
+      <div class="chart" style="grid-area: kernelslices;">
+        <PlotKernelSlices {xs} {k1s} {k2s} {atX1} {atX2} />
       </div>
-      <div class="chart" style="grid-area: covmat;">
-        <CovMat {atX1} {atX2} />
+      <div class="chart" style="grid-area: bicovmatrix;">
+        <ShowBivariateCovarianceMatrix {atX1} {atX2} />
       </div>
-      <div class="chart" style="grid-area: line;">
-        <Lineplot
+      <div class="chart" style="grid-area: marginals;">
+        <PlotMarginals
           {xs}
           {means}
           {marginalVariances}
@@ -241,8 +246,8 @@ Future thoughts:
           {plotProps}
         />
       </div>
-      <div class="squarechart" style="grid-area: covariance;">
-        <Covariance {atX1} {atX2} {covProps} {plotProps} />
+      <div class="squarechart" style="grid-area: bicovplot;">
+        <PlotBivariateCovariance {atX1} {atX2} {covProps} {plotProps} />
       </div>
     </div>
   </div>
@@ -275,7 +280,7 @@ Future thoughts:
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Kernel and likelihood</h3>
     <div slot="body">
-      <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
+      <ConfigModel bind:noiseScale bind:selectedKernel {kernelChoices} />
     </div>
   </CollapsibleCard>
 
@@ -301,8 +306,8 @@ Future thoughts:
     display: grid;
     grid-template-columns: auto 350px;
     grid-template-areas:
-      "kernel covmat"
-      "line covariance";
+      "kernelslices bicovmatrix"
+      "marginals bicovplot";
   }
   .text-explanation {
     margin: 10px;
@@ -313,8 +318,8 @@ Future thoughts:
     grid-template-rows: auto 350px;
     grid-template-columns: auto 350px;
     grid-template-areas:
-      "kernel covmat"
-      "line covariance";
+      "kernelslices bicovmatrix"
+      "marginals bicovplot";
   }
   .chart {
     min-width: 200px;
