@@ -50,6 +50,7 @@ Future thoughts:
     sampleMvn,
     sampleMvnTrajectory,
     covEllipse,
+    randn,
   } from "./mymath.js";
   import { HMC } from "./hmc.js";
   import { interpolateCatmullRom } from "./catmullrom.js";
@@ -68,7 +69,8 @@ Future thoughts:
   let noiseScale = 0.0;
 
   let doAnimate = true;
-  let useGreatCircleSampling = false;
+  const animTypes = { greatCircle: 0, samples: 1, hmc: 2 };
+  let animationType = animTypes.samples;
 
   let plotProps = {
     mean: true,
@@ -107,38 +109,51 @@ Future thoughts:
   let frameIdx = 0;
   let numFrames = 30;
   let sampleFrames;
-  $: if (useGreatCircleSampling) {
+  $: if (animationType === animTypes.greatCircle) {
     sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, $us, numFrames);
   }
   let currentVs;
-  $: samples = useGreatCircleSampling
-    ? sampleFrames[frameIdx]
-    : sampleMvn(means, covSqrt, currentVs);
+  $: samples =
+    animationType === animTypes.greatCircle
+      ? sampleFrames[frameIdx]
+      : sampleMvn(means, covSqrt, currentVs);
 
   let interpolator = (w) => {
     return $vs;
   };
-  let Vanchor = [];
-  let hmcEpsilon = 0.1;
-  let hmcL = 15;
+  let Vanchor, nextVs;
+  let hmcEpsilon = 0.1,
+    hmcL = 15;
+  vs.subscribe((value) => {
+    frameIdx = 0;
+    Vanchor = [];
+    nextVs = $vs;
+  });
+  function updateAnchor() {
+    Vanchor.shift();
+    while (Vanchor.length < 4) {
+      if (animationType === animTypes.hmc && nextVs) {
+        nextVs = HMC(nextVs, hmcEpsilon, hmcL);
+      } else {
+        nextVs = randn($vs.rows, $vs.columns, Math.random());
+      }
+      Vanchor.push(nextVs.clone());
+    }
+    interpolator = interpolateCatmullRom(...Vanchor);
+  }
+
+  let numInterpolate = 8;
   function updateFrameIdx() {
     if (doAnimate) {
-      if (useGreatCircleSampling) {
+      if (animationType === animTypes.greatCircle) {
         frameIdx = (frameIdx + 1) % numFrames;
       } else {
-        frameIdx = (frameIdx + 1) % 10;
         if (frameIdx == 0) {
-          while (Vanchor.length < 4) {
-            Vanchor.push($vs);
-          }
-          let newVs = HMC($vs.clone(), hmcEpsilon, hmcL);
-          vs.set(newVs);
-          Vanchor.push($vs);
-          Vanchor.shift();
-          interpolator = interpolateCatmullRom(...Vanchor);
+          updateAnchor();
         }
-        const w = frameIdx / 10;
+        const w = frameIdx / numInterpolate;
         currentVs = interpolator(w);
+        frameIdx = (frameIdx + 1) % numInterpolate;
       }
     }
   }
@@ -301,14 +316,20 @@ Future thoughts:
     <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
       <RandomSample xsLength={xs.length} bind:doAnimate />
-      <select bind:value={useGreatCircleSampling}>
-        <option value={true}>great circles</option>
-        <option value={false}>HMC trajectories</option>
-      </select>
-      {#if !useGreatCircleSampling}
-        <input type="number" bind:value={hmcEpsilon} />
-        <input type="number" bind:value={hmcL} />
-      {/if}
+      <div>
+        Animation:
+        <select bind:value={animationType}>
+          <option value={animTypes.greatCircle}>great circles</option>
+          <option value={animTypes.samples}>interpolated samples</option>
+          <option value={animTypes.hmc}>interpolated HMC trajectory</option>
+        </select>
+        <!--
+        {#if animationType === animTypes.hmc}
+          <input type="number" bind:value={hmcEpsilon} />
+          <input type="number" bind:value={hmcL} />
+        {/if}
+        -->
+      </div>
       <div>
         <button
           class="btn"
