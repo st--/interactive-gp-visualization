@@ -25,11 +25,11 @@
       ? sampleFrames[frameIdx]
       : sampleMvn(means, covSqrt, currentVs);
 
-  let interpolator = (w) => {
+  let interpolator = (_w) => {
     return $vs;
   };
   let Vanchor, nextVs;
-  vs.subscribe((value) => {
+  vs.subscribe((_value) => {
     if (animationType !== AnimationTypes.greatCircle) {
       frameIdx = 0;
       Vanchor = [];

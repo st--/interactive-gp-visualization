@@ -94,7 +94,7 @@ Future thoughts:
   $: marginalVariances = covMat.diag();
   $: covSqrt = matrixSqrt(covMat);
 
-  let samples; // bound to Animation component; will only contain value after it is mounted
+  let samples: m.Matrix; // bound to Animation component; will be undefined until it was mounted
 
   $: getDataAt = (dat) => {
     // Computes linear interpolation of all properties for point between two indices
