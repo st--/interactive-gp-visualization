@@ -27,14 +27,14 @@ Future thoughts:
   import * as m from "ml-matrix";
   import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
-  import Lineplot from "./Lineplot.svelte";
-  import Kernelplot from "./Kernelplot.svelte";
   import CovMat from "./CovMat.svelte";
-  import Covariance from "./Covariance.svelte";
+  import PlotMarginals from "./PlotMarginals.svelte";
+  import PlotKernelSlices from "./PlotKernelSlices.svelte";
+  import PlotCovariance from "./PlotCovariance.svelte";
   import RandomSample from "./RandomSample.svelte";
   import Animation from "./Animation.svelte";
-  import ConfigPlot from "./ConfigPlot.svelte";
   import ConfigModel from "./ConfigModel.svelte";
+  import ConfigPlot from "./ConfigPlot.svelte";
 
   import { x1, x2 } from "./store.js";
   import {
@@ -224,13 +224,13 @@ Future thoughts:
   <div>
     <div class="plot-container">
       <div class="chart" style="grid-area: kernel;">
-        <Kernelplot {xs} {k1s} {k2s} {atX1} {atX2} />
+        <PlotKernelSlices {xs} {k1s} {k2s} {atX1} {atX2} />
       </div>
       <div class="chart" style="grid-area: covmat;">
         <CovMat {atX1} {atX2} />
       </div>
       <div class="chart" style="grid-area: line;">
-        <Lineplot
+        <PlotMarginals
           {xs}
           {means}
           {marginalVariances}
@@ -242,7 +242,7 @@ Future thoughts:
         />
       </div>
       <div class="squarechart" style="grid-area: covariance;">
-        <Covariance {atX1} {atX2} {covProps} {plotProps} />
+        <PlotCovariance {atX1} {atX2} {covProps} {plotProps} />
       </div>
     </div>
   </div>
