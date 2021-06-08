@@ -27,7 +27,7 @@ Future thoughts:
   import * as m from "ml-matrix";
   import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
-  import CovMat from "./CovMat.svelte";
+  import ShowBivariateCovarianceMatrix from "./ShowBivariateCovarianceMatrix.svelte";
   import PlotMarginals from "./PlotMarginals.svelte";
   import PlotKernelSlices from "./PlotKernelSlices.svelte";
   import PlotCovariance from "./PlotCovariance.svelte";
@@ -227,7 +227,7 @@ Future thoughts:
         <PlotKernelSlices {xs} {k1s} {k2s} {atX1} {atX2} />
       </div>
       <div class="chart" style="grid-area: covmat;">
-        <CovMat {atX1} {atX2} />
+        <ShowBivariateCovarianceMatrix {atX1} {atX2} />
       </div>
       <div class="chart" style="grid-area: line;">
         <PlotMarginals
