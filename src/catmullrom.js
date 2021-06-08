@@ -3,10 +3,23 @@
 import * as m from "ml-matrix";
 
 function normpow(v1, v2, alpha) {
+  // ‖v1 - v2‖^alpha, column-wise
   return m.Matrix.subtract(v1, v2)
     .pow(2)
     .sum("column")
     .map((c) => Math.pow(c, alpha / 2));
+}
+
+function frac(ta, tb, tc, td) {
+  // (ta-tb)/(tc-td), element-wise
+  return ta.map((ta_val, idx) => (ta_val - tb[idx]) / (tc[idx] - td[idx]));
+}
+
+function linearInt(Pa, Pb, ta, tb, t) {
+  // TODO: column-wise, where ta==tb, return Pa==Pb directly
+  return Pa.clone()
+    .mulRowVector(frac(tb, t, tb, ta))
+    .add(Pb.clone().mulRowVector(frac(t, ta, tb, ta)));
 }
 
 export function interpolateCatmullRom(P0, P1, P2, P3) {
@@ -17,18 +30,6 @@ export function interpolateCatmullRom(P0, P1, P2, P3) {
   const t1 = normpow(P0, P1, alpha).map((c, idx) => c + t0[idx]);
   const t2 = normpow(P1, P2, alpha).map((c, idx) => c + t1[idx]);
   const t3 = normpow(P2, P3, alpha).map((c, idx) => c + t2[idx]);
-
-  function frac(ta, tb, tc, td) {
-    // (ta-tb)/(tc-td)
-    return ta.map((ta_val, idx) => (ta_val - tb[idx]) / (tc[idx] - td[idx]));
-  }
-
-  function linearInt(Pa, Pb, ta, tb, t) {
-    // TODO: column-wise, where ta==tb, return Pa==Pb directly
-    return Pa.clone()
-      .mulRowVector(frac(tb, t, tb, ta))
-      .add(Pb.clone().mulRowVector(frac(t, ta, tb, ta)));
-  }
 
   return (w) => {
     const t = t1.map((t1_val, idx) => (1 - w) * t1_val + w * t2[idx]);
