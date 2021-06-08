@@ -315,7 +315,7 @@ Future thoughts:
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
-      <RandomSample xsLength={xs.length} bind:doAnimate />
+      <RandomSample xsLength={xs.length} />
       <div>
         Animation:
         <select bind:value={animationType}>
@@ -323,6 +323,13 @@ Future thoughts:
           <option value={animTypes.samples}>interpolated samples</option>
           <option value={animTypes.hmc}>interpolated HMC trajectory</option>
         </select>
+        <button
+          class="btn"
+          on:click={(_event) => {
+            doAnimate = !doAnimate;
+          }}
+          >{#if doAnimate}Pause{:else}Play{/if}</button
+        >
         <!--
         {#if animationType === animTypes.hmc}
           <input type="number" bind:value={hmcEpsilon} />
