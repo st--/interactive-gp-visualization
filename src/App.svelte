@@ -99,7 +99,12 @@ Future thoughts:
 
   let samples: m.Matrix; // bound to Animation component; will be undefined until it was mounted
 
-  $: getDataAt = (dat) => {
+  $: getDataAt = (dat: {
+    idx1: number;
+    idx2: number;
+    w1: number;
+    w2: number;
+  }) => {
     // Computes linear interpolation of all properties for point between two indices
     // TODO improve using d3-interpolate?
     const samples1 = !samples ? [] : samples.getRow(dat.idx1);
