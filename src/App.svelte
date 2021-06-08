@@ -22,6 +22,8 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
+  import { VERSION } from "./version.js";
+
   import * as m from "ml-matrix";
   import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
@@ -33,6 +35,7 @@ Future thoughts:
   import Animation from "./Animation.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
   import ConfigData from "./ConfigData.svelte";
+
   import { x1, x2 } from "./store.js";
   import {
     sqexp,
@@ -284,7 +287,7 @@ Future thoughts:
   </CollapsibleCard>
 
   <div style="text-align: center;">
-    [
+    [ v{VERSION} |
     <a href="https://github.com/st--/interactive-gp-visualization/"
       >Source on GitHub</a
     >
