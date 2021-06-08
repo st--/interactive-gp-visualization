@@ -22,7 +22,7 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
-  import { VERSION } from "./version.js";
+  import VERSION from "./version.js";
 
   import * as m from "ml-matrix";
   import { CollapsibleCard } from "svelte-collapsible";
