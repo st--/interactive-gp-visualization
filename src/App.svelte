@@ -277,24 +277,30 @@ Future thoughts:
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
-      <RandomSample xsLength={xs.length} />
-      <Animation {means} {covSqrt} bind:samples />
-      <div>
-        <button
-          class="btn"
-          disabled={points.length == 0}
-          on:click={(_event) => {
-            points.pop();
-            points = points; // for Svelte reactivity
-          }}>Remove last observation</button
-        >
-        <button
-          class="btn"
-          disabled={points.length == 0}
-          on:click={(_event) => {
-            points = [];
-          }}>Remove all observations</button
-        >
+      <div class="flexcontainer">
+        <div class="flexelement">
+          <RandomSample xsLength={xs.length} />
+        </div>
+        <div class="flexelement">
+          <Animation {means} {covSqrt} bind:samples />
+        </div>
+        <div class="flexelement">
+          <button
+            class="btn"
+            disabled={points.length == 0}
+            on:click={(_event) => {
+              points.pop();
+              points = points; // for Svelte reactivity
+            }}>Remove last observation</button
+          >
+          <button
+            class="btn"
+            disabled={points.length == 0}
+            on:click={(_event) => {
+              points = [];
+            }}>Remove all observations</button
+          >
+        </div>
       </div>
     </div>
   </CollapsibleCard>
@@ -359,5 +365,14 @@ Future thoughts:
     height: 350px;
     padding-right: 30px;
     /* background-color: #fafafa; */
+  }
+  .flexcontainer {
+    display: flex;
+    flex-flow: row wrap;
+  }
+  .flexelement {
+    display: block;
+    vertical-align: middle;
+    margin-right: 1em;
   }
 </style>
