@@ -22,6 +22,7 @@ Future thoughts:
 - optimize hyperparameters
 -->
 <script lang="ts">
+  import * as m from "ml-matrix";
   import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
   import Lineplot from "./Lineplot.svelte";
@@ -29,9 +30,10 @@ Future thoughts:
   import CovMat from "./CovMat.svelte";
   import Covariance from "./Covariance.svelte";
   import RandomSample from "./RandomSample.svelte";
+  import Animation from "./Animation.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
   import ConfigData from "./ConfigData.svelte";
-  import { x1, x2, vs, us } from "./store.js";
+  import { x1, x2 } from "./store.js";
   import {
     sqexp,
     makeSqexp,
@@ -43,16 +45,7 @@ Future thoughts:
     white,
     sumKernel,
   } from "./kernels.js";
-  import {
-    linspace,
-    matrixSqrt,
-    sampleMvn,
-    sampleMvnTrajectory,
-    covEllipse,
-    randn,
-  } from "./mymath.js";
-  import { HMC } from "./hmc.js";
-  import { interpolateCatmullRom } from "./catmullrom.js";
+  import { linspace, matrixSqrt, covEllipse } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
@@ -66,10 +59,6 @@ Future thoughts:
   ];
   let selectedKernel = kernelChoices[3]; // = Sqexp
   let noiseScale = 0.0;
-
-  let doAnimate = true;
-  const animTypes = { greatCircle: 0, samples: 1, hmc: 2 };
-  let animationType = animTypes.samples;
 
   let plotProps = {
     mean: true,
@@ -105,70 +94,13 @@ Future thoughts:
   $: marginalVariances = covMat.diag();
   $: covSqrt = matrixSqrt(covMat);
 
-  let frameIdx = 0;
-  let numFrames = 30;
-  let sampleFrames;
-  $: if (animationType === animTypes.greatCircle) {
-    sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, $us, numFrames);
-  }
-  let currentVs;
-  $: samples =
-    animationType === animTypes.greatCircle
-      ? sampleFrames[frameIdx]
-      : sampleMvn(means, covSqrt, currentVs);
-
-  let interpolator = (w) => {
-    return $vs;
-  };
-  let Vanchor, nextVs;
-  let hmcEpsilon = 0.1,
-    hmcL = 15;
-  vs.subscribe((value) => {
-    frameIdx = 0;
-    Vanchor = [];
-    nextVs = $vs;
-  });
-  function updateInterpolator() {
-    Vanchor.shift();
-    while (Vanchor.length < 4) {
-      if (animationType === animTypes.hmc && nextVs) {
-        nextVs = HMC(nextVs, hmcEpsilon, hmcL);
-      } else {
-        nextVs = randn($vs.rows, $vs.columns, Math.random());
-      }
-      Vanchor.push(nextVs.clone());
-    }
-    interpolator = interpolateCatmullRom(...Vanchor);
-  }
-
-  let numInterpolate = 8;
-  function updateFrame() {
-    if (doAnimate) {
-      if (animationType === animTypes.greatCircle) {
-        frameIdx = (frameIdx + 1) % numFrames;
-      } else {
-        if (frameIdx == 0) {
-          updateInterpolator();
-        }
-        const w = frameIdx / numInterpolate;
-        currentVs = interpolator(w);
-        frameIdx = (frameIdx + 1) % numInterpolate;
-      }
-    }
-  }
-
-  let animationIntervalHandle;
-  let animationDelay = 100;
-  $: {
-    clearInterval(animationIntervalHandle);
-    animationIntervalHandle = setInterval(updateFrame, animationDelay);
-  }
+  let samples; // bound to Animation component; will only contain value after it is mounted
 
   $: getDataAt = (dat) => {
     // Computes linear interpolation of all properties for point between two indices
     // TODO improve using d3-interpolate?
-    const samples1 = samples.getRow(dat.idx1);
-    const samples2 = samples.getRow(dat.idx2);
+    const samples1 = !samples ? [] : samples.getRow(dat.idx1);
+    const samples2 = !samples ? [] : samples.getRow(dat.idx2);
     const ys = samples1.map(
       (y1: number, i: number) => dat.w1 * y1 + dat.w2 * samples2[i]
     );
@@ -316,27 +248,7 @@ Future thoughts:
     <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
       <RandomSample xsLength={xs.length} />
-      <div>
-        Animation:
-        <select bind:value={animationType}>
-          <option value={animTypes.greatCircle}>great circles</option>
-          <option value={animTypes.samples}>interpolated samples</option>
-          <option value={animTypes.hmc}>interpolated HMC trajectory</option>
-        </select>
-        <button
-          class="btn"
-          on:click={(_event) => {
-            doAnimate = !doAnimate;
-          }}
-          >{#if doAnimate}Pause{:else}Play{/if}</button
-        >
-        <!--
-        {#if animationType === animTypes.hmc}
-          <input type="number" bind:value={hmcEpsilon} />
-          <input type="number" bind:value={hmcL} />
-        {/if}
-        -->
-      </div>
+      <Animation {means} {covSqrt} bind:samples />
       <div>
         <button
           class="btn"
