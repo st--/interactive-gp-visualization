@@ -30,7 +30,7 @@ Future thoughts:
   import ShowBivariateCovarianceMatrix from "./ShowBivariateCovarianceMatrix.svelte";
   import PlotMarginals from "./PlotMarginals.svelte";
   import PlotKernelSlices from "./PlotKernelSlices.svelte";
-  import PlotCovariance from "./PlotCovariance.svelte";
+  import PlotBivariateCovariance from "./PlotBivariateCovariance.svelte";
   import RandomSample from "./RandomSample.svelte";
   import Animation from "./Animation.svelte";
   import ConfigModel from "./ConfigModel.svelte";
@@ -242,7 +242,7 @@ Future thoughts:
         />
       </div>
       <div class="squarechart" style="grid-area: covariance;">
-        <PlotCovariance {atX1} {atX2} {covProps} {plotProps} />
+        <PlotBivariateCovariance {atX1} {atX2} {covProps} {plotProps} />
       </div>
     </div>
   </div>
