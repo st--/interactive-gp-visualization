@@ -2,7 +2,6 @@
 
 To dos:
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
-- vertically align range sliders with rest of line
 - fix relative size when window too small...
 - center/right-align labels instead of manual pixel shifts
 - adjust axis ticks when resizing
@@ -166,6 +165,7 @@ Future thoughts:
   }
 
   $: getDataAt = (dat) => {
+    // Computes linear interpolation of all properties for point between two indices
     // TODO improve using d3-interpolate?
     const samples1 = samples.getRow(dat.idx1);
     const samples2 = samples.getRow(dat.idx2);
@@ -338,6 +338,14 @@ Future thoughts:
         -->
       </div>
       <div>
+        <button
+          class="btn"
+          disabled={points.length == 0}
+          on:click={(_event) => {
+            points.pop();
+            points = points; // for Svelte reactivity
+          }}>Remove last observation</button
+        >
         <button
           class="btn"
           disabled={points.length == 0}
