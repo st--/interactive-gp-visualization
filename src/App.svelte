@@ -24,6 +24,7 @@ Future thoughts:
 <script lang="ts">
   import { VERSION } from "./version.js";
 
+  import * as m from "ml-matrix";
   import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
   import Lineplot from "./Lineplot.svelte";
@@ -31,10 +32,11 @@ Future thoughts:
   import CovMat from "./CovMat.svelte";
   import Covariance from "./Covariance.svelte";
   import RandomSample from "./RandomSample.svelte";
+  import Animation from "./Animation.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
   import ConfigData from "./ConfigData.svelte";
 
-  import { x1, x2, vs, us } from "./store.js";
+  import { x1, x2 } from "./store.js";
   import {
     sqexp,
     makeSqexp,
@@ -46,13 +48,7 @@ Future thoughts:
     white,
     sumKernel,
   } from "./kernels.js";
-  import {
-    linspace,
-    matrixSqrt,
-    sampleMvn,
-    sampleMvnTrajectory,
-    covEllipse,
-  } from "./mymath.js";
+  import { linspace, matrixSqrt, covEllipse } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
@@ -66,8 +62,6 @@ Future thoughts:
   ];
   let selectedKernel = kernelChoices[3]; // = Sqexp
   let noiseScale = 0.0;
-
-  let doAnimate = true;
 
   let plotProps = {
     mean: true,
@@ -103,30 +97,13 @@ Future thoughts:
   $: marginalVariances = covMat.diag();
   $: covSqrt = matrixSqrt(covMat);
 
-  //$: samples = sampleMvn(means, covSqrt, $vs);
-  let frameIdx = 0;
-  let numFrames = 30;
-  $: sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, $us, numFrames);
-  $: samples = sampleFrames[frameIdx];
-
-  function updateFrameIdx() {
-    if (doAnimate) {
-      frameIdx = (frameIdx + 1) % numFrames;
-    }
-  }
-
-  let animationInterval;
-  let animationDelay = 100;
-  $: {
-    clearInterval(animationInterval);
-    setInterval(updateFrameIdx, animationDelay);
-  }
+  let samples: m.Matrix; // bound to Animation component; will be undefined until it was mounted
 
   $: getDataAt = (dat) => {
     // Computes linear interpolation of all properties for point between two indices
     // TODO improve using d3-interpolate?
-    const samples1 = samples.getRow(dat.idx1);
-    const samples2 = samples.getRow(dat.idx2);
+    const samples1 = !samples ? [] : samples.getRow(dat.idx1);
+    const samples2 = !samples ? [] : samples.getRow(dat.idx2);
     const ys = samples1.map(
       (y1: number, i: number) => dat.w1 * y1 + dat.w2 * samples2[i]
     );
@@ -273,7 +250,8 @@ Future thoughts:
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
-      <RandomSample xsLength={xs.length} bind:doAnimate />
+      <RandomSample xsLength={xs.length} />
+      <Animation {means} {covSqrt} bind:samples />
       <div>
         <button
           class="btn"
