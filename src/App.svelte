@@ -2,7 +2,6 @@
 
 To dos:
 - proper spacing/(re)sizing of Covariance/Line/Kernel plots
-- vertically align range sliders with rest of line
 - fix relative size when window too small...
 - center/right-align labels instead of manual pixel shifts
 - adjust axis ticks when resizing
