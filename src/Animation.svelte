@@ -29,8 +29,6 @@
     return $vs;
   };
   let Vanchor, nextVs;
-  let hmcEpsilon = 0.1,
-    hmcL = 15;
   vs.subscribe((value) => {
     if (animationType !== AnimationTypes.greatCircle) {
       frameIdx = 0;
@@ -38,6 +36,9 @@
       nextVs = $vs;
     }
   });
+
+  let hmcEpsilon = 0.1,
+    hmcL = 15;
   function updateInterpolator() {
     Vanchor.shift();
     while (Vanchor.length < 4) {
@@ -46,14 +47,14 @@
       } else {
         nextVs = randn($vs.rows, $vs.columns, Math.random());
       }
-      Vanchor.push(nextVs.clone());
+      Vanchor.push(nextVs.clone()); // as nextVs keeps getting changed in place
     }
     interpolator = interpolateCatmullRom(...Vanchor);
   }
 
   let numInterpolate = 8;
   function updateFrame() {
-    if (doAnimate) {
+    if (doAnimate || (frameIdx == 0)) {
       if (animationType === AnimationTypes.greatCircle) {
         frameIdx = (frameIdx + 1) % numFrames;
       } else {
