@@ -20,12 +20,21 @@
   let noiseScaleInternal = noiseScale;
   let useLikelihood = true;
   $: noiseScale = useLikelihood ? noiseScaleInternal : 0.0;
+
+  const kernelCombinationInfo = {
+    "": { header: "Kernel", symbol: "" },
+    "+": { header: "Sum kernel", symbol: "&plus;" },
+    "*": { header: "Product kernel", symbol: "&times;" },
+  };
+
+  $: kernelHeader = kernelCombinationInfo[kernelCombination].header;
+  $: kernelCombinationSymbol = kernelCombinationInfo[kernelCombination].symbol;
 </script>
 
 <div>
   <div class="flexcontainer">
     <div class="flexelement">
-      <strong>Kernel:</strong>
+      <strong>{kernelHeader}:</strong>
       <select bind:value={selectedKernel}>
         {#each kernelChoices as choice}
           <option value={choice}>
@@ -42,17 +51,20 @@
 
     <div class="flexelement">
       {#if kernelCombination === ""}
+        <!-- simple kernel -->
         <button
           on:click={(_event) => {
             kernelCombination = "+";
-          }}>+</button
+          }}
+          title="add second kernel"><strong>&plus;</strong></button
         >/<button
           on:click={(_event) => {
             kernelCombination = "*";
-          }}>*</button
+          }}
+          title="multiply by second kernel"><strong>&times;</strong></button
         >
       {:else}
-        <strong>{kernelCombination}</strong>
+        <strong>{@html kernelCombinationSymbol}</strong>
         <select bind:value={selectedKernel2}>
           {#each kernelChoices2 as choice}
             <option value={choice}>
@@ -64,7 +76,8 @@
         <button
           on:click={(_event) => {
             kernelCombination = "";
-          }}><i class="gg-trash" /></button
+          }}
+          title="remove second kernel"><i class="gg-trash" /></button
         >
 
         {#each selectedKernel2.parameters as parameter}
