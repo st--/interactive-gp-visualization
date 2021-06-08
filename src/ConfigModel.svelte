@@ -23,65 +23,90 @@
 </script>
 
 <div>
-  <strong>Kernel:</strong>
-  <select bind:value={selectedKernel}>
-    {#each kernelChoices as choice}
-      <option value={choice}>
-        {choice.description}
-      </option>
-    {/each}
-  </select>
-  <Katex math="k(x, x') = {selectedKernel.formula}" />
+  <div class="flexcontainer">
+    <div class="flexelement">
+      <strong>Kernel:</strong>
+      <select bind:value={selectedKernel}>
+        {#each kernelChoices as choice}
+          <option value={choice}>
+            {choice.description}
+          </option>
+        {/each}
+      </select>
+      <Katex math="k(x, x') = {selectedKernel.formula}" />
 
-  {#each selectedKernel.parameters as parameter}
-    <ParameterSlider bind:value={parameter.value} {...parameter} />
-  {/each}
-
-  <label
-    ><input type="radio" bind:group={kernelCombination} value={""} />simple
-    kernel</label
-  >
-  <label
-    ><input type="radio" bind:group={kernelCombination} value={"+"} />kernel sum</label
-  >
-  <label
-    ><input type="radio" bind:group={kernelCombination} value={"*"} />kernel
-    product</label
-  >
-  {#if kernelCombination !== ""}
-    <strong>{kernelCombination}</strong>
-    <select bind:value={selectedKernel2}>
-      {#each kernelChoices2 as choice}
-        <option value={choice}>
-          {choice.description}
-        </option>
+      {#each selectedKernel.parameters as parameter}
+        <ParameterSlider bind:value={parameter.value} {...parameter} />
       {/each}
-    </select>
-    <Katex math="k(x, x') = {selectedKernel2.formula}" />
+    </div>
 
-    {#each selectedKernel2.parameters as parameter}
-      <ParameterSlider bind:value={parameter.value} {...parameter} />
-    {/each}
-  {/if}
+    <div class="flexelement">
+      {#if kernelCombination === ""}
+        <button
+          on:click={(_event) => {
+            kernelCombination = "+";
+          }}>+</button
+        >/<button
+          on:click={(_event) => {
+            kernelCombination = "*";
+          }}>*</button
+        >
+      {:else}
+        <strong>{kernelCombination}</strong>
+        <select bind:value={selectedKernel2}>
+          {#each kernelChoices2 as choice}
+            <option value={choice}>
+              {choice.description}
+            </option>
+          {/each}
+        </select>
+        <Katex math="k(x, x') = {selectedKernel2.formula}" />
+        <button
+          on:click={(_event) => {
+            kernelCombination = "";
+          }}>X</button
+        >
 
-  <strong>Likelihood:</strong>
-  <label
-    ><input type="radio" bind:group={useLikelihood} value={false} />noise-free
-    observations</label
-  >
-  <label
-    ><input type="radio" bind:group={useLikelihood} value={true} />observations
-    with Gaussian noise, <Katex
-      math={"p(y\\, | \\,f(x)) = \\mathcal{N}(f(x), \\sigma_\\text{noise}^2)"}
-    /></label
-  >
-  {#if useLikelihood}
-    <ParameterSlider bind:value={noiseScaleInternal} {...noiseScaleProps} />
-  {/if}
+        {#each selectedKernel2.parameters as parameter}
+          <ParameterSlider bind:value={parameter.value} {...parameter} />
+        {/each}
+      {/if}
+    </div>
+
+    <div class="flexelement">
+      <strong>Likelihood:</strong>
+      <label
+        ><input
+          type="radio"
+          bind:group={useLikelihood}
+          value={false}
+        />noise-free observations</label
+      >
+      <label
+        ><input
+          type="radio"
+          bind:group={useLikelihood}
+          value={true}
+        />observations with Gaussian noise, <Katex
+          math={"p(y\\, | \\,f(x)) = \\mathcal{N}(f(x), \\sigma_\\text{noise}^2)"}
+        /></label
+      >
+      {#if useLikelihood}
+        <ParameterSlider bind:value={noiseScaleInternal} {...noiseScaleProps} />
+      {/if}
+    </div>
+  </div>
 </div>
 
 <style>
   input[type="radio"] {
     margin-right: 5px;
+  }
+  .flexcontainer {
+    display: flex;
+    flex-flow: row wrap;
+  }
+  .flexelement {
+    margin-right: 1em;
   }
 </style>
