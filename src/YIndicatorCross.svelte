@@ -1,6 +1,6 @@
 <script>
   import { y1, y2 } from "./store.js";
-  export let xScale, yScale, minY, maxY;
+  export let xScale, yScale, maxY;
   const halfwidth = 5;
 </script>
 
