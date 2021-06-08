@@ -34,7 +34,7 @@ Future thoughts:
   import RandomSample from "./RandomSample.svelte";
   import Animation from "./Animation.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
-  import ConfigData from "./ConfigData.svelte";
+  import ConfigModel from "./ConfigModel.svelte";
 
   import { x1, x2 } from "./store.js";
   import {
@@ -275,7 +275,7 @@ Future thoughts:
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Kernel and likelihood</h3>
     <div slot="body">
-      <ConfigData bind:noiseScale bind:selectedKernel {kernelChoices} />
+      <ConfigModel bind:noiseScale bind:selectedKernel {kernelChoices} />
     </div>
   </CollapsibleCard>
 
