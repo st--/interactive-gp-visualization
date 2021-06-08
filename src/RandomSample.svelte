@@ -3,7 +3,7 @@
   import InputNumberSafely from "./InputNumberSafely.svelte";
   import { randn } from "./mymath.js";
   import { vs, us } from "./store.js";
-  export let xsLength, doAnimate;
+  export let xsLength;
 
   let numSamples = 3;
   let seed1 = 0.1;
@@ -32,13 +32,6 @@
     />
   </label>
   <button class="btn" on:click={resampleClick}>Resample</button>
-  <button
-    class="btn"
-    on:click={(_event) => {
-      doAnimate = !doAnimate;
-    }}
-    >{#if doAnimate}Pause{:else}Play{/if}</button
-  >
 </div>
 
 <style>

@@ -5,7 +5,7 @@
 
   let numDigits = 3;
   const unicodeMinusSign = "\u2212";
-  const unicodeFigureSpace = "\u2007";
+  // const unicodeFigureSpace = "\u2007";
 
   function format(val, addSpace = true) {
     const str = `${val.toFixed(numDigits)}`;
