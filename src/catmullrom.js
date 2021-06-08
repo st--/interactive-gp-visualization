@@ -1,3 +1,5 @@
+// Copyright (c) 2021 ST John
+
 import * as m from "ml-matrix";
 
 function normpow(v1, v2, alpha) {
@@ -21,27 +23,21 @@ export function interpolateCatmullRom(P0, P1, P2, P3) {
     return ta.map((ta_val, idx) => (ta_val - tb[idx]) / (tc[idx] - td[idx]));
   }
 
+  function linearInt(Pa, Pb, ta, tb, t) {
+    // TODO: column-wise, where ta==tb, return Pa==Pb directly
+    return Pa.clone()
+      .mulRowVector(frac(tb, t, tb, ta))
+      .add(Pb.clone().mulRowVector(frac(t, ta, tb, ta)));
+  }
+
   return (w) => {
     const t = t1.map((t1_val, idx) => (1 - w) * t1_val + w * t2[idx]);
-    const A1 = P0.clone()
-      .mulRowVector(frac(t1, t, t1, t0))
-      .add(P1.clone().mulRowVector(frac(t, t0, t1, t0)));
-    const A2 = P1.clone()
-      .mulRowVector(frac(t2, t, t2, t1))
-      .add(P2.clone().mulRowVector(frac(t, t1, t2, t1)));
-    const A3 = P2.clone()
-      .mulRowVector(frac(t3, t, t3, t2))
-      .add(P3.clone().mulRowVector(frac(t, t2, t3, t2)));
-    const B1 = A1.clone()
-      .mulRowVector(frac(t2, t, t2, t0))
-      .add(A2.clone().mulRowVector(frac(t, t0, t2, t0)));
-    const B2 = A2.clone()
-      .mulRowVector(frac(t3, t, t3, t1))
-      .add(A3.clone().mulRowVector(frac(t, t1, t3, t1)));
-    const C = B1.mulRowVector(frac(t2, t, t2, t1)).add(
-      B2.mulRowVector(frac(t, t1, t2, t1))
-    );
-
+    const A1 = linearInt(P0, P1, t0, t1, t);
+    const A2 = linearInt(P1, P2, t1, t2, t);
+    const A3 = linearInt(P2, P3, t2, t3, t);
+    const B1 = linearInt(A1, A2, t0, t2, t);
+    const B2 = linearInt(A2, A3, t1, t3, t);
+    const C = linearInt(B1, B2, t1, t2, t);
     return C;
   };
 }
