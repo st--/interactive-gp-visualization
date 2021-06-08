@@ -54,7 +54,7 @@
 
   let numInterpolate = 8;
   function updateFrame() {
-    if (doAnimate || (frameIdx == 0)) {
+    if (doAnimate || frameIdx == 0) {
       if (animationType === AnimationTypes.greatCircle) {
         frameIdx = (frameIdx + 1) % numFrames;
       } else {
