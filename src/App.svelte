@@ -128,7 +128,7 @@ Future thoughts:
     Vanchor = [];
     nextVs = $vs;
   });
-  function updateAnchor() {
+  function updateInterpolator() {
     Vanchor.shift();
     while (Vanchor.length < 4) {
       if (animationType === animTypes.hmc && nextVs) {
@@ -142,13 +142,13 @@ Future thoughts:
   }
 
   let numInterpolate = 8;
-  function updateFrameIdx() {
+  function updateFrame() {
     if (doAnimate) {
       if (animationType === animTypes.greatCircle) {
         frameIdx = (frameIdx + 1) % numFrames;
       } else {
         if (frameIdx == 0) {
-          updateAnchor();
+          updateInterpolator();
         }
         const w = frameIdx / numInterpolate;
         currentVs = interpolator(w);
@@ -157,11 +157,11 @@ Future thoughts:
     }
   }
 
-  let animationInterval;
+  let animationIntervalHandle;
   let animationDelay = 100;
   $: {
-    clearInterval(animationInterval);
-    setInterval(updateFrameIdx, animationDelay);
+    clearInterval(animationIntervalHandle);
+    animationIntervalHandle = setInterval(updateFrame, animationDelay);
   }
 
   $: getDataAt = (dat) => {
