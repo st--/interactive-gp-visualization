@@ -1,3 +1,5 @@
+// Copyright (c) 2021 ST John
+
 import * as m from "ml-matrix";
 import { randn } from "./mymath.js";
 
@@ -61,10 +63,14 @@ export function HMC(current_qs, epsilon = 0.1, L = 2) {
     ) {
       current_qs.setColumn(i, qs.getColumn(i)); // accept proposed state
     } else {
-      // reject proposal; keep original position
+      // reject proposal; normally we would keep original position
       rejectedCount++;
+      // Here, we sample a completely fresh state from our known N(0, I) distribution
+      // so we do not run into numeric issues with the interpolation
+      // (easier than fixing the interpolation code!)
+      current_qs.setColumn(i, randn(qs.rows, 1, Math.random()));
     }
   }
-  console.log(rejectedCount / qs.columns);
+  // console.log(rejectedCount / qs.columns);
   return current_qs;
 }
