@@ -52,19 +52,23 @@
     <div class="flexelement">
       {#if kernelCombination === ""}
         <!-- simple kernel -->
-        <button
-          on:click={(_event) => {
-            kernelCombination = "+";
-          }}
-          title="add second kernel"><strong>&plus;</strong></button
-        >/<button
-          on:click={(_event) => {
-            kernelCombination = "*";
-          }}
-          title="multiply by second kernel"><strong>&times;</strong></button
-        >
+        <div style="margin-right: 1em;">
+          <button
+            on:click={(_event) => {
+              kernelCombination = "+";
+            }}
+            title="add second kernel"><strong>&plus;</strong></button
+          >/<button
+            on:click={(_event) => {
+              kernelCombination = "*";
+            }}
+            title="multiply by second kernel"><strong>&times;</strong></button
+          >
+        </div>
       {:else}
-        <strong>{@html kernelCombinationSymbol}</strong>
+        <strong style="margin-right: 1em;"
+          >{@html kernelCombinationSymbol}</strong
+        >
         <select bind:value={kernelSelection2}>
           {#each kernelChoices2 as choice}
             <option value={choice}>
