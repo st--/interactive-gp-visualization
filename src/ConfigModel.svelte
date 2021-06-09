@@ -123,7 +123,7 @@
     margin-right: 1em;
   }
 
-  /* from https://css.gg/trash */
+  /* .gg-* classes from https://css.gg/trash, Copyright (c) 2020 css.gg, MIT license */
   .gg-trash {
     box-sizing: border-box;
     position: relative;
