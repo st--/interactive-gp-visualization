@@ -357,7 +357,7 @@ Future thoughts:
     /* background-color: #fafafa; */
   }
   .fullcovchart {
-    background-color: #fafafa;
+    background-color: #fafafa; /* TODO */
   }
   .squarechart {
     width: 350px;

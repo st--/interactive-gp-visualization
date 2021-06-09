@@ -1,5 +1,8 @@
 <!-- Copyright (c) 2021 ST John -->
 <script>
+  // TODO: make contour plot actually react to window resizing
+  // TODO: fix color scale
+
   import { onMount } from "svelte";
   import { scaleLinear, scaleSequential } from "d3-scale";
   import { interpolateBlues as colorScale } from "d3-scale-chromatic";
