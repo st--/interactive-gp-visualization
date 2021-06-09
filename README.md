@@ -6,7 +6,10 @@ This is an interactive extension of a visualisation I developed for an invited [
 
 This webapp is built using [Svelte](https://svelte.dev/), [D3.js](https://d3js.org/), and [ml-matrix](https://github.com/mljs/matrix). Equations are rendered by [KaTeX](https://katex.org/). Thanks to [Ryan Davis](https://rdavis.io/articles/svelte_collapsible_card_component/) for the [CollapsibleCard](https://github.com/rsdavis/svelte-collapsible).
 
-The smooth animation of different samples goes back to Philipp Hennig's technical note [Animating samples from Gaussian distributions](http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf). How to compute the isocontour ellipses of a bivariate Gaussian distribution is explained by Chuong B. Do in [this note](http://cs229.stanford.edu/section/gaussians.pdf).
+There are several ways to make smooth animations across different samples.
+One way is to take random samples (independently or from [HMC](https://arxiv.org/abs/1206.1901) trajectories) and smoothly interpolate between them; here, using  [Catmull–Rom splines](https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline).
+Another way is to construct great circles in the sample space, which goes back to Philipp Hennig's technical note [Animating samples from Gaussian distributions](http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf).
+How to compute the isocontour ellipses of a bivariate Gaussian distribution is explained by Chuong B. Do in [this note](http://cs229.stanford.edu/section/gaussians.pdf).
 
 ## Other visualisations
 
@@ -14,12 +17,17 @@ There are plenty of other Gaussian process visualisations out there; here are so
 
 * Interactive tutorial: [A Visual Exploration of Gaussian Processes (distill.pub)](https://distill.pub/2019/visual-exploration-gaussian-processes/) by Jochen G&ouml;rtler, Rebecca Kehlbeck, Oliver Deussen ([source](https://github.com/distillpub/post%2d-visual-exploration-gaussian-processes), using D3.js, ml-matrix)
 * Interactive tutorial: [A Practical Guide to Gaussian Processes](http://tinyurl.com/guide2gp) by Marc Peter Deisenroth, Yicheng Luo, Mark van der Wilk
-* [Demo by Nicolas Durrande](https://durrande.shinyapps.io/gp_playground/) ([source](https://github.com/NicolasDurrande/shinyApps/tree/master/GP_playground), using R and Shiny)
 * [Demo by Johan W&aring;gberg](http://smlbook.org/GP/) ([source](https://github.com/uu-sml/sml-book-page/tree/master/GP), using D3.js, Numeric.js)
 * [Demo by Tomi Peltola](http://www.tmpl.fi/gp/) ([source](https://github.com/to-mi/gp-demo-js), using React, D3.js, Numeric.js)
+* [Demo by Nicolas Durrande](https://durrande.shinyapps.io/gp_playground/) ([source](https://github.com/NicolasDurrande/shinyApps/tree/master/GP_playground), using R and Shiny)
 * [Demo by Chi Feng](https://chi-feng.github.io/gp-demo/) ([source](https://github.com/chi-feng/gp-demo), using dat.gui, jQuery)
+
+<small>
+Other demos that no longer seem to work fully:
+
 * [Demo by Alex Y. Chan](https://gaussianprocess.herokuapp.com/) ([source](https://github.com/aybchan/gaussianprocess), using D3.js, math.js)
 * Demo by Artem Artemev, run locally ([source](https://github.com/awav/interactive-gp), using Python, GPflow, holoviews/bokeh)
+</small>
 
 ## Comments, bugs, feature suggestions
 
