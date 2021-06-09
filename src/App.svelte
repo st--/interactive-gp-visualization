@@ -37,7 +37,6 @@ Future thoughts:
   import ConfigPlot from "./ConfigPlot.svelte";
 
   import { x1, x2 } from "./store.js";
-  import type { KernelFunction } from "./kernels";
   import {
     createKernelChoices,
     instantiateKernel,
