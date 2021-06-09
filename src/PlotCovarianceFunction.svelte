@@ -38,7 +38,7 @@
 
   $: contourGenerator = contours().size([covMat.rows, covMat.columns]);
   $: flatCov = covMat.transpose().to1DArray();
-  let numContours = 30;
+  let numContours = 15;
   $: contourGeo = linspace(-1, 1, numContours).map((threshold) =>
     contourGenerator.contour(flatCov, threshold)
   );
