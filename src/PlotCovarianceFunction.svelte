@@ -48,20 +48,23 @@
   const grid = flatCov;
 
   // Converts from grid coordinates (indexes) to screen coordinates (pixels).
-  function mytransform({ type, value, coordinates }) {
-    return {
-      type,
-      value,
-      coordinates: coordinates.map((rings) => {
-        return rings.map((points) => {
-          return points.map(([x, y]) => [
-            xScale((x / covMat.rows) * 6 + 0),
-            yScale((y / covMat.rows) * 6 + 0),
-          ]);
-        });
-      }),
+  function createTransform(xScale, yScale) {
+    return ({ type, value, coordinates }) => {
+      return {
+        type,
+        value,
+        coordinates: coordinates.map((rings) => {
+          return rings.map((points) => {
+            return points.map(([x, y]) => [
+              xScale((x / covMat.rows) * 6 + 0),
+              yScale((y / covMat.rows) * 6 + 0),
+            ]);
+          });
+        }),
+      };
     };
   }
+  $: mytransform = createTransform(xScale, yScale);
   $: contourPaths = contourGeo.map(mytransform).map(geoPath());
   $: console.log(contourPaths);
 
