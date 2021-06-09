@@ -91,7 +91,7 @@
 
 <svelte:window on:resize={resize} />
 
-<div>
+<div id="container">
   <svg bind:this={svg} on:mousemove={handleMousemove}>
     <Axes
       {xScale}
@@ -122,9 +122,10 @@
 </div>
 
 <style>
-  div {
-    width: 400px;
-    height: 400px;
+  #container {
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
   svg {
     width: 100%;
