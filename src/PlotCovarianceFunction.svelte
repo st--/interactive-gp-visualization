@@ -44,8 +44,6 @@
   );
 
   // https://observablehq.com/@d3/contours
-  const grid = flatCov;
-
   // Converts from grid coordinates (indexes) to screen coordinates (pixels).
   function createTransform(xScale, yScale) {
     return ({ type, value, coordinates }) => {
@@ -91,6 +89,10 @@
 
 <div id="container">
   <svg bind:this={svg} on:mousemove={handleMousemove}>
+    {#each contourPaths as contourPath, i}
+      <path d={contourPath} style="fill: {color(i)};" />
+    {/each}
+
     <Axes
       {xScale}
       {yScale}
@@ -100,9 +102,6 @@
       height={size}
       {padding}
     />
-    {#each contourPaths as contourPath, i}
-      <path d={contourPath} style="fill: {color(i)};" />
-    {/each}
 
     <XIndicatorCross
       {xScale}
