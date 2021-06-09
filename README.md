@@ -22,12 +22,12 @@ There are plenty of other Gaussian process visualisations out there; here are so
 * [Demo by Nicolas Durrande](https://durrande.shinyapps.io/gp_playground/) ([source](https://github.com/NicolasDurrande/shinyApps/tree/master/GP_playground), using R and Shiny)
 * [Demo by Chi Feng](https://chi-feng.github.io/gp-demo/) ([source](https://github.com/chi-feng/gp-demo), using dat.gui, jQuery)
 
-<small>
-Other demos that no longer seem to work fully:
+<!--
+The following visualisations seem to no longer run out of the box:
 
 * [Demo by Alex Y. Chan](https://gaussianprocess.herokuapp.com/) ([source](https://github.com/aybchan/gaussianprocess), using D3.js, math.js)
 * Demo by Artem Artemev, run locally ([source](https://github.com/awav/interactive-gp), using Python, GPflow, holoviews/bokeh)
-</small>
+-->
 
 ## Comments, bugs, feature suggestions
 
