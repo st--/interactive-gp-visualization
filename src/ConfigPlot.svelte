@@ -36,4 +36,7 @@
   input[type="checkbox"] {
     margin-right: 5px;
   }
+  input[type="range"] {
+    vertical-align: middle;
+  }
 </style>
