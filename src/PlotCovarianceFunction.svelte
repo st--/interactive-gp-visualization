@@ -2,7 +2,7 @@
 <script>
   import { onMount } from "svelte";
   import { scaleLinear, scaleSequential } from "d3-scale";
-  import { interpolateSpectral } from "d3-scale-chromatic";
+  import { interpolateBlues as colorScale } from "d3-scale-chromatic";
   import { contours } from "d3-contour";
   import { geoPath, geoIdentity } from "d3-geo";
   import { x1, x2 } from "./store.js";
@@ -64,7 +64,7 @@
   $: mytransform = createTransform(xScale, yScale);
   $: contourPaths = contourGeo.map(mytransform).map(geoPath());
 
-  $: color = scaleSequential([numContours, 0], interpolateSpectral);
+  $: color = scaleSequential([0, contourPaths.length - 1], colorScale);
   onMount(resize);
   $: console.log("width", width, "height", height);
 
