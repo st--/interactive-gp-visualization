@@ -9,6 +9,7 @@
   import { linspace } from "./mymath.js";
   import { getSVGpoint } from "./getsvgpoint.js";
   import Axes from "./Axes.svelte";
+  import XIndicatorCross from "./XIndicatorCross.svelte";
   export let covMat;
 
   let svg;
@@ -101,6 +102,19 @@
     {#each contourPaths as contourPath, i}
       <path d={contourPath} style="fill: {color(i)};" />
     {/each}
+
+    <XIndicatorCross
+      {xScale}
+      {yScale}
+      x={$x1}
+      style="stroke: red; stroke-width: 2"
+    />
+    <XIndicatorCross
+      {xScale}
+      {yScale}
+      x={$x2}
+      style="stroke: orange; stroke-width: 2"
+    />
   </svg>
 </div>
 
