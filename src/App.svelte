@@ -70,20 +70,12 @@ Future thoughts:
 
   $: kernel1 = instantiateKernel(kernelSelection);
   $: kernel2 = instantiateKernel(kernelSelection2);
-  function combineKernel(
-    k1: KernelFunction,
-    k2: KernelFunction,
-    combination: string
-  ): KernelFunction {
-    if (combination == "+") {
-      return sumKernel([k1, k2]);
-    } else if (combination == "*") {
-      return productKernel([k1, k2]);
-    } else {
-      return k1;
-    }
-  }
-  $: kernel = combineKernel(kernel1, kernel2, kernelCombination);
+  $: kernel =
+    kernelCombination == "+"
+      ? sumKernel([kernel1, kernel2])
+      : kernelCombination == "*"
+      ? productKernel([kernel1, kernel2])
+      : kernel1;
   $: kernelWithJitter = sumKernel([kernel, white(1e-6)]);
 
   $: gp =
