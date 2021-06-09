@@ -24,6 +24,10 @@
   ><input type="checkbox" bind:checked={plotProps.marginals} />Plot marginal
   distributions of <Katex math="f(x_1), \, f(x_2)" /></label
 >
+<label
+  ><input type="checkbox" bind:checked={plotProps.fullcov} />Visualize full
+  covariance function <Katex math={"\\operatorname{cov}(f(x),f(x'))"} /></label
+>
 <div class="advanced">
   <label>
     Number of evaluation points: {num_grid}

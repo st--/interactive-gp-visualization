@@ -63,6 +63,7 @@ Future thoughts:
     confidence: true,
     samples: true,
     marginals: true,
+    fullcov: true,
   };
 
   let num_grid = 150;
@@ -250,12 +251,14 @@ Future thoughts:
     </div>
   </div>
 
-  <CollapsibleCard open={true}>
-    <h3 slot="header">&#187; Full covariance</h3>
-    <div slot="body" class="fullcovchart">
-      <PlotCovarianceFunction {covMat} />
-    </div>
-  </CollapsibleCard>
+  {#if plotProps.fullcov}
+    <CollapsibleCard open={true}>
+      <h3 slot="header">&#187; Full covariance</h3>
+      <div slot="body" class="fullcovchart">
+        <PlotCovarianceFunction {covMat} />
+      </div>
+    </CollapsibleCard>
+  {/if}
 
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Visualization settings</h3>
