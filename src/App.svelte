@@ -126,6 +126,8 @@ Future thoughts:
   $: covProps = covEllipse(covY1Y2);
 
   let points = [];
+
+  let widthPlotMarginals;
 </script>
 
 <div>
@@ -233,7 +235,11 @@ Future thoughts:
       <div class="chart" style="grid-area: bicovmatrix;">
         <ShowBivariateCovarianceMatrix {atX1} {atX2} />
       </div>
-      <div class="chart" style="grid-area: marginals;">
+      <div
+        class="chart"
+        style="grid-area: marginals;"
+        bind:clientWidth={widthPlotMarginals}
+      >
         <PlotMarginals
           {xs}
           {means}
@@ -254,7 +260,11 @@ Future thoughts:
   {#if plotProps.fullcov}
     <CollapsibleCard open={true}>
       <h3 slot="header">&#187; Full covariance</h3>
-      <div slot="body" class="fullcovchart">
+      <div
+        slot="body"
+        class="fullcovchart"
+        style="width: {widthPlotMarginals}px; height: {widthPlotMarginals}px;"
+      >
         <PlotCovarianceFunction {covMat} />
       </div>
     </CollapsibleCard>
@@ -347,8 +357,6 @@ Future thoughts:
     /* background-color: #fafafa; */
   }
   .fullcovchart {
-    min-width: 400px;
-    min-height: 400px;
     background-color: #fafafa;
   }
   .squarechart {
