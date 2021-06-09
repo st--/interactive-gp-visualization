@@ -23,4 +23,7 @@
     max-width: 500px;
     text-align: right;
   }
+  input[type="range"] {
+    vertical-align: middle;
+  }
 </style>

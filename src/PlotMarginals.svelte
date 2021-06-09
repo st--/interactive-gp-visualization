@@ -48,9 +48,11 @@
   // mean and samples
   $: pathMean = makePath(xs, means);
   $: samplePaths = samples
-    .transpose()
-    .to2DArray()
-    .map((ys) => makePath(xs, ys));
+    ? samples
+        .transpose()
+        .to2DArray()
+        .map((ys) => makePath(xs, ys))
+    : [];
 
   // marginal y distributions at x1 and x2
   // TODO unify with Covariance?

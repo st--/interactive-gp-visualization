@@ -122,7 +122,7 @@
       height={size}
       {padding}
     />
-    <YIndicatorCross {xScale} {yScale} {minY} {maxY} />
+    <YIndicatorCross {xScale} {yScale} {maxY} />
 
     <!-- data -->
     {#if plotProps.marginals}

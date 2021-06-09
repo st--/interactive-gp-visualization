@@ -1,10 +1,10 @@
 # Interactive Visualisation of Gaussian processes
 
-This is an interactive extension of a visualisation I developed for an invited talk at the FAI seminar series at University College London. Try out the [live demo](http://infinitecuriosity.org/vizgp)!
+This is an interactive extension of a visualisation I developed for an invited [talk](https://www.youtube.com/watch?v=uq8VxqeHPj8) at the FAI seminar series at University College London. Try out the [live demo](http://infinitecuriosity.org/vizgp)!
 
 ## Standing on the shoulders of...
 
-This webapp is built using [Svelte](https://svelte.dev/), [D3.js](https://d3js.org/), and [ml-matrix](https://github.com/mljs/matrix). Equations are rendered by [KaTeX](https://katex.org/). Thanks to [Ryan Davis](https://rdavis.io/articles/svelte_collapsible_card_component/) for the [CollapsibleCard](https://github.com/rsdavis/svelte-collapsible-card).
+This webapp is built using [Svelte](https://svelte.dev/), [D3.js](https://d3js.org/), and [ml-matrix](https://github.com/mljs/matrix). Equations are rendered by [KaTeX](https://katex.org/). Thanks to [Ryan Davis](https://rdavis.io/articles/svelte_collapsible_card_component/) for the [CollapsibleCard](https://github.com/rsdavis/svelte-collapsible).
 
 The smooth animation of different samples goes back to Philipp Hennig's technical note [Animating samples from Gaussian distributions](http://mlss.tuebingen.mpg.de/2013/Hennig_2013_Animating_Samples_from_Gaussian_Distributions.pdf). How to compute the isocontour ellipses of a bivariate Gaussian distribution is explained by Chuong B. Do in [this note](http://cs229.stanford.edu/section/gaussians.pdf).
 
