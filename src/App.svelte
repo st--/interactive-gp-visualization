@@ -37,43 +37,27 @@ Future thoughts:
   import ConfigPlot from "./ConfigPlot.svelte";
 
   import { x1, x2 } from "./store.js";
+  import type { KernelFunction } from "./kernels";
   import {
-    sqexp,
-    makeSqexp,
-    makeMatern12,
-    makeMatern32,
-    makeMatern52,
-    makePeriodic,
-    makeLinear,
+    createKernelChoices,
+    instantiateKernel,
     white,
     sumKernel,
     productKernel,
-  } from "./kernels.js";
+  } from "./kernels";
   import { linspace, matrixSqrt, covEllipse } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
-  let kernelChoices = [
-    makeMatern12(), // 0
-    makeMatern32(), // 1
-    makeMatern52(), // 2
-    makeSqexp(), // 3
-    makePeriodic(), // 4
-    makeLinear(), // 5
-  ];
-  let selectedKernel = kernelChoices[3]; // = Sqexp
-  let kernelChoices2 = [
-    makeMatern12(), // 0
-    makeMatern32(), // 1
-    makeMatern52(), // 2
-    makeSqexp(), // 3
-    makePeriodic(), // 4
-    makeLinear(), // 5
-  ];
-  let selectedKernel2 = kernelChoices2[3]; // = Sqexp
+  // variables for ConfigModel
+  let { choices: kernelChoices, selected: kernelSelection } =
+    createKernelChoices();
+  let { choices: kernelChoices2, selected: kernelSelection2 } =
+    createKernelChoices();
   let kernelCombination = "";
   let noiseScale = 0.0;
 
+  // variables for ConfigPlot
   let plotProps = {
     mean: true,
     confidence: true,
@@ -84,13 +68,13 @@ Future thoughts:
   let num_grid = 150;
   $: xs = linspace(0, 6, num_grid);
 
-  $: kernel1 = selectedKernel
-    ? selectedKernel.kernel(...selectedKernel.parameters.map((p) => p.value))
-    : sqexp();
-  $: kernel2 = selectedKernel2
-    ? selectedKernel2.kernel(...selectedKernel2.parameters.map((p) => p.value))
-    : sqexp();
-  function combineKernel(k1, k2, combination) {
+  $: kernel1 = instantiateKernel(kernelSelection);
+  $: kernel2 = instantiateKernel(kernelSelection2);
+  function combineKernel(
+    k1: KernelFunction,
+    k2: KernelFunction,
+    combination: string
+  ): KernelFunction {
     if (combination == "+") {
       return sumKernel([k1, k2]);
     } else if (combination == "*") {
@@ -310,9 +294,9 @@ Future thoughts:
     <div slot="body">
       <ConfigModel
         bind:noiseScale
-        bind:selectedKernel
+        bind:kernelSelection
         {kernelChoices}
-        bind:selectedKernel2
+        bind:kernelSelection2
         {kernelChoices2}
         bind:kernelCombination
       />
@@ -369,10 +353,10 @@ Future thoughts:
   .flexcontainer {
     display: flex;
     flex-flow: row wrap;
+    vertical-align: middle;
   }
   .flexelement {
     display: block;
-    vertical-align: middle;
     margin-right: 1em;
   }
 </style>

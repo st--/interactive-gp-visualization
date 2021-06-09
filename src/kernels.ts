@@ -2,6 +2,24 @@
 
 import * as m from "ml-matrix";
 
+export type KernelFunction = (x1: number, x2: number) => number;
+export type KernelConstructor = (...args: number[]) => KernelFunction;
+export type Parameter = {
+  name: string;
+  formula: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  lowerBound?: number;
+};
+export type KernelSelection = {
+  description: string;
+  formula: string;
+  parameters: Parameter[];
+  constructor: KernelConstructor;
+};
+
 const paramVariance = {
   name: "variance",
   formula: "\\sigma^2",
@@ -21,7 +39,7 @@ const paramLengthscale = {
   lowerBound: 1e-3,
 };
 
-export function sqexp(variance = 1, lengthscale = 1) {
+export function sqexp(variance = 1, lengthscale = 1): KernelFunction {
   const twosqlength = 2 * lengthscale * lengthscale;
   return (x1, x2) => {
     const sqdist = Math.pow(x1 - x2, 2);
@@ -29,49 +47,49 @@ export function sqexp(variance = 1, lengthscale = 1) {
   };
 }
 
-export function makeSqexp() {
+export function makeSqexp(): KernelSelection {
   return {
     description: "squared-exponential",
     formula: "\\sigma^2 \\exp\\Big(-\\frac{(x-x')^2}{2\\ell^2}\\Big)",
     parameters: [paramVariance, paramLengthscale],
-    kernel: sqexp,
+    constructor: sqexp,
   };
 }
 
-export function matern12(variance = 1, lengthscale = 1) {
+export function matern12(variance = 1, lengthscale = 1): KernelFunction {
   return (x1, x2) => {
     const dist = Math.abs(x1 - x2);
     return variance * Math.exp(-dist / lengthscale);
   };
 }
 
-export function makeMatern12() {
+export function makeMatern12(): KernelSelection {
   return {
     description: "exponential (Matérn 1/2)",
     formula: "\\sigma^2 \\exp\\Big(-\\frac{|x-x'|}{\\ell}\\Big)",
     parameters: [paramVariance, paramLengthscale],
-    kernel: matern12,
+    constructor: matern12,
   };
 }
 
-export function matern32(variance = 1, lengthscale = 1) {
+export function matern32(variance = 1, lengthscale = 1): KernelFunction {
   return (x1, x2) => {
     const scaledDist = (Math.sqrt(3) * Math.abs(x1 - x2)) / lengthscale;
     return variance * (1 + scaledDist) * Math.exp(-scaledDist);
   };
 }
 
-export function makeMatern32() {
+export function makeMatern32(): KernelSelection {
   return {
     description: "Matérn 3/2",
     formula:
       "\\sigma^2 \\big( 1 + \\frac{\\sqrt{3} |x-x'|}{\\ell} \\big) \\exp\\Big(-\\frac{\\sqrt{3} |x-x'|}{\\ell}\\Big)",
     parameters: [paramVariance, paramLengthscale],
-    kernel: matern32,
+    constructor: matern32,
   };
 }
 
-export function matern52(variance = 1, lengthscale = 1) {
+export function matern52(variance = 1, lengthscale = 1): KernelFunction {
   return (x1, x2) => {
     const scaledDist = (Math.sqrt(5) * Math.abs(x1 - x2)) / lengthscale;
     return (
@@ -82,23 +100,27 @@ export function matern52(variance = 1, lengthscale = 1) {
   };
 }
 
-export function makeMatern52() {
+export function makeMatern52(): KernelSelection {
   return {
     description: "Matérn 5/2",
     formula:
       "\\sigma^2 \\big( 1 + \\frac{\\sqrt{5} |x-x'|}{\\ell} + \\frac{5 (x-x')^2}{3 \\ell^2} \\big) \\exp\\Big(-\\frac{\\sqrt{5} |x-x'|}{\\ell}\\Big)",
     parameters: [paramVariance, paramLengthscale],
-    kernel: matern52,
+    constructor: matern52,
   };
 }
 
-export function white(variance) {
+export function white(variance: number): KernelFunction {
   return (x1, x2) => {
     return x1 == x2 ? variance : 0.0;
   };
 }
 
-export function periodic(variance = 1, lengthscale = 1.4, period = 2) {
+export function periodic(
+  variance = 1,
+  lengthscale = 1.4,
+  period = 2
+): KernelFunction {
   const sqlength = lengthscale * lengthscale;
   return (x1, x2) => {
     const dist = Math.abs(x1 - x2);
@@ -117,13 +139,13 @@ const paramPeriod = {
   lowerBound: 1e-3,
 };
 
-export function makePeriodic() {
+export function makePeriodic(): KernelSelection {
   return {
     description: "periodic",
     formula:
       "\\sigma^2 \\exp\\Big(- 2 \\frac{\\sin^2(\\pi |x-x'|/p)}{\\ell^2}\\Big)",
     parameters: [paramVariance, paramLengthscale, paramPeriod],
-    kernel: periodic,
+    constructor: periodic,
   };
 }
 
@@ -145,36 +167,54 @@ const paramCenter = {
   step: 0.1,
 };
 
-export function linear(variance = 1, bias = 0, center = 0) {
+export function linear(variance = 1, bias = 0, center = 0): KernelFunction {
   return (x1, x2) => {
     return bias + variance * (x1 - center) * (x2 - center);
   };
 }
 
-export function makeLinear() {
+export function makeLinear(): KernelSelection {
   return {
     description: "linear",
     formula: "\\sigma^2 (x - x_c)(x' - x_c) + \\sigma^2_b",
     parameters: [paramVariance, paramBias, paramCenter],
-    kernel: linear,
+    constructor: linear,
   };
 }
 
-export function productKernel(kernels) {
+export function createKernelChoices() {
+  const choices: KernelSelection[] = [
+    makeMatern12(), // 0
+    makeMatern32(), // 1
+    makeMatern52(), // 2
+    makeSqexp(), // 3
+    makePeriodic(), // 4
+    makeLinear(), // 5
+  ];
+  const selected = choices[3]; // = Sqexp
+  return { choices, selected };
+}
+
+export function instantiateKernel(selected: KernelSelection): KernelFunction {
+  if (!selected) return sqexp();
+  return selected.constructor(...selected.parameters.map((p) => p.value));
+}
+
+export function productKernel(kernels: KernelFunction[]): KernelFunction {
   return (x1, x2) => {
     const results = kernels.map((k) => k.apply(null, [x1, x2]));
     return results.reduce((acc, x) => acc * x, 1);
   };
 }
 
-export function sumKernel(kernels) {
+export function sumKernel(kernels: KernelFunction[]): KernelFunction {
   return (x1, x2) => {
     const results = kernels.map((k) => k.apply(null, [x1, x2]));
     return results.reduce((acc, x) => acc + x, 0);
   };
 }
 
-export function covMatrix(kernel, xs) {
+export function covMatrix(kernel: KernelFunction, xs: number[]) {
   const dim = xs.length;
   const kernelMatrix = new m.Matrix(dim, dim);
   for (let i = 0; i < dim; ++i) {

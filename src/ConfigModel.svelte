@@ -3,9 +3,9 @@
   import Katex from "./Katex.svelte";
   import ParameterSlider from "./ParameterSlider.svelte";
   export let noiseScale,
-    selectedKernel,
+    kernelSelection,
     kernelChoices,
-    selectedKernel2,
+    kernelSelection2,
     kernelChoices2,
     kernelCombination;
 
@@ -35,16 +35,16 @@
   <div class="flexcontainer">
     <div class="flexelement">
       <strong>{kernelHeader}:</strong>
-      <select bind:value={selectedKernel}>
+      <select bind:value={kernelSelection}>
         {#each kernelChoices as choice}
           <option value={choice}>
             {choice.description}
           </option>
         {/each}
       </select>
-      <Katex math="k(x, x') = {selectedKernel.formula}" />
+      <Katex math="k(x, x') = {kernelSelection.formula}" />
 
-      {#each selectedKernel.parameters as parameter}
+      {#each kernelSelection.parameters as parameter}
         <ParameterSlider bind:value={parameter.value} {...parameter} />
       {/each}
     </div>
@@ -65,14 +65,14 @@
         >
       {:else}
         <strong>{@html kernelCombinationSymbol}</strong>
-        <select bind:value={selectedKernel2}>
+        <select bind:value={kernelSelection2}>
           {#each kernelChoices2 as choice}
             <option value={choice}>
               {choice.description}
             </option>
           {/each}
         </select>
-        <Katex math="k(x, x') = {selectedKernel2.formula}" />
+        <Katex math="k(x, x') = {kernelSelection2.formula}" />
         <button
           on:click={(_event) => {
             kernelCombination = "";
@@ -80,7 +80,7 @@
           title="remove second kernel"><i class="gg-trash" /></button
         >
 
-        {#each selectedKernel2.parameters as parameter}
+        {#each kernelSelection2.parameters as parameter}
           <ParameterSlider bind:value={parameter.value} {...parameter} />
         {/each}
       {/if}
