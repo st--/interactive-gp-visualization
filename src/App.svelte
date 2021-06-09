@@ -31,8 +31,8 @@ Future thoughts:
   import PlotMarginals from "./PlotMarginals.svelte";
   import PlotKernelSlices from "./PlotKernelSlices.svelte";
   import PlotBivariateCovariance from "./PlotBivariateCovariance.svelte";
+  import PlotCovarianceFunction from "./PlotCovarianceFunction.svelte";
   import RandomSample from "./RandomSample.svelte";
-  import KernelTwoD from "./KernelTwoD.svelte";
   import Animation from "./Animation.svelte";
   import ConfigModel from "./ConfigModel.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
@@ -253,7 +253,7 @@ Future thoughts:
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Full covariance</h3>
     <div slot="body" class="fullcovchart">
-      <KernelTwoD {covMat} />
+      <PlotCovarianceFunction {covMat} />
     </div>
   </CollapsibleCard>
 
