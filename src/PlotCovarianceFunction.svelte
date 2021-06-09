@@ -38,7 +38,6 @@
 
   $: contourGenerator = contours().size([covMat.rows, covMat.columns]);
   $: flatCov = covMat.transpose().to1DArray();
-  $: console.log(flatCov);
   let numContours = 30;
   $: contourGeo = linspace(-1, 1, numContours).map((threshold) =>
     contourGenerator.contour(flatCov, threshold)
@@ -66,7 +65,6 @@
   }
   $: mytransform = createTransform(xScale, yScale);
   $: contourPaths = contourGeo.map(mytransform).map(geoPath());
-  $: console.log(contourPaths);
 
   $: color = scaleSequential([numContours, 0], interpolateSpectral);
   onMount(resize);
