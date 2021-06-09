@@ -63,7 +63,7 @@ Future thoughts:
     confidence: true,
     samples: true,
     marginals: true,
-    fullcov: true,
+    fullcov: false,
   };
 
   let num_grid = 150;
@@ -255,20 +255,21 @@ Future thoughts:
         <PlotBivariateCovariance {atX1} {atX2} {covProps} {plotProps} />
       </div>
     </div>
-  </div>
-
-  {#if plotProps.fullcov}
-    <CollapsibleCard open={true}>
-      <h3 slot="header">&#187; Full covariance</h3>
+    <label
+      ><input type="checkbox" bind:checked={plotProps.fullcov} />Visualize full
+      covariance function <Katex
+        math={"\\operatorname{cov}(f(x),f(x'))"}
+      /></label
+    >
+    {#if plotProps.fullcov}
       <div
-        slot="body"
         class="fullcovchart"
         style="width: {widthPlotMarginals}px; height: {widthPlotMarginals}px;"
       >
         <PlotCovarianceFunction {covMat} />
       </div>
-    </CollapsibleCard>
-  {/if}
+    {/if}
+  </div>
 
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Visualization settings</h3>
