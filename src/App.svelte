@@ -38,31 +38,25 @@ Future thoughts:
 
   import { x1, x2 } from "./store.js";
   import {
-    sqexp,
-    makeSqexp,
-    makeMatern12,
-    makeMatern32,
-    makeMatern52,
-    makePeriodic,
-    makeLinear,
+    createKernelChoices,
+    instantiateKernel,
     white,
     sumKernel,
-  } from "./kernels.js";
+    productKernel,
+  } from "./kernels";
   import { linspace, matrixSqrt, covEllipse } from "./mymath.js";
   import { getIndicesAndFrac } from "./binarysearch.js";
   import { posterior, prior } from "./gpposterior.js";
 
-  let kernelChoices = [
-    makeMatern12(), // 0
-    makeMatern32(), // 1
-    makeMatern52(), // 2
-    makeSqexp(), // 3
-    makePeriodic(), // 4
-    makeLinear(), // 5
-  ];
-  let selectedKernel = kernelChoices[3]; // = Sqexp
+  // variables for ConfigModel
+  let { choices: kernelChoices, selected: kernelSelection } =
+    createKernelChoices();
+  let { choices: kernelChoices2, selected: kernelSelection2 } =
+    createKernelChoices();
+  let kernelCombination = "";
   let noiseScale = 0.0;
 
+  // variables for ConfigPlot
   let plotProps = {
     mean: true,
     confidence: true,
@@ -73,12 +67,15 @@ Future thoughts:
   let num_grid = 150;
   $: xs = linspace(0, 6, num_grid);
 
-  $: kernelWithJitter = sumKernel([
-    selectedKernel
-      ? selectedKernel.kernel(...selectedKernel.parameters.map((p) => p.value))
-      : sqexp(),
-    white(1e-6),
-  ]);
+  $: kernel1 = instantiateKernel(kernelSelection);
+  $: kernel2 = instantiateKernel(kernelSelection2);
+  $: kernel =
+    kernelCombination == "+"
+      ? sumKernel([kernel1, kernel2])
+      : kernelCombination == "*"
+      ? productKernel([kernel1, kernel2])
+      : kernel1;
+  $: kernelWithJitter = sumKernel([kernel, white(1e-6)]);
 
   $: gp =
     points.length > 0
@@ -255,24 +252,30 @@ Future thoughts:
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Visualization settings</h3>
     <div slot="body">
-      <RandomSample xsLength={xs.length} />
-      <Animation {means} {covSqrt} bind:samples />
-      <div>
-        <button
-          class="btn"
-          disabled={points.length == 0}
-          on:click={(_event) => {
-            points.pop();
-            points = points; // for Svelte reactivity
-          }}>Remove last observation</button
-        >
-        <button
-          class="btn"
-          disabled={points.length == 0}
-          on:click={(_event) => {
-            points = [];
-          }}>Remove all observations</button
-        >
+      <div class="flexcontainer">
+        <div class="flexelement">
+          <RandomSample xsLength={xs.length} />
+        </div>
+        <div class="flexelement">
+          <Animation {means} {covSqrt} bind:samples />
+        </div>
+        <div class="flexelement">
+          <button
+            class="btn"
+            disabled={points.length == 0}
+            on:click={(_event) => {
+              points.pop();
+              points = points; // for Svelte reactivity
+            }}>Remove last observation</button
+          >
+          <button
+            class="btn"
+            disabled={points.length == 0}
+            on:click={(_event) => {
+              points = [];
+            }}>Remove all observations</button
+          >
+        </div>
       </div>
     </div>
   </CollapsibleCard>
@@ -280,7 +283,14 @@ Future thoughts:
   <CollapsibleCard open={true}>
     <h3 slot="header">&#187; Kernel and likelihood</h3>
     <div slot="body">
-      <ConfigModel bind:noiseScale bind:selectedKernel {kernelChoices} />
+      <ConfigModel
+        bind:noiseScale
+        bind:kernelSelection
+        {kernelChoices}
+        bind:kernelSelection2
+        {kernelChoices2}
+        bind:kernelCombination
+      />
     </div>
   </CollapsibleCard>
 
@@ -330,5 +340,14 @@ Future thoughts:
     height: 350px;
     padding-right: 30px;
     /* background-color: #fafafa; */
+  }
+  .flexcontainer {
+    display: flex;
+    flex-flow: row wrap;
+    vertical-align: middle;
+  }
+  .flexelement {
+    display: block;
+    margin-right: 1em;
   }
 </style>
