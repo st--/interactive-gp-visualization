@@ -113,22 +113,4 @@
     width: 100%;
     height: 100%;
   }
-
-  circle {
-    fill: orange;
-    fill-opacity: 0.6;
-    stroke: rgba(0, 0, 0, 0.5);
-  }
-
-  .path-line {
-    fill: none;
-    stroke: rgb(0, 100, 100);
-    stroke-linejoin: round;
-    stroke-linecap: round;
-    stroke-width: 2;
-  }
-
-  .path-area {
-    fill: rgba(0, 100, 100, 0.2);
-  }
 </style>
