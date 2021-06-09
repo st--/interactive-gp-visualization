@@ -75,8 +75,13 @@
     const pt = getSVGpoint(svg, event);
     const newX = xScale.invert(pt.x);
     const newY = yScale.invert(pt.y);
-    x1.set(newX);
-    x2.set(newY);
+    if (event.shiftKey) {
+      x1.set(newX);
+      x2.set(newY);
+    } else {
+      x1.set(newY);
+      x2.set(newX);
+    }
   }
 </script>
 
