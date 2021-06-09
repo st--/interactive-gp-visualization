@@ -15,9 +15,8 @@
   let width = 300;
   let height = 300;
 
-  // const padding = { top: 25, right: 40, bottom: 40, left: 25 };
-  const padding = { top: 25, bottom: 45, left: 50 };
-  padding.right = padding.top + padding.bottom - padding.left; // 20
+  const padding = { top: 25, right: 15, left: 50 }; // to match PlotMarginals
+  padding.bottom = padding.left + padding.right - padding.top; // to square up
 
   $: xTicks = size > 180 ? linspace(0, 6, 7) : linspace(0, 6, 3);
   $: yTicks = xTicks;
