@@ -1,7 +1,13 @@
-<script>
+<script lang="ts">
   import Katex from "./Katex.svelte";
   import InputNumberSafely from "./InputNumberSafely.svelte";
-  export let name, formula, value, min, max, step, lowerBound;
+  export let name: string,
+    formula: string,
+    value: number,
+    min: number,
+    max: number,
+    step: number,
+    lowerBound: number = undefined;
 </script>
 
 <label>

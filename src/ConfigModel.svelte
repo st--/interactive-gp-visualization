@@ -1,13 +1,14 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
+<script lang="ts">
   import Katex from "./Katex.svelte";
   import ParameterSlider from "./ParameterSlider.svelte";
-  export let noiseScale,
-    kernelSelection,
-    kernelChoices,
-    kernelSelection2,
-    kernelChoices2,
-    kernelCombination;
+  import type { KernelSelection } from "./kernels";
+  export let noiseScale: number,
+    kernelSelection: KernelSelection,
+    kernelChoices: KernelSelection[],
+    kernelSelection2: KernelSelection,
+    kernelChoices2: KernelSelection[],
+    kernelCombination: string;
 
   let noiseScaleProps = {
     name: "standard deviation",

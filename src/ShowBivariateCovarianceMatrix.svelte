@@ -1,13 +1,14 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
+<script lang="ts">
   import Katex from "./Katex.svelte";
-  export let atX1, atX2;
+  import type { DataAtX } from "./types";
+  export let atX1: DataAtX, atX2: DataAtX;
 
   let numDigits = 3;
   const unicodeMinusSign = "\u2212";
   // const unicodeFigureSpace = "\u2007";
 
-  function format(val, addSpace = true) {
+  function format(val: number, addSpace = true) {
     const str = `${val.toFixed(numDigits)}`;
     if (val < 0) {
       return str.replace("-", unicodeMinusSign);

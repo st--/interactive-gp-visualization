@@ -1,9 +1,9 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
+<script lang="ts">
   import InputNumberSafely from "./InputNumberSafely.svelte";
   import { randn } from "./mymath.js";
   import { vs, us } from "./store.js";
-  export let xsLength;
+  export let xsLength: number;
 
   let numSamples = 3;
   let seed1 = 0.1;
@@ -12,7 +12,7 @@
   $: vs.set(randn(xsLength, numSamples, seed1));
   $: us.set(randn(xsLength, numSamples, seed2));
 
-  const resampleClick = (event) => {
+  const resampleClick = (event: MouseEvent) => {
     event.preventDefault(); // so page doesn't reload
     seed1 = Math.random();
     seed2 = Math.random();
@@ -24,8 +24,8 @@
     Number of samples:
     <InputNumberSafely
       bind:value={numSamples}
-      min="0"
-      max="10"
+      min={0}
+      max={10}
       lowerBound={0}
       integer
       style="width: 50px;"

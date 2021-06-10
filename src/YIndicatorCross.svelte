@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
   import { y1, y2 } from "./store.js";
-  export let xScale, yScale, maxY;
+  export let xScale: (x: number) => number,
+    yScale: (y: number) => number,
+    maxY: number;
   const halfwidth = 5;
 </script>
 

@@ -1,5 +1,6 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
+<script lang="ts">
+  import { Matrix } from "ml-matrix";
   import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";
@@ -11,16 +12,17 @@
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
   import YIndicatorBar from "./YIndicatorBar.svelte";
-  export let xs,
-    means,
-    marginalVariances,
-    samples,
-    points,
-    atX1,
-    atX2,
-    plotProps;
+  import type { Point, DataAtX, PlotProps } from "./types";
+  export let xs: number[],
+    means: number[],
+    marginalVariances: number[],
+    samples: Matrix,
+    points: Point[],
+    atX1: DataAtX,
+    atX2: DataAtX,
+    plotProps: PlotProps;
 
-  let svg;
+  let svg: SVGSVGElement;
   let width = 500;
   let height = 200;
 
@@ -57,7 +59,7 @@
   // marginal y distributions at x1 and x2
   // TODO unify with Covariance?
   const num_grid = 100;
-  function makeYs(dat) {
+  function makeYs(dat: DataAtX) {
     return linspace(
       dat.mean - 4 * Math.sqrt(dat.variance),
       dat.mean + 4 * Math.sqrt(dat.variance),
@@ -88,11 +90,11 @@
 
   // one and two sigma confidence intervals
   $: sigma = marginalVariances.map((v) => Math.sqrt(v));
-  $: confidenceLower2 = means.map((mean, idx) => mean - 2 * sigma[idx]);
-  $: confidenceLower1 = means.map((mean, idx) => mean - sigma[idx]);
-  $: confidenceUpper1 = means.map((mean, idx) => mean + sigma[idx]);
-  $: confidenceUpper2 = means.map((mean, idx) => mean + 2 * sigma[idx]);
-  $: makeArea = (lower, upper) =>
+  $: confidenceLower2 = means.map((mean, idx: number) => mean - 2 * sigma[idx]);
+  $: confidenceLower1 = means.map((mean, idx: number) => mean - sigma[idx]);
+  $: confidenceUpper1 = means.map((mean, idx: number) => mean + sigma[idx]);
+  $: confidenceUpper2 = means.map((mean, idx: number) => mean + 2 * sigma[idx]);
+  $: makeArea = (lower: number[], upper: number[]) =>
     `${makePath(xs, lower)}L${makePath(xs, upper, true).slice(1)}Z`;
   $: areaConfidence1 = makeArea(confidenceLower1, confidenceUpper1);
   $: areaConfidence2 = makeArea(confidenceLower2, confidenceUpper2);
@@ -103,15 +105,15 @@
     ({ width, height } = svg.getBoundingClientRect());
   }
 
-  function addPoint(newX, newY) {
+  function addPoint(newX: number, newY: number) {
     points = points.concat({ x: newX, y: newY });
   }
-  function removePoint(point, event) {
+  function removePointClick(point: Point, event: MouseEvent) {
     event.stopPropagation();
     points = points.filter((element) => element != point);
   }
 
-  function handleClick(event) {
+  function handleClick(event: MouseEvent) {
     const pt = getSVGpoint(svg, event);
     const newX = xScale.invert(pt.x);
     const newY = yScale.invert(pt.y);
@@ -121,7 +123,7 @@
       addPoint(newX, newY);
     }
   }
-  function handleMousemove(event) {
+  function handleMousemove(event: MouseEvent) {
     const pt = getSVGpoint(svg, event);
     const newX = xScale.invert(pt.x);
     const newY = yScale.invert(pt.y);
@@ -215,7 +217,7 @@
         cx={xScale(point.x)}
         cy={yScale(point.y)}
         r="6"
-        on:click={(event) => removePoint(point, event)}
+        on:click={(event) => removePointClick(point, event)}
       />
       <!-- see https://svelte.dev/examples#7guis-circles -->
     {/each}

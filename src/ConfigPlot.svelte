@@ -1,8 +1,9 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
+<script lang="ts">
   import Katex from "./Katex.svelte";
+  import type { PlotProps } from "./types";
 
-  export let plotProps, num_grid;
+  export let plotProps: PlotProps, num_grid: number;
 </script>
 
 <label

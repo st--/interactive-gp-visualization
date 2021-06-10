@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
+<script lang="ts">
   import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";
@@ -11,13 +11,17 @@
   import { pathGenerator } from "./myplot.js";
   import Axes from "./Axes.svelte";
   import YIndicatorCross from "./YIndicatorCross.svelte";
-  export let atX1, atX2, covProps, plotProps;
+  import type { DataAtX, CovProps, PlotProps } from "./types";
+  export let atX1: DataAtX,
+    atX2: DataAtX,
+    covProps: CovProps,
+    plotProps: PlotProps;
 
-  let svg;
+  let svg: SVGSVGElement;
   let width = 300;
   let height = 300;
 
-  const padding = { top: 25, bottom: 45, left: 50 };
+  const padding = { top: 25, bottom: 45, left: 50, right: undefined };
   padding.right = padding.top + padding.bottom - padding.left; // 20
 
   const sigmaContours = [1, 2];
@@ -74,14 +78,14 @@
   function resize() {
     ({ width, height } = svg.getBoundingClientRect());
   }
-  function handleMousemove(event) {
+  function handleMousemove(event: MouseEvent | Touch) {
     const pt = getSVGpoint(svg, event);
     const newX = xScale.invert(pt.x);
     const newY = yScale.invert(pt.y);
     y1.set(newX);
     y2.set(newY);
   }
-  function handleTouchmove(event) {
+  function handleTouchmove(event: TouchEvent) {
     event.preventDefault();
     handleMousemove(event.touches[0]);
   }

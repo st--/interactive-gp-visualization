@@ -1,6 +1,9 @@
-<script>
+<script lang="ts">
   import { x1, x2 } from "./store.js";
-  export let xScale, yScale, y1, y2;
+  export let xScale: (x: number) => number,
+    yScale: (y: number) => number,
+    y1: number,
+    y2: number;
 </script>
 
 <line
