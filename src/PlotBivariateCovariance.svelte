@@ -1,23 +1,27 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
+<script lang="ts">
   import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";
   import { schemeCategory10 } from "d3-scale-chromatic";
   import { zip } from "d3-array";
-  import { y1, y2 } from "./store.js";
-  import { getSVGpoint } from "./getsvgpoint.js";
-  import { linspace, gaussian } from "./mymath.js";
-  import { pathGenerator } from "./myplot.js";
+  import { y1, y2 } from "./store";
+  import { getSVGpoint } from "./getsvgpoint";
+  import { linspace, gaussian } from "./mymath";
+  import { pathGenerator } from "./myplot";
   import Axes from "./Axes.svelte";
   import YIndicatorCross from "./YIndicatorCross.svelte";
-  export let atX1, atX2, covProps, plotProps;
+  import type { DataAtX, CovProps, PlotProps } from "./types";
+  export let atX1: DataAtX,
+    atX2: DataAtX,
+    covProps: CovProps,
+    plotProps: PlotProps;
 
-  let svg;
+  let svg: SVGSVGElement;
   let width = 300;
   let height = 300;
 
-  const padding = { top: 25, bottom: 45, left: 50 };
+  const padding = { top: 25, bottom: 45, left: 50, right: undefined };
   padding.right = padding.top + padding.bottom - padding.left; // 20
 
   const sigmaContours = [1, 2];
@@ -74,14 +78,14 @@
   function resize() {
     ({ width, height } = svg.getBoundingClientRect());
   }
-  function handleMousemove(event) {
+  function handleMousemove(event: MouseEvent | Touch) {
     const pt = getSVGpoint(svg, event);
     const newX = xScale.invert(pt.x);
     const newY = yScale.invert(pt.y);
     y1.set(newX);
     y2.set(newY);
   }
-  function handleTouchmove(event) {
+  function handleTouchmove(event: TouchEvent) {
     event.preventDefault();
     handleMousemove(event.touches[0]);
   }
@@ -172,7 +176,7 @@
           cx={xScale(ys[0])}
           cy={yScale(ys[1])}
           r="3"
-          style="fill: {sampleColor(i)};"
+          style="fill: {sampleColor(String(i))};"
         />
       {/each}
     {/if}

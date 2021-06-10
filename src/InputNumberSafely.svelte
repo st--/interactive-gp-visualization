@@ -1,12 +1,13 @@
-<script>
-  export let value,
-    min,
-    max,
+<script lang="ts">
+  export let value: number,
+    min: number,
+    max: number,
     step = 1,
-    lowerBound,
-    upperBound,
+    lowerBound: number = undefined,
+    upperBound: number = undefined,
     integer = false,
-    style;
+    style: string,
+    id: string = undefined;
 
   $: maybeValue = value;
 
@@ -30,4 +31,5 @@
   {step}
   on:input={handleInput}
   {style}
+  {id}
 />

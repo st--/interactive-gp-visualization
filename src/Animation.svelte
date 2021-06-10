@@ -1,10 +1,11 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
-  import { vs, us } from "./store.js";
-  import { sampleMvn, sampleMvnTrajectory, randn } from "./mymath.js";
-  import { HMC } from "./hmc.js";
-  import { interpolateCatmullRom } from "./catmullrom.js";
-  export let means, covSqrt, samples;
+<script lang="ts">
+  import type { Matrix } from "ml-matrix";
+  import { vs, us } from "./store";
+  import { sampleMvn, sampleMvnTrajectory, randn } from "./mymath";
+  import { HMC } from "./hmc";
+  import { interpolateCatmullRom } from "./catmullrom";
+  export let means: number[], covSqrt: Matrix, samples: Matrix;
 
   let doAnimate = true;
   const AnimationTypes = Object.freeze({ greatCircle: 0, samples: 1, hmc: 2 });
@@ -13,22 +14,22 @@
   let frameIdx = 0;
 
   let numFrames = 30;
-  let sampleFrames;
+  let sampleFrames: Matrix[];
   $: if (animationType === AnimationTypes.greatCircle) {
     sampleFrames = sampleMvnTrajectory(means, covSqrt, $vs, $us, numFrames);
   }
 
-  let currentVs;
+  let currentVs: Matrix;
 
   $: samples =
     animationType === AnimationTypes.greatCircle
       ? sampleFrames[frameIdx]
       : sampleMvn(means, covSqrt, currentVs);
 
-  let interpolator = (_w) => {
+  let interpolator = (_w: number) => {
     return $vs;
   };
-  let Vanchor, nextVs;
+  let Vanchor: Matrix[], nextVs: Matrix;
   vs.subscribe((_value) => {
     if (animationType !== AnimationTypes.greatCircle) {
       frameIdx = 0;
@@ -49,7 +50,9 @@
       }
       Vanchor.push(nextVs.clone()); // as nextVs keeps getting changed in place
     }
-    interpolator = interpolateCatmullRom(...Vanchor);
+    interpolator = interpolateCatmullRom(
+      ...(Vanchor as [Matrix, Matrix, Matrix, Matrix])
+    );
   }
 
   let numInterpolate = 8;
@@ -68,7 +71,7 @@
     }
   }
 
-  let animationIntervalHandle;
+  let animationIntervalHandle: ReturnType<typeof setInterval>;
   let animationDelay = 100;
   $: {
     clearInterval(animationIntervalHandle);

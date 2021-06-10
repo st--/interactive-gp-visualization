@@ -67,6 +67,7 @@ Run the checks with
 ```bash
 npx svelte-check
 ```
+(Note: if you run svelte-check from a subdirectory, e.g. `src/`, it will not find the included type hints in `custom_typings/`.)
 
 ### Using Prettier
 

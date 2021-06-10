@@ -1,7 +1,7 @@
 // Copyright (c) 2021 ST John
 
 import * as m from "ml-matrix";
-import { randn } from "./mymath.js";
+import { randn } from "./mymath";
 
 function kineticEnergy(ps) {
   return m.Matrix.pow(ps, 2).div(2).sum("column");
