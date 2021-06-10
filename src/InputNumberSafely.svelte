@@ -6,7 +6,8 @@
     lowerBound: number = undefined,
     upperBound: number = undefined,
     integer = false,
-    style: string;
+    style: string,
+    id: string = undefined;
 
   $: maybeValue = value;
 
@@ -30,4 +31,5 @@
   {step}
   on:input={handleInput}
   {style}
+  {id}
 />

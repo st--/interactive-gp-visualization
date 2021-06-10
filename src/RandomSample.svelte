@@ -20,7 +20,7 @@
 </script>
 
 <div class="randomize-box">
-  <label>
+  <label for="numSamplesInput">
     Number of samples:
     <InputNumberSafely
       bind:value={numSamples}
@@ -29,6 +29,7 @@
       lowerBound={0}
       integer
       style="width: 50px;"
+      id="numSamplesInput"
     />
   </label>
   <button class="btn" on:click={resampleClick}>Resample</button>
