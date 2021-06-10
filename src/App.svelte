@@ -24,7 +24,7 @@ Future thoughts:
 <script lang="ts">
   import VERSION from "./version.js";
 
-  import { Matrix } from "ml-matrix";
+  import type { Matrix } from "ml-matrix";
   import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
   import ShowBivariateCovarianceMatrix from "./ShowBivariateCovarianceMatrix.svelte";

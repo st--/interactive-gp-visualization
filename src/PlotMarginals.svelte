@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2021 ST John -->
 <script lang="ts">
-  import { Matrix } from "ml-matrix";
+  import type { Matrix } from "ml-matrix";
   import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";
