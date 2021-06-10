@@ -5,10 +5,10 @@
   import { scaleLinear, scaleOrdinal } from "d3-scale";
   import { schemeCategory10 } from "d3-scale-chromatic";
   import { zip } from "d3-array";
-  import { y1, y2 } from "./store.js";
-  import { getSVGpoint } from "./getsvgpoint.js";
-  import { linspace, gaussian } from "./mymath.js";
-  import { pathGenerator } from "./myplot.js";
+  import { y1, y2 } from "./store";
+  import { getSVGpoint } from "./getsvgpoint";
+  import { linspace, gaussian } from "./mymath";
+  import { pathGenerator } from "./myplot";
   import Axes from "./Axes.svelte";
   import YIndicatorCross from "./YIndicatorCross.svelte";
   import type { DataAtX, CovProps, PlotProps } from "./types";

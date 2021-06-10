@@ -3,9 +3,9 @@
   import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear } from "d3-scale";
-  import { x1, x2 } from "./store.js";
-  import { getSVGpoint } from "./getsvgpoint.js";
-  import { pathGenerator } from "./myplot.js";
+  import { x1, x2 } from "./store";
+  import { getSVGpoint } from "./getsvgpoint";
+  import { pathGenerator } from "./myplot";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
   import type { DataAtX } from "./types";

@@ -1,8 +1,8 @@
 // Copyright (c) 2021 ST John
 
 import * as m from "ml-matrix";
-import { covMatrix } from "./kernels.js";
-import { cholesky, symmetrise } from "./mymath.js";
+import { covMatrix } from "./kernels";
+import { cholesky, symmetrise } from "./mymath";
 
 export function prior(kernel) {
   function mean(xs) {

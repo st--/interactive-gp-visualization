@@ -1,8 +1,8 @@
 <!-- Copyright (c) 2021 ST John -->
 <script lang="ts">
   import InputNumberSafely from "./InputNumberSafely.svelte";
-  import { randn } from "./mymath.js";
-  import { vs, us } from "./store.js";
+  import { randn } from "./mymath";
+  import { vs, us } from "./store";
   export let xsLength: number;
 
   let numSamples = 3;

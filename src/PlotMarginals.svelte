@@ -5,10 +5,10 @@
   import { onMount } from "svelte";
   import { scaleLinear, scaleOrdinal } from "d3-scale";
   import { schemeCategory10 } from "d3-scale-chromatic";
-  import { x1, x2, y1, y2 } from "./store.js";
-  import { getSVGpoint } from "./getsvgpoint.js";
-  import { linspace, gaussian } from "./mymath.js";
-  import { pathGenerator } from "./myplot.js";
+  import { x1, x2, y1, y2 } from "./store";
+  import { getSVGpoint } from "./getsvgpoint";
+  import { linspace, gaussian } from "./mymath";
+  import { pathGenerator } from "./myplot";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
   import YIndicatorBar from "./YIndicatorBar.svelte";

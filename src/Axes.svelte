@@ -7,6 +7,8 @@
     width: number,
     height: number,
     padding: { left: number; top: number; bottom: number; right: number };
+
+  width; // to suppress "unused export property" warning
 </script>
 
 <g>

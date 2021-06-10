@@ -36,7 +36,7 @@ Future thoughts:
   import ConfigModel from "./ConfigModel.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
 
-  import { x1, x2 } from "./store.js";
+  import { x1, x2 } from "./store";
   import {
     createKernelChoices,
     instantiateKernel,
@@ -44,10 +44,10 @@ Future thoughts:
     sumKernel,
     productKernel,
   } from "./kernels";
-  import { linspace, matrixSqrt, covEllipse } from "./mymath.js";
+  import { linspace, matrixSqrt, covEllipse } from "./mymath";
   import { getIndicesAndFrac } from "./binarysearch";
   import type { IndicesAndFrac } from "./binarysearch";
-  import { posterior, prior } from "./gpposterior.js";
+  import { posterior, prior } from "./gpposterior";
 
   // variables for ConfigModel
   let { choices: kernelChoices, selected: kernelSelection } =

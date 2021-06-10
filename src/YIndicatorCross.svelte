@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { y1, y2 } from "./store.js";
+  import { y1, y2 } from "./store";
   export let xScale: (x: number) => number,
     yScale: (y: number) => number,
     maxY: number;

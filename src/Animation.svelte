@@ -1,10 +1,10 @@
 <!-- Copyright (c) 2021 ST John -->
 <script lang="ts">
   import { Matrix } from "ml-matrix";
-  import { vs, us } from "./store.js";
-  import { sampleMvn, sampleMvnTrajectory, randn } from "./mymath.js";
-  import { HMC } from "./hmc.js";
-  import { interpolateCatmullRom } from "./catmullrom.js";
+  import { vs, us } from "./store";
+  import { sampleMvn, sampleMvnTrajectory, randn } from "./mymath";
+  import { HMC } from "./hmc";
+  import { interpolateCatmullRom } from "./catmullrom";
   export let means: number[], covSqrt: Matrix, samples: Matrix;
 
   let doAnimate = true;
@@ -50,7 +50,9 @@
       }
       Vanchor.push(nextVs.clone()); // as nextVs keeps getting changed in place
     }
-    interpolator = interpolateCatmullRom(...Vanchor);
+    interpolator = interpolateCatmullRom(
+      ...(Vanchor as [Matrix, Matrix, Matrix, Matrix])
+    );
   }
 
   let numInterpolate = 8;

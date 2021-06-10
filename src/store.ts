@@ -1,4 +1,5 @@
-import { writable } from "svelte/store";
+import { writable, Writable } from "svelte/store";
+import { Matrix } from "ml-matrix";
 
 function createMinMaxStore(min, max, initial = null) {
   const { subscribe, set: orig_set, update } = writable(initial);
@@ -18,5 +19,5 @@ export const x2 = createMinMaxStore(0, 6, 2.1);
 export const y1 = createMinMaxStore(-3, 3, 0);
 export const y2 = createMinMaxStore(-3, 3, 0);
 
-export const vs = writable();
-export const us = writable();
+export const vs: Writable<Matrix> = writable();
+export const us: Writable<Matrix> = writable();
