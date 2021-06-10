@@ -190,7 +190,11 @@
 
     {#if plotProps.samples}
       {#each samplePaths as path, i}
-        <path class="path-line" d={path} style="stroke: {sampleColor(i)};" />
+        <path
+          class="path-line"
+          d={path}
+          style="stroke: {sampleColor(String(i))};"
+        />
       {/each}
 
       {#each atX1.ys as y1, i}
@@ -198,7 +202,7 @@
           cx={xScale($x1)}
           cy={yScale(y1)}
           r="3"
-          style="fill: {sampleColor(i)};"
+          style="fill: {sampleColor(String(i))};"
         />
       {/each}
       {#each atX2.ys as y2, i}
@@ -206,7 +210,7 @@
           cx={xScale($x2)}
           cy={yScale(y2)}
           r="3"
-          style="fill: {sampleColor(i)};"
+          style="fill: {sampleColor(String(i))};"
         />
       {/each}
     {/if}

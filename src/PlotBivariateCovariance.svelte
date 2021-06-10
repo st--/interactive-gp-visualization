@@ -176,7 +176,7 @@
           cx={xScale(ys[0])}
           cy={yScale(ys[1])}
           r="3"
-          style="fill: {sampleColor(i)};"
+          style="fill: {sampleColor(String(i))};"
         />
       {/each}
     {/if}
