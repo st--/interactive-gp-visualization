@@ -123,7 +123,7 @@ Future thoughts:
 
   let points = [];
 
-  let widthPlotMarginals;
+  let widthPlotMarginals: number;
 </script>
 
 <div>

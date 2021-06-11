@@ -7,7 +7,8 @@
   import { scaleLinear, scaleSequential } from "d3-scale";
   import { interpolateBlues as colorScale } from "d3-scale-chromatic";
   import { contours } from "d3-contour";
-  import { geoPath, geoIdentity } from "d3-geo";
+  import { geoPath } from "d3-geo";
+  // import { geoIdentity } from "d3-geo";
   import { x1, x2 } from "./store.js";
   import { linspace } from "./mymath.js";
   import { getSVGpoint } from "./getsvgpoint.js";
