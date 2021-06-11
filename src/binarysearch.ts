@@ -1,5 +1,12 @@
 // Copyright (c) 2021 ST John
 
+export type IndicesAndFrac = {
+  idx1: number;
+  idx2: number;
+  w1: number;
+  w2: number;
+};
+
 export function getIndexInSorted(array, target) {
   let low = 0;
   let high = array.length;
@@ -11,7 +18,7 @@ export function getIndexInSorted(array, target) {
   return low;
 }
 
-export function getIndicesAndFrac(xs, xnew) {
+export function getIndicesAndFrac(xs, xnew): IndicesAndFrac {
   const idx = getIndexInSorted(xs, xnew);
   const idx1 = idx > 0 ? idx - 1 : idx;
   const idx2 = idx > 0 ? idx : idx + 1;

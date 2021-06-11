@@ -24,7 +24,7 @@ Future thoughts:
 <script lang="ts">
   import VERSION from "./version.js";
 
-  import * as m from "ml-matrix";
+  import type { Matrix } from "ml-matrix";
   import { CollapsibleCard } from "svelte-collapsible";
   import Katex from "./Katex.svelte";
   import ShowBivariateCovarianceMatrix from "./ShowBivariateCovarianceMatrix.svelte";
@@ -37,7 +37,7 @@ Future thoughts:
   import ConfigModel from "./ConfigModel.svelte";
   import ConfigPlot from "./ConfigPlot.svelte";
 
-  import { x1, x2 } from "./store.js";
+  import { x1, x2 } from "./store";
   import {
     createKernelChoices,
     instantiateKernel,
@@ -45,9 +45,10 @@ Future thoughts:
     sumKernel,
     productKernel,
   } from "./kernels";
-  import { linspace, matrixSqrt, covEllipse } from "./mymath.js";
-  import { getIndicesAndFrac } from "./binarysearch.js";
-  import { posterior, prior } from "./gpposterior.js";
+  import { linspace, matrixSqrt, covEllipse } from "./mymath";
+  import { getIndicesAndFrac } from "./binarysearch";
+  import type { IndicesAndFrac } from "./binarysearch";
+  import { posterior, prior } from "./gpposterior";
 
   // variables for ConfigModel
   let { choices: kernelChoices, selected: kernelSelection } =
@@ -96,14 +97,9 @@ Future thoughts:
   $: marginalVariances = covMat.diag();
   $: covSqrt = matrixSqrt(covMat);
 
-  let samples: m.Matrix; // bound to Animation component; will be undefined until it was mounted
+  let samples: Matrix; // bound to Animation component; will be undefined until it was mounted
 
-  $: getDataAt = (dat: {
-    idx1: number;
-    idx2: number;
-    w1: number;
-    w2: number;
-  }) => {
+  $: getDataAt = (dat: IndicesAndFrac) => {
     // Computes linear interpolation of all properties for point between two indices
     // TODO improve using d3-interpolate?
     const samples1 = !samples ? [] : samples.getRow(dat.idx1);

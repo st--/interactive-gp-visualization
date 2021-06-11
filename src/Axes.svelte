@@ -1,6 +1,14 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
-  export let xScale, yScale, xTicks, yTicks, width, height, padding;
+<script lang="ts">
+  export let xScale: (x: number) => number,
+    yScale: (y: number) => number,
+    xTicks: number[],
+    yTicks: number[],
+    width: number,
+    height: number,
+    padding: { left: number; top: number; bottom: number; right: number };
+
+  width; // to suppress "unused export property" warning
 </script>
 
 <g>

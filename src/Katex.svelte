@@ -1,7 +1,7 @@
 <!-- source: https://svelte.dev/repl/49ff6c089825418888cf804d9dde77bc?version=3.37.0 -->
-<script>
+<script lang="ts">
   import katex from "katex";
-  export let math;
+  export let math: string;
   export let displayMode = false;
 
   const options = {

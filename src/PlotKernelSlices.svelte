@@ -1,16 +1,21 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
+<script lang="ts">
   import Katex from "./Katex.svelte";
   import { onMount } from "svelte";
   import { scaleLinear } from "d3-scale";
-  import { x1, x2 } from "./store.js";
-  import { getSVGpoint } from "./getsvgpoint.js";
-  import { pathGenerator } from "./myplot.js";
+  import { x1, x2 } from "./store";
+  import { getSVGpoint } from "./getsvgpoint";
+  import { pathGenerator } from "./myplot";
   import Axes from "./Axes.svelte";
   import XIndicators from "./XIndicators.svelte";
-  export let xs, k1s, k2s, atX1, atX2;
+  import type { DataAtX } from "./types";
+  export let xs: number[],
+    k1s: number[],
+    k2s: number[],
+    atX1: DataAtX,
+    atX2: DataAtX;
 
-  let svg;
+  let svg: SVGSVGElement;
   let width = 500;
   let height = 200;
 
@@ -42,7 +47,7 @@
   function resize() {
     ({ width, height } = svg.getBoundingClientRect());
   }
-  function handleClick(event) {
+  function handleClick(event: MouseEvent) {
     const newX = xScale.invert(getSVGpoint(svg, event).x);
     if (event.shiftKey) {
       x2.set(newX);
@@ -50,7 +55,7 @@
       x1.set(newX);
     }
   }
-  function handleMousemove(event) {
+  function handleMousemove(event: MouseEvent) {
     const newX = xScale.invert(getSVGpoint(svg, event).x);
     if (event.shiftKey) {
       x1.set(newX);
@@ -58,7 +63,7 @@
       x2.set(newX);
     }
   }
-  function handleTouchmove(event) {
+  function handleTouchmove(event: TouchEvent) {
     event.preventDefault();
     const touches = event.touches;
     const newX = xScale.invert(getSVGpoint(svg, touches[0]).x);

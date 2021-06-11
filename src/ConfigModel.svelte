@@ -1,13 +1,14 @@
 <!-- Copyright (c) 2021 ST John -->
-<script>
+<script lang="ts">
   import Katex from "./Katex.svelte";
   import ParameterSlider from "./ParameterSlider.svelte";
-  export let noiseScale,
-    kernelSelection,
-    kernelChoices,
-    kernelSelection2,
-    kernelChoices2,
-    kernelCombination;
+  import type { KernelSelection } from "./kernels";
+  export let noiseScale: number,
+    kernelSelection: KernelSelection,
+    kernelChoices: KernelSelection[],
+    kernelSelection2: KernelSelection,
+    kernelChoices2: KernelSelection[],
+    kernelCombination: string;
 
   let noiseScaleProps = {
     name: "standard deviation",
@@ -18,7 +19,7 @@
     lowerBound: 0.0,
   };
   let noiseScaleInternal = noiseScale;
-  let useLikelihood = true;
+  let useLikelihood = 1; // input radio's typing doesn't play along with boolean
   $: noiseScale = useLikelihood ? noiseScaleInternal : 0.0;
 
   const kernelCombinationInfo = {
@@ -93,18 +94,12 @@
     <div class="flexelement">
       <strong>Likelihood:</strong>
       <label
-        ><input
-          type="radio"
-          bind:group={useLikelihood}
-          value={false}
-        />noise-free observations</label
+        ><input type="radio" bind:group={useLikelihood} value={0} />noise-free
+        observations</label
       >
       <label
-        ><input
-          type="radio"
-          bind:group={useLikelihood}
-          value={true}
-        />observations with Gaussian noise, <Katex
+        ><input type="radio" bind:group={useLikelihood} value={1} />observations
+        with Gaussian noise, <Katex
           math={"p(y\\, | \\,f(x)) = \\mathcal{N}(f(x), \\sigma_\\text{noise}^2)"}
         /></label
       >
