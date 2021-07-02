@@ -36,11 +36,12 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
+		// file: '../_jekyll/vizgp/build/bundle.js'
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
 		svelte({
-			preprocess: sveltePreprocess({ sourceMap: !production }),
+			preprocess: sveltePreprocess({ sourceMap: !production, defaults: { markup: 'html', script: 'typescript', style: 'css' } }),
 			compilerOptions: {
 				// enable run-time checks when not in production
 				dev: !production
