@@ -16,6 +16,12 @@
     math="\pm \sigma(x)"
   /> and <Katex math="\pm 2 \sigma(x)" /> confidence bands</label
 >
+{#if plotProps.confidence}
+  <label
+    ><input type="checkbox" bind:checked={plotProps.withNoise} />...include
+    observation noise</label
+  >
+{/if}
 <label
   ><input type="checkbox" bind:checked={plotProps.samples} />Plot samples <Katex
     math="\sim f(\cdot)"
