@@ -20,4 +20,5 @@ export type PlotProps = {
   confidence: boolean;
   samples: boolean;
   marginals: boolean;
+  withNoise: boolean;
 };
