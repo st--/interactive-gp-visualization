@@ -21,7 +21,7 @@
     "d3-array": "latest",
     "d3-random": "^2.2.2",
     "d3-scale": "latest",
-    "d3-scale-chromatic": "^2.0.0",
+    "d3-scale-chromatic": "^3.0.0",
     "katex": "^0.13.11",
     "ml-matrix": "latest",
     "prettier": "^2.3.0",
