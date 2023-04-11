@@ -20,7 +20,8 @@
     points: Point[],
     atX1: DataAtX,
     atX2: DataAtX,
-    plotProps: PlotProps;
+    plotProps: PlotProps,
+    noiseScale: number;
 
   let svg: SVGSVGElement;
   let width = 500;
@@ -89,7 +90,12 @@
   )(ys2.map(marginalDistX2), ys2);
 
   // one and two sigma confidence intervals
-  $: sigma = marginalVariances.map((v) => Math.sqrt(v));
+  $: additionalVariance =
+    plotProps.withNoise ? noiseScale*noiseScale : 0.0;
+  $: yLabelStr = "f(\\cdot)" +
+    (plotProps.withNoise ? "+ \\epsilon" : "");
+
+  $: sigma = marginalVariances.map((v) => Math.sqrt(v + additionalVariance));
   $: confidenceLower2 = means.map((mean, idx: number) => mean - 2 * sigma[idx]);
   $: confidenceLower1 = means.map((mean, idx: number) => mean - sigma[idx]);
   $: confidenceUpper1 = means.map((mean, idx: number) => mean + sigma[idx]);
@@ -151,10 +157,12 @@
   </div>
   <div
     class="label"
-    style="bottom: {yScale((minY + maxY) / 2) + 10}px; left: {xScale(0) -
-      50}px; transform: rotate(-90deg);"
+    style="bottom: {yScale((minY + maxY) / 2) - 10}px; left: {xScale(0) -
+      30}px;"
   >
-    <Katex math="f(\cdot)" />
+    <div style="transform-origin: center left; transform: rotate(-90deg);">
+      <Katex math={yLabelStr} />
+    </div>
   </div>
 
   <svg
