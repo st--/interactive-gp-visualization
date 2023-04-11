@@ -65,6 +65,7 @@ Future thoughts:
     samples: true,
     marginals: true,
     fullcov: false,
+    withNoise: false,
   };
 
   let num_grid = 150;
@@ -245,6 +246,7 @@ Future thoughts:
           {atX1}
           {atX2}
           {plotProps}
+          {noiseScale}
         />
       </div>
       <div class="squarechart" style="grid-area: bicovplot;">

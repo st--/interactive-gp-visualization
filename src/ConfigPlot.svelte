@@ -7,6 +7,15 @@
 </script>
 
 <label
+  ><input type="checkbox" bind:checked={plotProps.samples} />Plot samples <Katex
+    math="\sim f(\cdot)"
+  /></label
+>
+<label
+  ><input type="checkbox" bind:checked={plotProps.marginals} />Plot marginal
+  distributions of <Katex math="f(x_1), \, f(x_2)" /></label
+>
+<label
   ><input type="checkbox" bind:checked={plotProps.mean} />Plot mean <Katex
     math={"\\mathbb{E}[f(x)]"}
   /></label
@@ -16,15 +25,12 @@
     math="\pm \sigma(x)"
   /> and <Katex math="\pm 2 \sigma(x)" /> confidence bands</label
 >
-<label
-  ><input type="checkbox" bind:checked={plotProps.samples} />Plot samples <Katex
-    math="\sim f(\cdot)"
-  /></label
->
-<label
-  ><input type="checkbox" bind:checked={plotProps.marginals} />Plot marginal
-  distributions of <Katex math="f(x_1), \, f(x_2)" /></label
->
+{#if plotProps.confidence}
+  <label
+    ><input type="checkbox" bind:checked={plotProps.withNoise} />...include
+    observation noise</label
+  >
+{/if}
 <div class="advanced">
   <label>
     Number of evaluation points: {num_grid}

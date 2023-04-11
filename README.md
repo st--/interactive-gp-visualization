@@ -15,7 +15,7 @@ How to compute the isocontour ellipses of a bivariate Gaussian distribution is e
 
 There are plenty of other Gaussian process visualisations out there; here are some I came across so far (if you know of others you like, please let me know, I'm happy to extend the list!):
 
-* Interactive tutorial: [A Visual Exploration of Gaussian Processes (distill.pub)](https://distill.pub/2019/visual-exploration-gaussian-processes/) by Jochen G&ouml;rtler, Rebecca Kehlbeck, Oliver Deussen ([source](https://github.com/distillpub/post%2d-visual-exploration-gaussian-processes), using D3.js, ml-matrix)
+* Interactive tutorial: [A Visual Exploration of Gaussian Processes (distill.pub)](https://distill.pub/2019/visual-exploration-gaussian-processes/) by Jochen G&ouml;rtler, Rebecca Kehlbeck, Oliver Deussen ([source](https://github.com/distillpub/post--visual-exploration-gaussian-processes), using D3.js, ml-matrix)
 * Interactive tutorial: [A Practical Guide to Gaussian Processes](http://tinyurl.com/guide2gp) by Marc Peter Deisenroth, Yicheng Luo, Mark van der Wilk
 * [Demo by Johan W&aring;gberg](http://smlbook.org/GP/) ([source](https://github.com/uu-sml/sml-book-page/tree/master/GP), using D3.js, Numeric.js)
 * [Demo by Tomi Peltola](http://www.tmpl.fi/gp/) ([source](https://github.com/to-mi/gp-demo-js), using React, D3.js, Numeric.js)
