@@ -31,6 +31,7 @@ Future thoughts:
   import PlotMarginals from "./PlotMarginals.svelte";
   import PlotKernelSlices from "./PlotKernelSlices.svelte";
   import PlotBivariateCovariance from "./PlotBivariateCovariance.svelte";
+  import PlotCovarianceFunction from "./PlotCovarianceFunction.svelte";
   import RandomSample from "./RandomSample.svelte";
   import Animation from "./Animation.svelte";
   import ConfigModel from "./ConfigModel.svelte";
@@ -63,6 +64,7 @@ Future thoughts:
     confidence: true,
     samples: true,
     marginals: true,
+    fullcov: false,
     withNoise: false,
   };
 
@@ -121,6 +123,8 @@ Future thoughts:
   $: covProps = covEllipse(covY1Y2);
 
   let points = [];
+
+  let widthPlotMarginals: number;
 </script>
 
 <div>
@@ -170,7 +174,7 @@ Future thoughts:
         observations on which to condition the Gaussian process by
         <strong>clicking</strong>
         anywhere in the plot; these observations are drawn as black circles &#9899;.
-        To remove an observation, click on it again.
+        To remove an observation again, click on it.
         <small
           ><em>Note:</em> Two observations too close to each other can lead to numerical
           issues and long compute times. If the app seems to hang, reload the page
@@ -228,7 +232,11 @@ Future thoughts:
       <div class="chart" style="grid-area: bicovmatrix;">
         <ShowBivariateCovarianceMatrix {atX1} {atX2} />
       </div>
-      <div class="chart" style="grid-area: marginals;">
+      <div
+        class="chart"
+        style="grid-area: marginals;"
+        bind:clientWidth={widthPlotMarginals}
+      >
         <PlotMarginals
           {xs}
           {means}
@@ -245,6 +253,20 @@ Future thoughts:
         <PlotBivariateCovariance {atX1} {atX2} {covProps} {plotProps} />
       </div>
     </div>
+    <label
+      ><input type="checkbox" bind:checked={plotProps.fullcov} />Visualize full
+      covariance function <Katex
+        math={"\\operatorname{cov}(f(x),f(x'))"}
+      /></label
+    >
+    {#if plotProps.fullcov}
+      <div
+        class="fullcovchart"
+        style="width: {widthPlotMarginals}px; height: {widthPlotMarginals}px;"
+      >
+        <PlotCovarianceFunction {covMat} />
+      </div>
+    {/if}
   </div>
 
   <CollapsibleCard open={true}>
@@ -332,6 +354,9 @@ Future thoughts:
   .chart {
     min-width: 200px;
     /* background-color: #fafafa; */
+  }
+  .fullcovchart {
+    background-color: #fafafa; /* TODO */
   }
   .squarechart {
     width: 350px;
